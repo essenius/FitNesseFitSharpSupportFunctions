@@ -1,0 +1,73 @@
+|script            |common functions                                            |
+|$format=          |date format                                                 |
+|$yesterday=       |Add     |-1               |days to  |today                  |
+|show              |echo    |$yesterday                                         |
+|$ninetyMinutesAgo=|Add     |-1.5             |Hours to |now                    |
+|show              |Date    |$ninetyMinutesAgo|formatted|HH:mm:ss.fff           |
+|$YesterdayNoon=   |Add     |12               |hours to |$yesterday             |
+|$SolarEclipse=    |Parse   |21 Aug 2017                                        |
+|check             |echo    |$SolarEclipse    |2017-08-21T00:00:00              |
+|check             |Date    |$SolarEclipse    |formatted|dd-MMM-yyyy|21-Aug-2017|
+|$IndependenceDay= |Parse   |4-Jul-1776                                         |
+|show              |to ticks|$IndependenceDay                                   |
+
+
+|script         |common functions                                                          |
+|set date format|M/d/yyyy h:mm tt                                                          |
+|$inputDate=    |Parse|3/24/2017 9:25 PM                                                   |
+|check          |date |$inputDate|formatted|M/d/yyyy h:mm:ss tt|3/24/2017 9:25:00 PM       |
+|check          |date |$inputDate|formatted|o                  |2017-03-24T21:25:00.0000000|
+
+
+I need to compare 2/2/2017 2:53 AM with 2/2/2017 2:54:22 AM  and i need to check 2/2/2017 2:53 AM  is less than (<) 2/2/2017 2:54:22 AM
+
+|script         |common functions                            |
+|set date format|M/d/yyyy h:mm:ss tt                         |
+|$inputDate1=   |Parse        |12/3/2017 2:54:39 AM          |
+|$inputDate2=   |Parse        |2/2/2017 2:53 AM              |
+|check          |ticks between|$inputDate1|and|$inputDate2|<0|
+|set date format|$format                                     |
+
+|script    |common functions                            |
+|$tickdate=|Parse         |621247104000000000           |
+|check     |echo          |$tickdate|1969-08-28T00:00:00|
+|$ticks1=  |Ticks                                       |
+|$ticks2=  |Ticks                                       |
+|check     |ticks  between|$ticks1  |and     |$ticks2|>0|
+|$now1=    |parse         |now                          |
+|$now2=    |parse         |now                          |
+|check     |ticks  between|$now1    |and     |$now2  |>0|
+|check     |to ticks      |$tickdate|621247104000000000 |
+|check     |ticks since   |$now2    |>0                 |
+|show      |ticks since   |today                        |
+|$tomorrow=|add           |1        |days to |today     |
+|show      |ticks since   |$tomorrow                    |
+|show      |ticks between |today    |and     |now       |
+
+|script                                    |
+|set date format|yyyy-MM-dd HH:mm:ss.ffffff|
+|$now=          |parse    |now             |
+|set date format|MM/dd/yyyy                |
+|$springStart=  |parse    |03/21/2007      |
+|set date format|o                         |
+|show           |echo     |$springStart    |
+
+!define difference {${= 12 * 3600 * 1000 * 10000 =}}
+
+#|$timezone=|echo|Pacific US (UTC-07:00)|
+
+|script                                                                                            |
+|$timezone=          |echo         |Asia/Calcutta (UTC+05:30)                                      |
+|$UtcDifference=     |evaluate     |substring('$timezone',len('$timezone')-5,5)|as |System.DateTime|
+|$sign=              |evaluate     |substring('$timezone',len('$timezone')-6,1)|as |string         |
+|$ticks=             |ticks between|today                                      |and|$UtcDifference |
+|$ticks=             |evaluate     |$sign$ticks                                |as |long           |
+|$hoursDifference=   |echo         |5.5                                                            |
+|$expectedDifference=|evaluate     |$hoursDifference * 3600. * 1000 * 10000    |as |long           |
+|check               |echo         |$expectedDifference                        |$ticks             |
+|set date format     |MM/dd/yyyy HH:mm:ss tt                                                       |
+|$date1=             |parse        |02/15/2017 1:00:00 am                                          |
+|$date2=             |parse        |02/15/2017 1:00:00 pm                                          |
+|$diff=              |ticks between|$date1                                     |and|$date2         |
+|check               |echo         |$diff                                      |${difference}      |
+

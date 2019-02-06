@@ -1,0 +1,23 @@
+|script           |common functions                      |
+|$roughStartTime= |echo     |!today (dd-MMM-yyyy HH:mm:s)|
+|$roughStartTicks=|to ticks |$roughStartTime             |
+|$now1 =          |Ticks                                 |
+|$now2=           |Ticks                                 |
+|$now3=           |Ticks                                 |
+|$diff1=          |calculate|$now2 - $now1               |
+|$diff2=          |calculate|$now3 - $now2               |
+|is true          |$diff1 > 0                            |
+|is true          |$diff2 > 0                            |
+
+|script                                               |
+|$elapse1 =|Ticks since  |$now1                       |
+|$elapse2 =|Ticks since  |$roughStartTime             |
+|$elapse3= |Ticks since  |$roughStartTime             |
+|$elapse4= |Ticks since  |$roughStartTime             |
+|$diff1=   |calculate    |$elapse2 - $elapse1         |
+|check     |ticks between|$elapse1|and|$elapse2|$diff1|
+|$diff2=   |calculate    |$elapse3 - $elapse2         |
+|$diff3=   |calculate    |$elapse4 - $elapse3         |
+|is true   |$diff1 > 0                                |
+|is true   |$diff2 > 0                                |
+|is true   |$diff3 > 0                                |

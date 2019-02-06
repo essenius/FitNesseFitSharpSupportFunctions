@@ -1,0 +1,34 @@
+!define FileName {myfile.json}
+
+|library  |
+|Stopwatch|
+
+|script         |dictionary library          |!{name:bob, address:here}|
+|start stopwatch|1                                                     |
+|check          |count                       |2                        |
+|check          |get                         |address      |here       |
+|Add            |phone                       |value        |12345      |
+|set            |employed                    |to           |true       |
+|save file      |${FileName}                                           |
+|check          |file name                   |${FileName}              |
+|check          |read Stopwatch|1            |<1         |
+
+Create a new dictionary (different instance), and load the file we just saved. 
+Delete it then, so we don't leave a mess. Then check if the data loaded correctly
+
+!|script  |dictionary library               |
+|check    |count    |0                      |
+|load file|${FileName}                      |
+|delete file                                |
+|check    |count    |4                      |
+|check    |get      |name|=~/b.b/           |
+|ensure   |get      |employed               |
+|check    |read Stopwatch|1|<1|
+
+Check if we can load the dictionary into a variable and use that
+
+!|script                                                   |
+|$dict=|get dictionary                                     |
+|check |get                         |phone|from|$dict|12345|
+|check |echo                        |$dict|$dict           |
+|check |stop Stopwatch|1    |<1              |

@@ -1,0 +1,4 @@
+﻿1.5.6 Added UtcNow and UtcToday to Date.Parse, added new fixture functions Date.ParseFormatted, CommonFunctions.DateFormatted(Date,string)
+1.5.7 Refactored UniqueDateTime (removed duplication), added Date.ToLocal, Date.ToUtc, CommonFunctions.ToUtc(Date), CommonFunctions.ToLocal(Date). Added WaitSeconds test.
+2.0.1 Added documentation for several APIs
+2.0.2 Removed deprecated MemoFunction

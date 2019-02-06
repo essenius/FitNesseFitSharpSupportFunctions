@@ -1,0 +1,8 @@
+---
+Test
+---
+!define seconds {360}
+
+!|script|CommonFunctions |
+|wait   |${count}|seconds|
+|echo   |true            |

@@ -1,0 +1,32 @@
+!|script  |common functions            |
+|check    |calculate|2+3        |5     |
+|check    |calculate|7 / 3      |~=2.33|
+|check    |calculate|8 % 3      |2     |
+|$counter=|echo     |1                 |
+|$counter=|calculate|$counter+1        |
+|ensure   |is true  |$counter>1        |
+|check    |echo     |$counter   |2     |
+|$var=    |echo     |abcdef            |
+|check    |calculate|len('$var')|6     |
+
+!|script                                                              |
+|check |leftmost |5               |of|$var      |abcde                |
+|check |rightmost|3               |of|$var      |def                  |
+|check |do       |Length          |on|$var      |>5                   |
+|check |do       |Length          |on|-1234     |4<_<6                |
+|check |do       |Substring       |on|$var      |with param |4     |ef|
+|check |do       |Substring       |on|$var      |with params|[2, 2]|cd|
+|check |do       |Substring       |on|123456    |with params|[2, 2]|34|
+|check |do       |GetType         |on|1         |System.Int32         |
+|check |do       |GetType         |on|$var      |System.String        |
+|check |do       |GetType         |on|2147483648|System.Int64         |
+|check |do       |GetType         |on|true      |System.Boolean       |
+|check |do       |GetType         |on|23.2      |System.Decimal       |
+|check |do       |Math.Log10      |on|0.01      |-2                   |
+|reject|do       |Contains        |on|abcdef    |with param |dg       |
+|check |do       |byte.MaxValue   |on|          |255                  |
+|check |do       |decimal.MinusOne|-1                                 |
+|check |trim     |abc             |abc                                |
+|check |concat   |[a, b, c]       |abc                                |
+
+

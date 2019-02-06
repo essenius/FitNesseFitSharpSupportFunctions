@@ -1,0 +1,2 @@
+!path "SupportFunctions\SupportFunctions\bin\release\SupportFunctions.dll"
+!contents -R2 -g -p -f -h

@@ -1,0 +1,20 @@
+|Library|
+|Stopwatch|
+
+!|script|Common Functions|
+|Start Stopwatch|test1|
+|start stopwatch|test2|
+|start stopwatch|test3|
+|wait|0.2|seconds|
+|$time=|stop stopwatch|test1|
+|check|echo|$time|0.2<=_<0.25|
+|check|read stopwatch|test2|0.2<=_<0.25|
+|restart stopwatch|test3|
+|wait|0.2|seconds|
+|check|read stopwatch|test1|$time|
+|check|stop stopwatch|test2|0.4<=_<0.5|
+|check|stop stopwatch|test3|0.2<=_<0.25|
+|reset stopwatch|test1|
+|wait|0.2|seconds|
+|check|read stopwatch|test1|0|
+

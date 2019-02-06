@@ -1,0 +1,55 @@
+#!define TEST_RUNNER {e:\Apps\FitNesse\FitSharp40\RunnerW.exe}
+Now some characters that must be encoded such as <>&
+
+|Library     |
+|Echo Support|
+|Machine Info|
+
+We use this page to grab a table from, just as demo. 
+
+
+!|script   |dictionary library                            |
+|page root |http://localhost:${FITNESSE_PORT}/${PAGE_PATH}|
+|load table|main       |from page      |${PAGE_NAME}      |
+|check     |count      |5                                 |
+|check     |get        |name           |=~/b.b/           |
+|check     |get        |address        |there             |
+|$phone=   |get        |phone                             |
+|check     |echo       |$phone         |12344<_<12346     |
+|ensure    |get        |employed                          |
+|$dict=    |get dictionary                                |
+
+!|script                     |
+|$pageName=|echo|${PAGE_NAME}|
+
+|script                                        |
+|set       |phone|to     |2345                 |
+|save table|Main |to page|!-PersistToPageTest-!|
+#|set       |date|to     |!today (yyyy-MM-dd HH:mm:ss)|
+----
+Here is where the test ends. Below this are only test data tables
+
+Note that this test will fail the next time it is run, because the page has changed
+This also shows why it is kind of tricky to use this functionality
+
+Introduce an empty scenario so the tables don't break the test run
+
+|scenario|Dictionary _ _ _|Name, Key, Value|
+
+This is the table to be captured. 
+
+!|Dictionary|Having|Name|Main|
+|Key|Value|
+|name|bob|
+|address|there|
+|phone|2345|
+|employed|true|
+|date|2016-08-13 17:04:43|
+
+The following table should be ignored
+|Dictionary|having|Name|Wrong|
+|Key       |Value            |
+|name      |joop             |
+|address   |here             |
+|phone     |23456            |
+|employed  |false            |

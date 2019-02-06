@@ -1,0 +1,21 @@
+|Library     |
+|test control|
+
+The Stop Test If command throws a !-StopTestException-! if the parameter evaluates to true, or if it can't be parsed as a boolean
+Stop Test If Not throws the exception if the parameter evaluates to false, or if it can't be parsed as a boolean
+
+This table should not stop the test
+
+!|script                    |
+|$ok=            |echo|true |
+|stop test if not|$ok       |
+|$error=         |echo|false|
+|stop test if    |$error    |
+
+The next test should stop the test. 
+The Evaluate command throws an exception, so $calcResult is not defined. This means that FitNesse simply passed '$calcResult' to the fixture, which it can't parse as a boolean.
+
+|script                                                     |
+|$calcResult=|evaluate|irrelevant    |as    |unknownType    |
+|stop test if|$calcResult                                   |
+|$notset=    |echo    |this statement should not be executed|

@@ -1,0 +1,301 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation='TestData.xsd'>
+  <DimensionGridlineInterval range="0.02" interval="0.002" />
+  <DimensionGridlineInterval range="0.03" interval="0.005" />
+  <DimensionGridlineInterval range="0.004" interval="0.0005" />
+  <DimensionGridlineInterval range="0.07" interval="0.01" />
+  <DimensionGridlineInterval range="0.09" interval="0.01" />
+  <DimensionGridlineInterval range="0.1" interval="0.01" />
+  <DimensionGridlineInterval range="0.11" interval="0.02 " />
+  <DimensionGridlineInterval range="5" interval="0.5" />
+  <DimensionGridlineInterval range="235" interval="25" />
+  <DimensionGridlineInterval range="357" interval="50" />
+  <DimensionGridlineInterval range="798" interval="100" />
+  <DimensionGridlineInterval range="1366" interval="200" />
+  <DimensionGridlineInterval range="123456789" interval="20000000" />
+  <DimensionGridlineInterval range="1.23456789e+30" interval="2e+29" />
+  <DimensionGridlineInterval range="2.23456789e-30" interval="2.5e-31" />
+
+  <ExtensionFunctionInferType testcase="Double-Int" value1="12.5" value2="13" expectedType="System.Double" />
+  <ExtensionFunctionInferType testcase="Double-Bool" value1="12.5" value2="true" expectedType="System.String" />
+  <ExtensionFunctionInferType testcase="Double-Long" value1="1e15" value2="2147483648" expectedType="System.Double" />
+  <ExtensionFunctionInferType testcase="Double-String" value1="12.5" value2="Hi1" expectedType="System.String" />
+  <ExtensionFunctionInferType testcase="Double-Double" value1="12.5" value2="13.2" expectedType="System.Double" />
+  <ExtensionFunctionInferType testcase="Int-Long" value1="12" value2="2147483648" expectedType="System.Int64" />
+  <ExtensionFunctionInferType testcase="Int-Double" value1="12" value2="12.1" expectedType="System.Double" />
+  <ExtensionFunctionInferType testcase="Int-Bool" value1="12" value2="True" expectedType="System.String" />
+  <ExtensionFunctionInferType testcase="Int-String" value1="12" value2="Hi1" expectedType="System.String" />
+  <ExtensionFunctionInferType testcase="Int-Int" value1="12" value2="13" expectedType="System.Int32" />
+  <ExtensionFunctionInferType testcase="Long-Int" value1="2147483648" value2="12" expectedType="System.Int64" />
+  <ExtensionFunctionInferType testcase="Long-Long" value1="2147483648" value2="2147483648" expectedType="System.Int64" />
+  <ExtensionFunctionInferType testcase="Long-Double" value1="2147483648" value2="12.5" expectedType="System.Double" />
+  <ExtensionFunctionInferType testcase="Long-Bool" value1="2147483648" value2="False" expectedType="System.String" />
+  <ExtensionFunctionInferType testcase="Long-String" value1="2147483648" value2="Hi1" expectedType="System.String" />
+  <ExtensionFunctionInferType testcase="Bool-String" value1="False" value2="Hi1" expectedType="System.String" />
+  <ExtensionFunctionInferType testcase="Bool-Bool" value1="False" value2="True" expectedType="System.Boolean" />
+  <ExtensionFunctionInferType testcase="Bool-Double" value1="False" value2="12.5" expectedType="System.String" />
+  <ExtensionFunctionInferType testcase="String-Double" value1="Hi1" value2="1e10" expectedType="System.String" />
+  <ExtensionFunctionInferType testcase="Double-InfT-NaN" value1="Infinity" value2="NaN" expectedType="System.Double" />
+  <ExtensionFunctionInferType testcase="Double-InfS-NaN" value1="∞" value2="NaN" expectedType="System.Double" />
+
+  <MeasurementCompare testcase="0-All Good String" tolerance="0" compareType="System.String"
+                      expectedTimestamp="2016-12-24T00:14:00.0000000" expectedValue="Hi1" expectedIsGood="true"
+                      actualTimestamp="2016-12-24T00:14:00.0000000" actualValue="Hi1" actualIsGood="true"
+                      issue="None" resultTimeStamp="2016-12-24T00:14:00.0000000"
+                      resultExpectedValue="Hi1" resultExpectedIsGood="true" resultActualValue="Hi1"
+                      resultActualIsGood="true" />
+  <MeasurementCompare testcase="1-All Good Int" tolerance="0" compareType="System.Int32"
+                      expectedTimestamp="2016-12-24T00:15:00.0000000" expectedValue="12345" expectedIsGood="true"
+                      actualTimestamp="2016-12-24T00:15:00.0000000" actualValue="12345" actualIsGood="true"
+                      issue="None" resultTimeStamp="2016-12-24T00:15:00.0000000"
+                      resultExpectedValue="12345" resultExpectedIsGood="true" resultActualValue="12345"
+                      resultActualIsGood="true" />
+  <MeasurementCompare testcase="2-All Good Double" tolerance="0.001" compareType="System.Double"
+                      expectedTimestamp="2016-12-24T00:16:00.0000000" expectedValue="12.1" expectedIsGood="true"
+                      actualTimestamp="2016-12-24T00:16:00.0000000" actualValue="12.1" actualIsGood="true"
+                      issue="None" resultTimeStamp="2016-12-24T00:16:00.0000000"
+                      resultExpectedValue="12.1" resultExpectedIsGood="true" resultActualValue="12.1"
+                      resultActualIsGood="true" />
+  <MeasurementCompare testcase="3-Type Mismatch" tolerance="0"
+                      expectedTimestamp="2016-12-24T00:17:00.0000000" expectedValue="12.1" expectedIsGood="true"
+                      actualTimestamp="2016-12-24T00:17:00.0000000" actualValue="Hi1" actualIsGood="true"
+                      issue="ValueIssue" resultTimeStamp="2016-12-24T00:17:00.0000000"
+                      resultExpectedValue="12.1" resultExpectedIsGood="true" resultActualValue="Hi1"
+                      resultActualIsGood="true" />
+  <MeasurementCompare testcase="4-Double Mismatch" tolerance="0.001:4"
+                      expectedTimestamp="2016-12-24T00:19:00.0000000" expectedValue="12.0" expectedIsGood="true"
+                      actualTimestamp="2016-12-24T00:19:00.0000000" actualValue="12.01" actualIsGood="true"
+                      issue="OutsideToleranceIssue" resultTimeStamp="2016-12-24T00:19:00.0000000" resultDelta="0.01"
+                      resultExpectedValue="12" resultExpectedIsGood="true" resultActualValue="12.01"
+                      resultActualIsGood="true" />
+  <MeasurementCompare testcase="5-Double Mismatch With 5 Significant Digits" tolerance="0.0012345678:5"
+                      expectedTimestamp="2016-12-24T00:19:00.0000000" expectedValue="12.00345678901"
+                      expectedIsGood="true"
+                      actualTimestamp="2016-12-24T00:19:00.0000000" actualValue="12.00567890123" actualIsGood="true"
+                      issue="OutsideToleranceIssue" resultTimeStamp="2016-12-24T00:19:00.0000000"
+                      resultExpectedValue="12.0034568" resultActualValue="12.0056789" resultDelta="0.0022221"
+                      resultExpectedIsGood="true" resultActualIsGood="true" />
+  <MeasurementCompare testcase="6-Double NaN" tolerance="0.0012345678:5"
+                      expectedTimestamp="2016-12-24T00:19:00.0000000" expectedValue="NaN" expectedIsGood="true"
+                      actualTimestamp="2016-12-24T00:19:00.0000000" actualValue="NaN" actualIsGood="true"
+                      issue="None" resultTimeStamp="2016-12-24T00:19:00.0000000"
+                      resultExpectedValue="NaN" resultActualValue="NaN" resultExpectedIsGood="true"
+                      resultActualIsGood="true" />
+  <MeasurementCompare testcase="7-Long Mismatch" tolerance="1"
+                      expectedTimestamp="2016-12-24T00:20:00.0000000" expectedValue="636188256000010001"
+                      expectedIsGood="true"
+                      actualTimestamp="2016-12-24T00:20:00.0000000" actualValue="636188256000010000"
+                      actualIsGood="true"
+                      issue="WithinTolerance" resultTimeStamp="2016-12-24T00:20:00.0000000"
+                      resultExpectedValue="636188256000010001" resultActualValue="636188256000010000"
+                      resultExpectedIsGood="true" resultActualIsGood="true" />
+  <MeasurementCompare testcase="8-Int Mismatch" tolerance="0"
+                      expectedTimestamp="2016-12-24T00:20:00.0000000" expectedValue="11" expectedIsGood="true"
+                      actualTimestamp="2016-12-24T00:20:00.0000000" actualValue="12" actualIsGood="true"
+                      issue="ValueIssue" resultTimeStamp="2016-12-24T00:20:00.0000000"
+                      resultExpectedValue="11" resultActualValue="12" resultExpectedIsGood="true"
+                      resultActualIsGood="true" />
+  <MeasurementCompare testcase="9-Bool Mismatch" tolerance="0"
+                      expectedTimestamp="2016-12-24T00:20:00.0000000" expectedValue="True" expectedIsGood="true"
+                      actualTimestamp="2016-12-24T00:20:00.0000000" actualValue="False" actualIsGood="true"
+                      issue="ValueIssue" resultTimeStamp="2016-12-24T00:20:00.0000000"
+                      resultExpectedValue="True" resultActualValue="False" resultExpectedIsGood="true"
+                      resultActualIsGood="true" />
+  <MeasurementCompare testcase="10-Is Good Mismatch" tolerance="0"
+                      expectedTimestamp="2016-12-24T00:21:00.0000000" expectedValue="11" expectedIsGood="true"
+                      actualTimestamp="2016-12-24T00:21:00.0000000" actualValue="11" actualIsGood="false"
+                      issue="IsGoodIssue" resultTimeStamp="2016-12-24T00:21:00.0000000"
+                      resultExpectedValue="11" resultActualValue="11" resultExpectedIsGood="true"
+                      resultActualIsGood="false" />
+  <MeasurementCompare testcase="11-Missing Actual" tolerance="0"
+                      expectedTimestamp="2016-12-24T00:21:00.0000000" expectedValue="11" expectedIsGood="true"
+                      issue="Missing" resultTimeStamp="2016-12-24T00:21:00.0000000"
+                      resultExpectedValue="11" resultExpectedIsGood="true" />
+  <MeasurementCompare testcase="12-Missing Expected" tolerance="0"
+                      actualTimestamp="2016-12-24T00:22:00.0000000" actualValue="11" actualIsGood="true"
+                      issue="Surplus" resultTimeStamp="2016-12-24T00:22:00.0000000"
+                      resultActualValue="11" resultActualIsGood="true" />
+
+  <TimeSeriesComparisonDoTable testcase="double_0.1%_0.001" tolerance="0.1%;0.001" usedTolerance="0.001 (1.9 %)"
+                               displayTolerance=" [tolerance: 0.001 (1.9 %)]" isGood="True" failures="4" datapoints="7">
+    <data timestamp="1980-01-01T00:00:00.0000000" exists="both" expectedValue="50" actualValue="50" pass="True"
+          value="pass:50" delta="report:" deltaPercentage="report:" />
+    />
+    <data timestamp="1980-01-01T00:03:00.0000000" exists="both" expectedValue="50.0000000414593" actualValue="50"
+          pass="True" value="pass:50 ~= 50.0000000414593" delta="pass:4.14593E-08" deltaPercentage="pass:0.0 %" />
+    />
+    <data timestamp="1980-01-01T00:06:00.0000000" exists="both" expectedValue="49.9752835096486"
+          actualValue="49.9739350539787" pass="False" value="fail:49.9739350539787 != 49.9752835096486"
+          delta="fail:0.0013484556699" deltaPercentage="fail:2.6 %" />
+    <data timestamp="1980-01-01T00:09:00.0000000" exists="both" expectedValue="49.9480367888638"
+          actualValue="49.9469639682952" pass="False" value="fail:49.9469639682952 != 49.9480367888638"
+          delta="fail:0.0010728205686" deltaPercentage="fail:2.1 %" />
+    <data timestamp="1980-01-01T00:12:00.0000000" exists="both" expectedValue="49.9540729336722"
+          actualValue="49.9547465725331" pass="True" value="pass:49.9547465725331 ~= 49.9540729336722"
+          delta="pass:0.0006736388609" deltaPercentage="pass:1.3 %" />
+    <data timestamp="1980-01-01T00:15:00.0000000" exists="both" expectedValue="49.9626680632779"
+          actualValue="49.964159146503" pass="False" value="fail:49.964159146503 != 49.9626680632779"
+          delta="fail:0.0014910832251" deltaPercentage="fail:2.9 %" />
+    <data timestamp="1980-01-01T00:18:00.0000000" exists="both" expectedValue="49.9626680632779" actualValue="False"
+          pass="False" value="fail:[False] expected [49.9626680632779]" delta="report:" deltaPercentage="report:" />
+  </TimeSeriesComparisonDoTable>
+
+  <TimeSeriesComparisonDoTable testcase="double_0.001_rounded" tolerance="0.1%:4;0.001:4" usedTolerance="0.001 (1.9 %)"
+                               displayTolerance=" [tolerance: 0.001 (1.9 %)]" isGood="True" failures="4" datapoints="7">
+    <data timestamp="1980-01-01T00:00:00.0000000" exists="both" expectedValue="50" actualValue="50" pass="True" />
+    <data timestamp="1980-01-01T00:03:00.0000000" exists="both" expectedValue="50.0000000414593" actualValue="50"
+          pass="True" />
+    <data timestamp="1980-01-01T00:06:00.0000000" exists="both" expectedValue="49.9752835096486"
+          actualValue="49.9739350539787" pass="False" value="fail:49.973935 != 49.975284" delta="fail:0.001348"
+          deltaPercentage="fail:2.6 %" />
+    <data timestamp="1980-01-01T00:09:00.0000000" exists="both" expectedValue="49.9480367888638"
+          actualValue="49.9469639682952" pass="False" value="fail:49.946964 != 49.948037" delta="fail:0.001073"
+          deltaPercentage="fail:2.1 %" />
+    <data timestamp="1980-01-01T00:12:00.0000000" exists="both" expectedValue="49.9540729336722"
+          actualValue="49.9547465725331" pass="True" />
+    <data timestamp="1980-01-01T00:15:00.0000000" exists="both" expectedValue="49.9626680632779"
+          actualValue="49.964159146503" pass="False" value="fail:49.964159 != 49.962668" delta="fail:0.001491"
+          deltaPercentage="fail:2.9 %" />
+    <data timestamp="1980-01-01T00:18:00.0000000" exists="both" expectedValue="49.9626680632779" actualValue="False"
+          pass="False" value="fail:[False] expected [49.962668]" />
+  </TimeSeriesComparisonDoTable>
+
+  <TimeSeriesComparisonDoTable testcase="int_0.1%_missing_surplus" tolerance="0.1%" usedTolerance="2 (0.1 %)"
+                               displayTolerance=" [tolerance: 2 (0.1 %)]" isGood="True " failures="3" datapoints="5">
+    <data timestamp="1990-01-01T00:00:00.0000000" exists="both" expectedValue="0" actualValue="0" pass="True" />
+    <data timestamp="1990-01-01T00:03:00.0000000" exists="both" expectedValue="2000" actualValue="1999" pass="True" />
+    <data timestamp="1990-01-01T00:06:00.0000000" exists="expected" expectedValue="1000" pass="False"
+          timestampOut="fail:[1990-01-01T00:06:00.0000000] missing" />
+    <data timestamp="1990-01-01T00:09:00.0000000" exists="actual" actualValue="500" pass="False"
+          timestampOut="fail:[1990-01-01T00:09:00.0000000] surplus" />
+    <data timestamp="1990-01-01T00:12:00.0000000" exists="both" expectedValue="500" actualValue="503" pass="False"
+          value="fail:503 != 500" delta="fail:3" deltaPercentage="fail:0.2 %" />
+  </TimeSeriesComparisonDoTable>
+
+  <TimeSeriesComparisonDoTable testcase="string" isGood="True" failures="1" datapoints="2">
+    <data timestamp="2000-01-01T00:00:00.0000000" exists="both" expectedValue="hi1" actualValue="hi1" pass="True" />
+    <data timestamp="2000-01-01T00:03:00.0000000" exists="both" expectedValue="hi2" actualValue="hi3" pass="False"
+          value="fail:[hi3] expected [hi2]" />
+  </TimeSeriesComparisonDoTable>
+
+  <TimeSeriesComparisonDoTable testcase="bool" isGood="True" failures="5" datapoints="6">
+    <data timestamp="2010-01-01T00:00:00.0000000" exists="both" expectedValue="True" actualValue="True" pass="True" />
+    <data timestamp="2010-01-01T00:03:00.0000000" exists="both" expectedValue="True" actualValue="False" pass="False"
+          value="fail:[False] expected [True]" />
+    <data timestamp="2010-01-01T00:06:00.0000000" exists="both" expectedValue="True" actualValue="hi3" pass="False"
+          value="fail:[hi3] expected [True]" />
+    <data timestamp="2010-01-01T00:09:00.0000000" exists="both" expectedValue="True" actualValue="True"
+          expectedIsGood="True" actualIsGood="False" pass="False" value="pass:True"
+          isGood="fail:[False] expected [True]" />
+    <data timestamp="2010-01-01T00:12:00.0000000" exists="expected" expectedValue="True" pass="False"
+          timestampOut="fail:[2010-01-01T00:12:00.0000000] missing" value="fail:[True] missing"
+          isGood="fail:[True] missing" />
+    <data timestamp="2010-01-01T00:15:00.0000000" exists="actual" actualValue="True" pass="False"
+          timestampOut="fail:[2010-01-01T00:15:00.0000000] surplus" value="fail:[True] surplus"
+          isGood="fail:[True] surplus" />
+  </TimeSeriesComparisonDoTable>
+
+  <TimeSeriesComparisonDoTable testcase="allgood" isGood="True" failures="0" datapoints="4">
+    <data timestamp="2010-01-01T00:00:00.0000000" exists="both" expectedValue="10" actualValue="10" pass="True" />
+    <data timestamp="2010-01-01T03:03:00.0000000" exists="both" expectedValue="12" actualValue="12" pass="True" />
+    <data timestamp="2010-01-01T06:06:00.0000000" exists="both" expectedValue="13" actualValue="13" pass="True" />
+    <data timestamp="2010-01-01T12:12:00.0000000" exists="both" expectedValue="14" actualValue="14" pass="True" />
+  </TimeSeriesComparisonDoTable>
+
+  <TimeSeriesDataRange testcase="0-100" count="10" lowValue="0" highValue="100" expectedRange="100" />
+  <TimeSeriesDataRange testcase="-50-100" count="12" lowValue="-50" highValue="100" expectedRange="150" />
+  <TimeSeriesDataRange testcase="-1e10-1e10" count="14" lowValue="-1e10" highValue="1e10" expectedRange="2e10" />
+  <TimeSeriesDataRange testcase="-0.2-1.6" count="16" lowValue="-0.2" highValue="1.6" expectedRange="1.8" />
+  <TimeSeriesDataRange testcase="empty" count="0" expectedRange="0" />
+  <TimeSeriesDataRange testcase="bool" count="2" lowValue="false" highValue="true" expectedRange="0" />
+  <TimeSeriesDataRange testcase="string" count="2" lowValue="hi1" highValue="hi2" expectedRange="0" />
+
+  <TimeSeriesDataType testcase="Double-Int-50" count="50" value1="12.5" value2="13" expectedType="System.Double" />
+  <TimeSeriesDataType testcase="Double-Bool-10" count="10" value1="12.5" value2="true" expectedType="System.String" />
+  <TimeSeriesDataType testcase="Double-Long-4" count="4" value1="1e10" value2="2147483648" expectedType="System.Double" />
+  <TimeSeriesDataType testcase="Double-String-3" count="3" value1="12.5" value2="Hi1" expectedType="System.String" />
+  <TimeSeriesDataType testcase="Double-Double-7" count="7" value1="12.5" value2="13.2" expectedType="System.Double" />
+  <TimeSeriesDataType testcase="Int-Long-25" count="25" value1="12" value2="2147483648" expectedType="System.Int64" />
+  <TimeSeriesDataType testcase="Int-Double-12" count="12" value1="12" value2="12.1" expectedType="System.Double" />
+  <TimeSeriesDataType testcase="Int-Bool-2" count="2" value1="12" value2="True" expectedType="System.String" />
+  <TimeSeriesDataType testcase="Int-String-5" count="5" value1="12" value2="Hi1" expectedType="System.String" />
+  <TimeSeriesDataType testcase="Int-Int-6" count="6" value1="12" value2="13" expectedType="System.Int32" />
+  <TimeSeriesDataType testcase="Long-Int-8" count="8" value1="2147483648" value2="12" expectedType="System.Int64" />
+  <TimeSeriesDataType testcase="Long-Long-9" count="9000" value1="2147483648" value2="2147483648"
+                      expectedType="System.Int64" />
+  <TimeSeriesDataType testcase="Long-Double-11" count="11" value1="2147483648" value2="12.5"
+                      expectedType="System.Double" />
+  <TimeSeriesDataType testcase="Long-Bool-13" count="13" value1="2147483648" value2="False"
+                      expectedType="System.String" />
+  <TimeSeriesDataType testcase="Long-String-14" count="14" value1="2147483648" value2="Hi1"
+                      expectedType="System.String" />
+  <TimeSeriesDataType testcase="Bool-String-15" count="15" value1="False" value2="Hi1" expectedType="System.String" />
+  <TimeSeriesDataType testcase="Bool-Bool-16" count="16" value1="False" value2="True" expectedType="System.Boolean" />
+  <TimeSeriesDataType testcase="Bool-Double-18" count="18" value1="False" value2="12.5" expectedType="System.String" />
+  <TimeSeriesDataType testcase="String-Double-17" count="17" value1="Hi1" value2="1e10" expectedType="System.String" />
+  <TimeSeriesDataType testcase="Double-Inf-NaN" count="2" value1="Infinity" value2="NaN" expectedType="System.Double" />
+
+  <Tolerance testcase="AbsRelNoDigits" range="25.0" tolerance="0.0123456789;0.01%" expectedValue="0.0123456789"
+             expectedPrecision="" expectedRendering="0.0123456789 (0.0 %)" />
+  <Tolerance testcase="Abs2Rel3_AbsWins" range="25.0" tolerance="0.123:2;0.1234%:3" expectedValue="0.12"
+             expectedPrecision="2" expectedRendering="0.12 (0.5 %)" />
+  <Tolerance testcase="Abs3Rel2_AbsWins" range="25.0" tolerance="0.0123:3;0.01234%:2" expectedValue="0.0123"
+             expectedPrecision="4" expectedRendering="0.0123 (0.0 %)" />
+  <Tolerance testcase="Abs2Rel3_RelWins" range="100" tolerance="0.0111:2;0.01234%:3" expectedValue="0.0123"
+             expectedPrecision="4" expectedRendering="0.0123 (0.0 %)" />
+  <Tolerance testcase="Abs3Rel2_RelWins" range="100" tolerance="0.0111:3;0.01234%:2" expectedValue="0.012"
+             expectedPrecision="3" expectedRendering="0.012 (0.0 %)" />
+  <Tolerance testcase="Abs3Rel2_NullRange" range="null" tolerance="0.0111:3;0.01234%:2" expectedValue="0.0111"
+             expectedPrecision="4" expectedRendering="0.0111" />
+
+  <ToleranceValue testcase="doubleAbsolute" range="250.0" tolerance="0.1" expectedOutput="0.1" />
+  <ToleranceValue testcase="doubleAbsolute2Digits" range="250.0" tolerance="0.123:2" expectedOutput="0.12" />
+  <ToleranceValue testcase="doubleRelative" range="123.4567890" tolerance="0.1%" expectedOutput="0.123456789" />
+  <ToleranceValue testcase="doubleRelative5Digits" range="123.4567890" tolerance="0.1%:5" expectedOutput="0.12346" />
+  <ToleranceValue testcase="doubleAbsoluteEpsilon" range="1" tolerance="epsilon" expectedOutput="4.94065645841247E-324" />
+  <ToleranceValue testcase="intAbsolute" range="10000" tolerance="2" expectedOutput="2" />
+  <ToleranceValue testcase="intRelative" range="20000" tolerance="0.2%" expectedOutput="40" />
+  <ToleranceValue testcase="intNoTolerance" range="10000" tolerance="" expectedOutput="0" />
+  <ToleranceValue testcase="doubleNoTolerance" range="123.45" tolerance="" expectedOutput="0" />
+  <ToleranceValue testcase="NoRange" range="" tolerance="0.2%" expectedOutput="0" />
+
+
+  <ValueCompare testcase="0-All Good String" tolerance="0" compareType="System.String" expected="Hi1" actual="Hi1"
+                issue="None" resultExpected="Hi1" resultActual="Hi1" />
+  <ValueCompare testcase="1-All Good Int" tolerance="0" compareType="System.Int32" expected="12345" actual="12345"
+                issue="None" resultExpected="12345" resultActual="12345" />
+  <ValueCompare testcase="2-All Good Double" tolerance="0.001" compareType="System.Double" expected="12.0"
+                actual="12.0009"
+                issue="WithinTolerance" resultExpected="12" resultActual="12.0009" />
+  <ValueCompare testcase="3-Type Mismatch" tolerance="0" expected="12.1" actual="Hi1"
+                issue="ValueIssue" resultExpected="12.1" resultActual="Hi1" />
+  <ValueCompare testcase="4-Double Mismatch" tolerance="0.001:4" expected="12.0" actual="12.01"
+                issue="OutsideToleranceIssue" resultDelta="0.01" resultExpected="12" resultActual="12.01" />
+  <ValueCompare testcase="5-Double Mismatch With 5 Significant Digits" tolerance="0.0012345678:5"
+                expected="12.00345678901"
+                actual="12.00567890123" issue="OutsideToleranceIssue" resultExpected="12.0034568"
+                resultActual="12.0056789" resultDelta="0.0022221" />
+  <ValueCompare testcase="6-Double NaN" tolerance="0.0012345678:5" expected="NaN" actual="NaN"
+                issue="None" resultExpected="NaN" resultActual="NaN" />
+  <ValueCompare testcase="7-Long Mismatch" tolerance="1" expected="636188256000010001" actual="636188256000010000"
+                issue="WithinTolerance" resultExpected="636188256000010001" resultActual="636188256000010000" />
+  <ValueCompare testcase="8-Int Mismatch" tolerance="0" expected="11" actual="12"
+                issue="ValueIssue" resultExpected="11" resultActual="12" />
+  <ValueCompare testcase="9-Bool Mismatch" tolerance="0" expected="True" actual="False"
+                issue="ValueIssue" resultExpected="True" resultActual="False" />
+  <ValueCompare testcase="10-Missing Actual" tolerance="0" expected="11"
+                issue="Missing" resultExpected="11" />
+  <ValueCompare testcase="11-Missing Expected" tolerance="0" actual="11.0"
+                issue="Surplus" resultActual="11" />
+  <ValueCompare testcase="12-Double 0" tolerance="2%" expected="0.00E+00" actual="0"
+                issue="WithinTolerance" resultExpected="0" resultActual="0" />
+  <ValueCompare testcase="13-Double null" issue="None" />
+  <ValueCompare testcase="14-Infinity Text" expected="Infinity" actual="∞" tolerance="0.0001"
+                compareType="System.Double"
+                issue="None" resultExpected="Infinity" resultActual="Infinity" />
+  <ValueCompare testcase="15--Infinity Text" expected="-∞" actual="-Infinity" tolerance="0.0001"
+                compareType="System.Double"
+                issue="None" resultExpected="-Infinity" resultActual="-Infinity" />
+</items>

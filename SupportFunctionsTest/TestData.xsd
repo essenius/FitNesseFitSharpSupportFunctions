@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="items">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" name="DimensionGridlineInterval">
+          <xs:complexType>
+            <xs:attribute name="range" type="xs:double" use="required" />
+            <xs:attribute name="interval" type="xs:float" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="ExtensionFunctionInferType">
+          <xs:complexType>
+            <xs:attribute name="testcase" type="xs:string" use="required" />
+            <xs:attribute name="value1" type="xs:string" use="required" />
+            <xs:attribute name="value2" type="xs:string" use="required" />
+            <xs:attribute name="expectedType" type="xs:string" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="MeasurementCompare">
+          <xs:complexType>
+            <xs:attribute name="testcase" type="xs:string" use="required" />
+            <xs:attribute name="tolerance" type="xs:string" use="required" />
+            <xs:attribute name="compareType" type="xs:string" use="optional" />
+            <xs:attribute name="expectedTimestamp" type="xs:dateTime" use="optional" />
+            <xs:attribute name="expectedValue" type="xs:string" use="optional" />
+            <xs:attribute name="expectedIsGood" type="xs:boolean" use="optional" />
+            <xs:attribute name="actualTimestamp" type="xs:dateTime" use="optional" />
+            <xs:attribute name="actualValue" type="xs:string" use="optional" />
+            <xs:attribute name="actualIsGood" type="xs:boolean" use="optional" />
+            <xs:attribute name="issue" type="xs:string" use="required" />
+            <xs:attribute name="resultTimeStamp" type="xs:dateTime" use="required" />
+            <xs:attribute name="resultExpectedValue" type="xs:string" use="optional" />
+            <xs:attribute name="resultExpectedIsGood" type="xs:boolean" use="optional" />
+            <xs:attribute name="resultActualValue" type="xs:string" use="optional" />
+            <xs:attribute name="resultActualIsGood" type="xs:boolean" use="optional" />
+            <xs:attribute name="resultDelta" type="xs:decimal" use="optional" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="TimeSeriesComparisonDoTable">
+          <xs:complexType mixed="true">
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="data">
+                <xs:complexType>
+                  <xs:attribute name="timestamp" type="xs:dateTime" use="required" />
+                  <xs:attribute name="exists" type="xs:string" use="required" />
+                  <xs:attribute name="expectedValue" type="xs:string" use="optional" />
+                  <xs:attribute name="actualValue" type="xs:string" use="optional" />
+                  <xs:attribute name="pass" type="xs:string" use="required" />
+                  <xs:attribute name="value" type="xs:string" use="optional" />
+                  <xs:attribute name="delta" type="xs:string" use="optional" />
+                  <xs:attribute name="deltaPercentage" type="xs:string" use="optional" />
+                  <xs:attribute name="timestampOut" type="xs:string" use="optional" />
+                  <xs:attribute name="expectedIsGood" type="xs:string" use="optional" />
+                  <xs:attribute name="actualIsGood" type="xs:string" use="optional" />
+                  <xs:attribute name="isGood" type="xs:string" use="optional" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="testcase" type="xs:string" use="required" />
+            <xs:attribute name="tolerance" type="xs:string" use="optional" />
+            <xs:attribute name="usedTolerance" type="xs:string" use="optional" />
+            <xs:attribute name="displayTolerance" type="xs:string" use="optional" />
+            <xs:attribute name="isGood" type="xs:string" use="required" />
+            <xs:attribute name="failures" type="xs:unsignedByte" use="required" />
+            <xs:attribute name="datapoints" type="xs:unsignedByte" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="TimeSeriesDataRange">
+          <xs:complexType>
+            <xs:attribute name="testcase" type="xs:string" use="required" />
+            <xs:attribute name="count" type="xs:unsignedByte" use="required" />
+            <xs:attribute name="lowValue" type="xs:string" use="optional" />
+            <xs:attribute name="highValue" type="xs:string" use="optional" />
+            <xs:attribute name="expectedRange" type="xs:double" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="TimeSeriesDataType">
+          <xs:complexType>
+            <xs:attribute name="testcase" type="xs:string" use="required" />
+            <xs:attribute name="count" type="xs:unsignedShort" use="required" />
+            <xs:attribute name="value1" type="xs:string" use="required" />
+            <xs:attribute name="value2" type="xs:string" use="required" />
+            <xs:attribute name="expectedType" type="xs:string" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="Tolerance">
+          <xs:complexType>
+            <xs:attribute name="testcase" type="xs:string" use="required" />
+            <xs:attribute name="range" type="xs:string" use="required" />
+            <xs:attribute name="tolerance" type="xs:string" use="required" />
+            <xs:attribute name="expectedValue" type="xs:decimal" use="required" />
+            <xs:attribute name="expectedPrecision" type="xs:string" use="required" />
+            <xs:attribute name="expectedRendering" type="xs:string" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="ToleranceValue">
+          <xs:complexType>
+            <xs:attribute name="testcase" type="xs:string" use="required" />
+            <xs:attribute name="range" type="xs:string" use="required" />
+            <xs:attribute name="tolerance" type="xs:string" use="required" />
+            <xs:attribute name="expectedOutput" type="xs:double" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="ValueCompare">
+          <xs:complexType>
+            <xs:attribute name="testcase" type="xs:string" use="required" />
+            <xs:attribute name="tolerance" type="xs:string" use="optional" />
+            <xs:attribute name="compareType" type="xs:string" use="optional" />
+            <xs:attribute name="expected" type="xs:string" use="optional" />
+            <xs:attribute name="actual" type="xs:string" use="optional" />
+            <xs:attribute name="issue" type="xs:string" use="required" />
+            <xs:attribute name="resultExpected" type="xs:string" use="optional" />
+            <xs:attribute name="resultActual" type="xs:string" use="optional" />
+            <xs:attribute name="resultDelta" type="xs:decimal" use="optional" />
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
