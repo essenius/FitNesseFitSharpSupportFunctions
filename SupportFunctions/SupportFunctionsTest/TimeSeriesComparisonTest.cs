@@ -26,60 +26,15 @@ namespace SupportFunctionsTest
     [TestClass]
     public class TimeSeriesComparisonTest
     {
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "False positive")]
+        public TestContext TestContext { get; set; }
+
         private static void AddIfExistInTestSpec(IDictionary<string, string> result, DataRow entry, string key)
         {
             var value = ColumnWithDefault(entry, key, null)?.ToString();
             // value returns empty string if not specified, so we need to check for that too.
-            if (!string.IsNullOrEmpty(value))
-            {
-                result.Add(key, value);
-            }
+            if (!string.IsNullOrEmpty(value)) result.Add(key, value);
         }
-
-        private static void AssertIssue(string expectedIssue, IReadOnlyList<object> row)
-        {
-            Assert.IsNotNull(row);
-            var issue = row[5] as Collection<string>;
-            Assert.IsNotNull(issue);
-            Assert.AreEqual(expectedIssue, issue[1]);
-        }
-
-        private static object ColumnWithDefault(DataRow row, string columnName, object defaultValue)
-        {
-            return row.Table.Columns.Cast<DataColumn>().Any(column => column.ColumnName == columnName)
-                ? row[columnName]
-                : defaultValue;
-        }
-
-        private static Measurement CreateMeasurementFrom(DataRow row, object defaultValue, object defaultIsGood,
-            string valueField, string isGoodField)
-        {
-            var value = ValueWithDefault(row[valueField], defaultValue);
-            var isGood = ValueWithDefault(row[isGoodField], defaultIsGood);
-            //($"Creating {valueField}: {row["timestamp"]}, {value}, {isGood}").Log();
-            return new Measurement(row["timestamp"], value, isGood);
-        }
-
-        private static string GetTimestamp(string cell)
-        {
-            // remove the pass/fail indicator by keeping everything after the first colon
-            var timestamp = cell.Split(new[] {':'}, 2)[1];
-            if (string.IsNullOrEmpty(timestamp))
-            {
-                return null;
-            }
-            if (timestamp.StartsWith("["))
-            {
-                timestamp = timestamp.Substring(1, timestamp.IndexOf("]", StringComparison.Ordinal) - 1);
-            }
-            return timestamp;
-        }
-
-        private static object ValueWithDefault(object value, object defaultValue) =>
-            string.IsNullOrEmpty(value.ToString()) ? defaultValue : value;
-
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "False positive")]
-        public TestContext TestContext { get; set; }
 
         private void ArrangeDataForDoTable(IEnumerable<DataRow> data, TimeSeries expectedSeries, TimeSeries actualSeries,
             IDictionary<string, Dictionary<string, string>> expectedResults)
@@ -113,8 +68,41 @@ namespace SupportFunctionsTest
             }
         }
 
-        [TestMethod, TestCategory("Unit"), ExpectedExceptionWithMessage(typeof(ArgumentException),
-             "Duplicate timestamp in expected: 2004-03-24T00:00:00.0000000")]
+        private static void AssertIssue(string expectedIssue, IReadOnlyList<object> row)
+        {
+            Assert.IsNotNull(row);
+            var issue = row[5] as Collection<string>;
+            Assert.IsNotNull(issue);
+            Assert.AreEqual(expectedIssue, issue[1]);
+        }
+
+        private static object ColumnWithDefault(DataRow row, string columnName, object defaultValue)
+        {
+            return row.Table.Columns.Cast<DataColumn>().Any(column => column.ColumnName == columnName) ? row[columnName] : defaultValue;
+        }
+
+        private static Measurement CreateMeasurementFrom(DataRow row, object defaultValue, object defaultIsGood, string valueField,
+            string isGoodField)
+        {
+            var value = ValueWithDefault(row[valueField], defaultValue);
+            var isGood = ValueWithDefault(row[isGoodField], defaultIsGood);
+            return new Measurement(row["timestamp"], value, isGood);
+        }
+
+        private static string GetTimestamp(string cell)
+        {
+            // remove the pass/fail indicator by keeping everything after the first colon
+            var timestamp = cell.Split(new[] {':'}, 2)[1];
+            if (string.IsNullOrEmpty(timestamp)) return null;
+            if (timestamp.StartsWith("["))
+            {
+                timestamp = timestamp.Substring(1, timestamp.IndexOf("]", StringComparison.Ordinal) - 1);
+            }
+            return timestamp;
+        }
+
+        [TestMethod, TestCategory("Unit"),
+         ExpectedExceptionWithMessage(typeof(ArgumentException), "Duplicate timestamp in expected: 2004-03-24T00:00:00.0000000")]
         public void TimeSeriesComparisonDoTableExceptionTest()
         {
             var expected = new TimeSeries();
@@ -127,8 +115,8 @@ namespace SupportFunctionsTest
         }
 
         [TestMethod, TestCategory("Unit"), DeploymentItem("TestData.xml"),
-         DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", "|DataDirectory|\\TestData.xml",
-             "TimeSeriesComparisonDoTable", DataAccessMethod.Sequential)]
+         DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", "|DataDirectory|\\TestData.xml", "TimeSeriesComparisonDoTable",
+             DataAccessMethod.Sequential)]
         public void TimeSeriesComparisonDoTableTest()
         {
             var testCase = TestContext.DataRow["testcase"].ToString();
@@ -159,10 +147,8 @@ namespace SupportFunctionsTest
             foreach (Collection<object> row in result.Skip(1))
             {
                 var timestamp = GetTimestamp(row[0].ToString());
-                Assert.IsFalse(string.IsNullOrEmpty(timestamp),
-                    $"Timestamp not found in actual result [{row[0]}] for {testCase}");
-                Assert.IsTrue(expectedResults.ContainsKey(timestamp),
-                    $"Timestamp [{timestamp}] not found in expected result for {testCase}");
+                Assert.IsFalse(string.IsNullOrEmpty(timestamp), $"Timestamp not found in actual result [{row[0]}] for {testCase}");
+                Assert.IsTrue(expectedResults.ContainsKey(timestamp), $"Timestamp [{timestamp}] not found in expected result for {testCase}");
                 var expectedResult = expectedResults[timestamp];
                 var actualResult = new Dictionary<string, object>
                 {
@@ -182,8 +168,7 @@ namespace SupportFunctionsTest
             }
             Assert.AreEqual(TestContext.DataRow["failures"].To<long>(), timeSeriesComparison.FailureCount, $"FailureCount {testCase}");
             Assert.AreEqual(TestContext.DataRow["datapoints"].To<long>(), timeSeriesComparison.PointCount, $"PointCount {testCase}");
-            Assert.AreEqual(TestContext.DataRow["usedTolerance"].ToString(), timeSeriesComparison.UsedTolerance,
-                $"UsedTolerance {testCase}");
+            Assert.AreEqual(TestContext.DataRow["usedTolerance"].ToString(), timeSeriesComparison.UsedTolerance, $"UsedTolerance {testCase}");
         }
 
         [TestMethod, TestCategory("Unit")]
@@ -324,14 +309,8 @@ namespace SupportFunctionsTest
                 var timestamp = timestampBase.AddSeconds(time);
                 var expectedValue = TimeSeriesChartTest.SecondOrderResponse(time, zetaExpected, omega, theta);
                 var actualValue = TimeSeriesChartTest.SecondOrderResponse(time, zetaActual, omega, theta);
-                if (actualValue > maxY)
-                {
-                    maxY = actualValue;
-                }
-                if (actualValue < minY)
-                {
-                    minY = actualValue;
-                }
+                if (actualValue > maxY) maxY = actualValue;
+                if (actualValue < minY) minY = actualValue;
 
                 var okValue = time < 12 || time > 16 && time < 25 || time > 25.5;
 
@@ -386,10 +365,7 @@ namespace SupportFunctionsTest
             var result = timeseriesComparison.GraphX(320, 200);
             var expectedResult = File.ReadAllText("Base64SimpleResult.html");
             Assert.AreEqual(expectedResult, result);
-            var parameters = new Dictionary<string, string>
-            {
-                {"start timestamp", "2004-03-24"}
-            };
+            var parameters = new Dictionary<string, string> { {"start timestamp", "2004-03-24"} };
             var result2 = timeseriesComparison.Graph(parameters);
             Assert.AreEqual("no data", result2);
         }
@@ -432,5 +408,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual("0", subset.First().Value.Value.ActualValueOut);
             Assert.AreEqual("10", subset.Last().Value.Value.ActualValueOut);
         }
+
+        private static object ValueWithDefault(object value, object defaultValue) =>
+            string.IsNullOrEmpty(value.ToString()) ? defaultValue : value;
     }
 }

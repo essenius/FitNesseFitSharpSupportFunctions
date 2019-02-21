@@ -70,10 +70,7 @@ namespace SupportFunctionsTest
             var compareType = string.IsNullOrEmpty(compareTypeString)
                 ? expected?.Value.InferType()
                 : Type.GetType(compareTypeString);
-            if (compareType == null)
-            {
-                $"compareType == null for {testName}".Log();
-            }
+            if (compareType == null) $"compareType == null for {testName}".Log();
             ("Precision parsed:" + tolerance.Precision).Log();
 
             var actualResult = new MeasurementComparison(expected, actual, tolerance, compareType);
@@ -82,14 +79,12 @@ namespace SupportFunctionsTest
             var resultExpectedValue = TestContext.DataRow.ValueIfExists("resultExpectedValue");
             if (!string.IsNullOrEmpty(resultExpectedValue))
             {
-                Assert.AreEqual(resultExpectedValue, actualResult.Value.ExpectedValueOut ?? string.Empty,
-                    testName + "-ExpectedValue");
+                Assert.AreEqual(resultExpectedValue, actualResult.Value.ExpectedValueOut ?? string.Empty, testName + "-ExpectedValue");
             }
             var resultActualValue = TestContext.DataRow.ValueIfExists("resultActualValue");
             if (!string.IsNullOrEmpty(resultActualValue))
             {
-                Assert.AreEqual(resultActualValue, actualResult.Value.ActualValueOut ?? string.Empty,
-                    testName + "-ActualValue");
+                Assert.AreEqual(resultActualValue, actualResult.Value.ActualValueOut ?? string.Empty, testName + "-ActualValue");
             }
             var resultDelta = TestContext.DataRow.ValueIfExists("resultDelta");
             if (!string.IsNullOrEmpty(resultDelta))
@@ -99,14 +94,12 @@ namespace SupportFunctionsTest
             var resultExpectedIsGood = TestContext.DataRow.ValueIfExists("resultExpectedIsGood");
             if (!string.IsNullOrEmpty(resultExpectedIsGood))
             {
-                Assert.AreEqual(resultExpectedIsGood.To<bool>(), actualResult.IsGood.ExpectedValueOut.To<bool>(),
-                    testName + "-ExpectedIsGood");
+                Assert.AreEqual(resultExpectedIsGood.To<bool>(), actualResult.IsGood.ExpectedValueOut.To<bool>(), testName + "-ExpectedIsGood");
             }
             var resultActualIsGood = TestContext.DataRow.ValueIfExists("resultActualIsGood");
             if (!string.IsNullOrEmpty(resultActualIsGood))
             {
-                Assert.AreEqual(resultActualIsGood.To<bool>(), actualResult.IsGood.ActualValueOut.To<bool>(),
-                    testName + "ActualIsGood");
+                Assert.AreEqual(resultActualIsGood.To<bool>(), actualResult.IsGood.ActualValueOut.To<bool>(), testName + "ActualIsGood");
             }
         }
     }

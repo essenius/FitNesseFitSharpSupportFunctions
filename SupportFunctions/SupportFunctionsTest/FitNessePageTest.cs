@@ -23,7 +23,6 @@ namespace SupportFunctionsTest
     {
         private const string AddChildPartialRequest = Server + "DataStore?addChild&pageName=PageName&pageContent=";
         private const string DeletePageRequest = Server + "DataStore.PageName?deletePage&confirmed=yes" + UriSeparator;
-
         private const string PageDataRequest = Server + "DataStore.PageName?pageData" + UriSeparator;
 
         //private const string SaveDataPartialRequest = Server + "DataStore.PageName?saveData&editTime=1&pageContent=";
@@ -40,8 +39,7 @@ namespace SupportFunctionsTest
             var fitnessePage = new FitNessePageMock(null);
             var target = new PrivateObject(fitnessePage, new PrivateType(typeof(FitNessePage)));
             target.Invoke("AddPage", "PageName", lines);
-            const string expected =
-                AddChildPartialRequest + "#escape characters<grin>&\n!|Dictionary|TableName|\n|key1|value1|\n\f";
+            const string expected = AddChildPartialRequest + "#escape characters<grin>&\n!|Dictionary|TableName|\n|key1|value1|\n\f";
             Assert.AreEqual(expected, fitnessePage.UsedUri);
         }
 
@@ -55,8 +53,7 @@ namespace SupportFunctionsTest
         }
 
         [TestMethod, TestCategory("Unit"),
-         ExpectedExceptionWithMessage(typeof(FormatException),
-             "Second column must be called 'Value' instead of 'Waarde'")]
+         ExpectedExceptionWithMessage(typeof(FormatException), "Second column must be called 'Value' instead of 'Waarde'")]
         public void FitNessePageCheckColumnNamesWithWrongSecondColumnNameTrowsFormatException()
         {
             var target = new PrivateType(typeof(FitNessePage));
@@ -89,8 +86,7 @@ namespace SupportFunctionsTest
             const string pageContent = "\nq\n|Dictionary|TableName|\n|key|value|\n|key1|value1|\nq\n";
             var fitnessePage = new FitNessePageMock(pageContent);
             Assert.IsTrue(fitnessePage.DeleteTableFromPage("TableName", "PageName"));
-            const string expected =
-                PageDataRequest + DeletePageRequest + AddChildPartialRequest + "\nq\nq\n" + UriSeparator;
+            const string expected = PageDataRequest + DeletePageRequest + AddChildPartialRequest + "\nq\nq\n" + UriSeparator;
             Assert.AreEqual(expected, fitnessePage.UsedUri);
             Assert.IsFalse(fitnessePage.DeleteTableFromPage("WrongTableName", "PageName"),
                 "Non-existing table returns false");
@@ -259,8 +255,7 @@ namespace SupportFunctionsTest
             var target = new PrivateObject(fitnessePage, new PrivateType(typeof(FitNessePage)));
             target.Invoke("RemoveTableAt", 2);
             target.Invoke("SavePage", "PageName");
-            const string expected =
-                PageDataRequest + DeletePageRequest + AddChildPartialRequest + "\nq\nq\n" + UriSeparator;
+            const string expected = PageDataRequest + DeletePageRequest + AddChildPartialRequest + "\nq\nq\n" + UriSeparator;
             Assert.AreEqual(expected, fitnessePage.UsedUri);
         }
 
@@ -330,8 +325,7 @@ namespace SupportFunctionsTest
                 var expected = AddChildPartialRequest + testcase[2];
 
                 // we're only interested in the last result
-                var actual =
-                    fitnessePage.UsedUri.Split(new[] {UriSeparator}, StringSplitOptions.RemoveEmptyEntries).Last();
+                var actual = fitnessePage.UsedUri.Split(new[] {UriSeparator}, StringSplitOptions.RemoveEmptyEntries).Last();
                 Assert.AreEqual(expected, actual, "Test case " + testcase[0]);
             }
         }
@@ -353,8 +347,7 @@ namespace SupportFunctionsTest
             var target = new PrivateType(typeof(FitNessePage));
             foreach (var testcase in testcases)
             {
-                Assert.IsFalse((bool)target.InvokeStatic("TableIsNamed", testcase, "TestTable"),
-                    "Testcase: " + testcase);
+                Assert.IsFalse((bool)target.InvokeStatic("TableIsNamed", testcase, "TestTable"), "Testcase: " + testcase);
             }
         }
 
@@ -370,8 +363,7 @@ namespace SupportFunctionsTest
             var target = new PrivateType(typeof(FitNessePage));
             foreach (var testcase in testcases)
             {
-                Assert.IsTrue((bool)target.InvokeStatic("TableIsNamed", testcase, "TestTable"),
-                    "Testcase: " + testcase);
+                Assert.IsTrue((bool)target.InvokeStatic("TableIsNamed", testcase, "TestTable"), "Testcase: " + testcase);
             }
         }
     }

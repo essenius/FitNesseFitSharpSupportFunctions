@@ -34,10 +34,7 @@ namespace SupportFunctions.Utilities
 
         public static void AddWithCheck<T>(this IDictionary<DateTime, T> dictionary, DateTime key, T value, string id)
         {
-            if (dictionary.ContainsKey(key))
-            {
-                throw new ArgumentException(Invariant($"Duplicate timestamp in {id}: {key.ToRoundTripFormat()}"));
-            }
+            if (dictionary.ContainsKey(key)) throw new ArgumentException(Invariant($"Duplicate timestamp in {id}: {key.ToRoundTripFormat()}"));
             dictionary.Add(key, value);
         }
 
@@ -52,26 +49,11 @@ namespace SupportFunctions.Utilities
         /// <returns>the value cast to the type it could be parsed into</returns>
         public static object CastToInferredType(this string input)
         {
-            if (int.TryParse(input, out var intValue))
-            {
-                return intValue;
-            }
-            if (long.TryParse(input, out var longValue))
-            {
-                return longValue;
-            }
-            if (decimal.TryParse(input, out var decimalValue))
-            {
-                return decimalValue;
-            }
-            if (double.TryParse(input, out var doubleValue))
-            {
-                return doubleValue;
-            }
-            if (bool.TryParse(input, out var boolValue))
-            {
-                return boolValue;
-            }
+            if (int.TryParse(input, out var intValue)) return intValue;
+            if (long.TryParse(input, out var longValue)) return longValue;
+            if (decimal.TryParse(input, out var decimalValue)) return decimalValue;
+            if (double.TryParse(input, out var doubleValue)) return doubleValue;
+            if (bool.TryParse(input, out var boolValue)) return boolValue;
             return input;
         }
 
@@ -83,22 +65,10 @@ namespace SupportFunctions.Utilities
         public static Type InferType(this object value)
         {
             var stringValue = value?.ToString();
-            if (int.TryParse(stringValue, NumberStyles.Integer, InvariantCulture, out _))
-            {
-                return typeof(int);
-            }
-            if (long.TryParse(stringValue, NumberStyles.Integer, InvariantCulture, out _))
-            {
-                return typeof(long);
-            }
-            if (double.TryParse(stringValue, NumberStyles.Any, InvariantCulture, out _))
-            {
-                return typeof(double);
-            }
-            if (double.TryParse(stringValue, NumberStyles.Any, CurrentCulture, out _))
-            {
-                return typeof(double);
-            }
+            if (int.TryParse(stringValue, NumberStyles.Integer, InvariantCulture, out _)) return typeof(int);
+            if (long.TryParse(stringValue, NumberStyles.Integer, InvariantCulture, out _)) return typeof(long);
+            if (double.TryParse(stringValue, NumberStyles.Any, InvariantCulture, out _)) return typeof(double);
+            if (double.TryParse(stringValue, NumberStyles.Any, CurrentCulture, out _)) return typeof(double);
             return bool.TryParse(stringValue, out _) ? typeof(bool) : typeof(string);
         }
 
@@ -111,21 +81,12 @@ namespace SupportFunctions.Utilities
         public static Type InferType(this object value, Type currentType)
         {
             var newType = value.InferType();
-            if (currentType == null || currentType == newType)
-            {
-                return newType;
-            }
+            if (currentType == null || currentType == newType) return newType;
             // if one is long and the other int, we move to long
-            if (ArePair(currentType, newType, typeof(long), typeof(int)))
-            {
-                return typeof(long);
-            }
+            if (ArePair(currentType, newType, typeof(long), typeof(int))) return typeof(long);
             // if one is double and the other int or long, we move to double
             // in all other cases (including bool/numerical pairs) we move to string
-            if (ArePair(currentType, newType, typeof(double), typeof(long)))
-            {
-                return typeof(double);
-            }
+            if (ArePair(currentType, newType, typeof(double), typeof(long))) return typeof(double);
             return ArePair(currentType, newType, typeof(double), typeof(int)) ? typeof(double) : typeof(string);
         }
 
@@ -133,10 +94,7 @@ namespace SupportFunctions.Utilities
             (startTimestamp == null || pointInTime >= startTimestamp) &&
             (endTimestamp == null || pointInTime <= endTimestamp);
 
-        public static void Log(this object info)
-        {
-            Console.WriteLine(info.To<string>());
-        }
+        public static void Log(this object info) => Console.WriteLine(info.To<string>());
 
         /// <summary>
         ///     Convert a value to a specified type
@@ -203,16 +161,10 @@ namespace SupportFunctions.Utilities
         public static Type ToType(this string type)
         {
             var typeKey = type.ToUpperInvariant();
-            if (TypeDictionary.ContainsKey(typeKey))
-            {
-                return TypeDictionary[typeKey];
-            }
+            if (TypeDictionary.ContainsKey(typeKey)) return TypeDictionary[typeKey];
             // none of the standard types, check if we can map it
             var evalType = Type.GetType(type);
-            if (evalType != null)
-            {
-                return evalType;
-            }
+            if (evalType != null) return evalType;
             // don't know what this is, give up.
             throw new ArgumentException(Invariant($"Type '{type}' not recognized."), nameof(type));
         }

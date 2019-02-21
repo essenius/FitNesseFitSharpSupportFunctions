@@ -101,6 +101,7 @@
     <Compile Include="TableRendererTest.cs" />
     <Compile Include="FixtureDocumentationTest.cs" />
     <Compile Include="StopExceptionTest.cs" />
+    <Compile Include="DocumentationAttributeTest.cs" />
     <Compile Include="ValueComparisonMock.cs" />
     <Compile Include="ValueComparisonTest.cs" />
     <Compile Include="WikiFileTest.cs" />

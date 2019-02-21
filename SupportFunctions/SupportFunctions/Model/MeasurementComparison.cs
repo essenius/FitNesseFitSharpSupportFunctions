@@ -17,11 +17,9 @@ namespace SupportFunctions.Model
 {
     internal class MeasurementComparison : IMeasurementComparison
     {
-        public MeasurementComparison(Measurement expected, Measurement actual, Tolerance tolerance = null,
-            Type compareType = null)
+        public MeasurementComparison(Measurement expected, Measurement actual, Tolerance tolerance = null, Type compareType = null)
         {
-            Timestamp = new ValueComparison(expected?.Timestamp.ToRoundTripFormat(),
-                actual?.Timestamp.ToRoundTripFormat());
+            Timestamp = new ValueComparison(expected?.Timestamp.ToRoundTripFormat(), actual?.Timestamp.ToRoundTripFormat());
             Value = new ValueComparison(expected?.Value, actual?.Value, tolerance, compareType);
             IsGood = new ValueComparison(expected?.IsGood, actual?.IsGood);
         }
@@ -34,19 +32,10 @@ namespace SupportFunctions.Model
         {
             get
             {
-                if (Timestamp.Outcome != CompareOutcome.None)
-                {
-                    return Timestamp.Outcome.ToString();
-                }
+                if (Timestamp.Outcome != CompareOutcome.None) return Timestamp.Outcome.ToString();
                 var result = new List<string>();
-                if (Value.Outcome != CompareOutcome.None)
-                {
-                    result.Add(Value.Outcome.ToString());
-                }
-                if (!IsGood.IsOk())
-                {
-                    result.Add("IsGoodIssue");
-                }
+                if (Value.Outcome != CompareOutcome.None) result.Add(Value.Outcome.ToString());
+                if (!IsGood.IsOk()) result.Add("IsGoodIssue");
                 return result.Count == 0 ? CompareOutcome.None.ToString() : string.Join("; ", result);
             }
         }

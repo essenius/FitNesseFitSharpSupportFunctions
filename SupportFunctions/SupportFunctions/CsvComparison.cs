@@ -21,7 +21,7 @@ using static System.FormattableString;
 
 namespace SupportFunctions
 {
-    [SuppressMessage("ReSharper", "UnusedParameter.Global")]
+    [SuppressMessage("ReSharper", "UnusedParameter.Global"), Documentation("Comparing two CSVs")]
     public class CsvComparison
     {
         private const string ColumnNameCaption = "Column Name";
@@ -60,16 +60,16 @@ namespace SupportFunctions
             _result = null;
         }
 
-        public static Dictionary<string, string> FixtureDocumentation { get; } = new Dictionary<string, string>
-        {
-            {string.Empty, "Comparing two CSVs"},
-            {nameof(DoTable), "The result of the comparison in a Table Table format"},
-            {nameof(DeltaWith), "Inernal use only"},
-            {nameof(ErrorCount), "The number of items with a comparison error"},
-            {nameof(MakeQueryTable), "Inernal use only"},
-            {nameof(Parse), "Enables assigning a FitNesse symbol to parameters of this type"},
-            {nameof(Query), "Return the errors of a CSV comparison in a Query Table format"}
-        };
+        //public static Dictionary<string, string> FixtureDocumentation { get; } = new Dictionary<string, string>
+        // {
+        //{string.Empty, "Comparing two CSVs"},
+        //{nameof(DoTable), "The result of the comparison in a Table Table format"},
+        //{nameof(DeltaWith), "Inernal use only"},
+        //{nameof(ErrorCount), "The number of items with a comparison error"},
+        //{nameof(MakeQueryTable), "Inernal use only"},
+        //{nameof(Parse), "Enables assigning a FitNesse symbol to parameters of this type"},
+        //{nameof(Query), "Return the errors of a CSV comparison in a Query Table format"}
+        //};
 
         private List<CellComparison> Result
         {
@@ -80,11 +80,31 @@ namespace SupportFunctions
             }
         }
 
+        internal IEnumerable<CellComparison> DeltaWith(CsvComparison otherComparison)
+        {
+            var comparer = new RowColumnComparer();
+            var common = Result.Intersect(otherComparison.Result, comparer).ToList();
+            var difference = Result.Except(common, comparer).Union(otherComparison.Result.Except(common, comparer));
+            return difference;
+        }
+
         private static string DisplayColumn(int columnNo) => Invariant($"{columnNo + 1} ({columnNo.ToExcelColumnName()})");
 
         // header is -1, internal data row counting starts at 0. 
         // People used to Excel will expect counting to start at 1
         private static string DisplayRow(int rowNo) => Invariant($"{rowNo + 2}");
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures"), SuppressMessage("Microsoft.Usage",
+             "CA1801:ReviewUnusedParameters", MessageId = "tableIn",
+             Justification = "FitNesse API spec"), Documentation("The result of the comparison in a Table Table format")]
+        public Collection<object> DoTable(Collection<Collection<object>> tableIn)
+        {
+            var renderer = new TableRenderer<CellComparison>(GetTableValues);
+            return renderer.MakeTableTable(Result, tableIn);
+        }
+
+        [Documentation("The number of items with a comparison error")]
+        public int ErrorCount() => Result.Count;
 
         internal static Collection<object> MakeQueryTable(IEnumerable<CellComparison> result)
         {
@@ -96,9 +116,12 @@ namespace SupportFunctions
             return rows;
         }
 
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "input", Justification = "FitNesse requirement")]
-        // We need this method to be able to assign a FitNesse symbol to parameters of this type.
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "input", Justification = "FitNesse requirement"),
+         Documentation("Enables assigning a FitNesse symbol to parameters of this type")]
         public static CsvComparison Parse(string input) => null;
+
+        [Documentation("Return the errors of a CSV comparison in a Query Table format")]
+        public Collection<object> Query() => MakeQueryTable(Result);
 
         private static Collection<object> QueryRow(CellComparison row) => new Collection<object>
         {
@@ -111,27 +134,6 @@ namespace SupportFunctions
             new Collection<object> {DeltaPercentageCaption, row.Cell.DeltaPercentageMessage},
             new Collection<object> {IssueCaption, row.Cell.Outcome.ToString()}
         };
-
-        internal IEnumerable<CellComparison> DeltaWith(CsvComparison otherComparison)
-        {
-            var comparer = new RowColumnComparer();
-            var common = Result.Intersect(otherComparison.Result, comparer).ToList();
-            var difference = Result.Except(common, comparer).Union(otherComparison.Result.Except(common, comparer));
-            return difference;
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures"), SuppressMessage("Microsoft.Usage",
-             "CA1801:ReviewUnusedParameters", MessageId = "tableIn",
-             Justification = "FitNesse API spec")]
-        public Collection<object> DoTable(Collection<Collection<object>> tableIn)
-        {
-            var renderer = new TableRenderer<CellComparison>(GetTableValues);
-            return renderer.MakeTableTable(Result, tableIn);
-        }
-
-        public int ErrorCount() => Result.Count;
-
-        public Collection<object> Query() => MakeQueryTable(Result);
 
         private void RunComparison()
         {

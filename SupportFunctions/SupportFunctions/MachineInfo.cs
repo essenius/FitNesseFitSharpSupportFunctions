@@ -10,7 +10,6 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
@@ -19,18 +18,14 @@ namespace SupportFunctions
 {
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Used by FitSharp"),
      SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used by FitSharp"),
-     SuppressMessage("Microsoft.Design", "CA1053:StaticHolderTypesShouldNotHaveConstructors", Justification = "Used by FitSharp")]
+     SuppressMessage("Microsoft.Design", "CA1053:StaticHolderTypesShouldNotHaveConstructors", Justification = "Used by FitSharp"),
+     Documentation("Machine information")]
     public class MachineInfo
     {
-        public static Dictionary<string, string> FixtureDocumentation { get; } = new Dictionary<string, string>
-        {
-            {string.Empty, "Machine information"},
-            {nameof(FullyQualifiedDomainName), "Return the FQDN of the current machine, i.e. machine name with full domain"},
-            {nameof(FullyQualifiedDomainName) + "`1", "Return the FQDN of computerName, i.e. machine name with full domain"}
-        };
-
+        [Documentation("Return the FQDN of the current machine, i.e. machine name with full domain")]
         public static string FullyQualifiedDomainName() => FullyQualifiedDomainName(Environment.MachineName);
 
+        [Documentation("Return the FQDN of computerName, i.e. machine name with full domain")]
         public static string FullyQualifiedDomainName(string computerName)
         {
             Debug.Assert(computerName != null, "computerName != null");

@@ -31,16 +31,10 @@ namespace SupportFunctionsTest
         {
             var testName = "Test " + TestContext.DataRow["testcase"];
             var expected = TestContext.DataRow["expected"].ToString();
-            if (string.IsNullOrEmpty(expected))
-            {
-                expected = null;
-            }
+            if (string.IsNullOrEmpty(expected)) expected = null;
 
             var actual = TestContext.DataRow["actual"].ToString();
-            if (string.IsNullOrEmpty(actual))
-            {
-                actual = null;
-            }
+            if (string.IsNullOrEmpty(actual)) actual = null;
 
             var tolerance = Tolerance.Parse(TestContext.DataRow["tolerance"].ToString());
             ("Precision parsed:" + tolerance.Precision).Log();

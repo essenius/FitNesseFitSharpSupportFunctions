@@ -203,9 +203,7 @@ namespace SupportFunctionsTest
 
             Assert.IsTrue(ticksElapsed1 > 0);
             Assert.IsTrue(ticksElapsed2 > ticksElapsed1);
-            var ticksBetween = CommonFunctions.TicksBetweenAnd(
-                Date.Parse(firstCheck.ToString()),
-                Date.Parse(secondCheck.ToString()));
+            var ticksBetween = CommonFunctions.TicksBetweenAnd(Date.Parse(firstCheck.ToString()),Date.Parse(secondCheck.ToString()));
             ("Ticks between: " + ticksBetween).Log();
             Assert.IsTrue(ticksBetween > 0);
             var ticks2 = CommonFunctions.Ticks;
@@ -236,29 +234,5 @@ namespace SupportFunctionsTest
 
         [TestMethod, TestCategory("Unit")]
         public void CommonFunctionsTrimTest() => Assert.AreEqual("abc", CommonFunctions.Trim("  abc   "));
-
-        //[TestMethod, TestCategory("Experiments")]
-        public void TimerTest()
-        {
-            var ticks = DateTime.Now.Ticks;
-            var same = 0L;
-            for (var i = 0; i < 100000; i++)
-            {
-                if (ticks != DateTime.Now.Ticks)
-                {
-                    if (same != 0)
-                    {
-                        ("same: " + same).Log();
-                    }
-                    same = 0;
-                    ticks = DateTime.Now.Ticks;
-                    ticks.Log();
-                }
-                else
-                {
-                    same++;
-                }
-            }
-        }
     }
 }

@@ -20,6 +20,7 @@ using SupportFunctions.Utilities;
 
 namespace SupportFunctions
 {
+    [Documentation("Compares two time series and reports results tabularly or graphically")]
     public class TimeSeriesComparison
     {
         private const string DeltaCaption = "Delta";
@@ -52,6 +53,7 @@ namespace SupportFunctions
         private double _minValue;
         private double _timeSpanSeconds;
 
+        [Documentation("Compares two time series and reports results tabularly or graphically")]
         public TimeSeriesComparison(TimeSeries expected, TimeSeries actual, Tolerance tolerance)
         {
             _expected = expected ?? new TimeSeries();
@@ -60,40 +62,23 @@ namespace SupportFunctions
             _result = new MeasurementComparisonDictionary();
         }
 
-        public TimeSeriesComparison(TimeSeries expected, TimeSeries actual)
-            : this(expected, actual, Tolerance.Parse(""))
+        public TimeSeriesComparison(TimeSeries expected, TimeSeries actual) : this(expected, actual, Tolerance.Parse(""))
         {
         }
 
-        public static Dictionary<string, string> FixtureDocumentation { get; } = new Dictionary<string, string>
-        {
-            {string.Empty, "Compares two time series and reports results tabularly or graphically"},
-            {nameof(BaseTimestamp), "Timestamp of the first data point"},
-            {nameof(DoTable), "Table interface, providing full details about the comparison."},
-            {nameof(FailureCount), "the number of failures in the comparison"},
-            {nameof(Graph), "html img element with an in-line base-64 html image containing a chart of the comparison"},
-            {
-                nameof(Graph) + "`1",
-                "Graph with optional parameters: Width, Height, StartTimestamp, EndTimestamp, MinValue, MaxValue"
-            },
-            {nameof(GraphX), "Shorthand for Graph with a certain width and height; other parameters default"},
-            {nameof(MaxValue), "maximal value of the time series if numerical, 0 if not numerical"},
-            {nameof(MinValue), "minimal value of the time series if numerical, 0 if not numerical"},
-            {nameof(PointCount), "The number of data points in the comparison"},
-            {nameof(Query), "Query interface, returning the comparison failures"},
-            {nameof(RunComparison), "Execute a comparison. Normally done implicitly"},
-            {nameof(TimeSpanSeconds), "Time span in seconds between last and first data point"},
-            {nameof(UsedTolerance), "The tolerance that was used in the comparison"}
-        };
-
+        [Documentation("Timestamp of the first data point")]
         public Date BaseTimestamp => DoOperation(comparison => comparison._baseTimestamp);
 
+        [Documentation("the number of failures in the comparison")]
         public long FailureCount => DoOperation(comparison => comparison._result.Values.Count(result => !result.IsOk()));
 
+        [Documentation("maximal value of the time series if numerical, 0 if not numerical")]
         public double MaxValue => DoOperation(comparison => comparison._maxValue);
 
+        [Documentation("minimal value of the time series if numerical, 0 if not numerical")]
         public double MinValue => DoOperation(comparison => comparison._minValue);
 
+        [Documentation("The number of data points in the comparison")]
         public long PointCount => DoOperation(comparison => comparison._result.Count);
 
         private MeasurementComparisonDictionary Result
@@ -105,42 +90,11 @@ namespace SupportFunctions
             }
         }
 
+        [Documentation("Time span in seconds between last and first data point")]
         public double TimeSpanSeconds => DoOperation(comparison => comparison._timeSpanSeconds);
 
+        [Documentation("The tolerance that was used in the comparison")]
         public string UsedTolerance => DoOperation(comparison => comparison._tolerance.ToString());
-
-        private static Dictionary<DateTime, Measurement> DictionaryFrom(IEnumerable<Measurement> measurements,
-            string tag)
-        {
-            var dictionary = new Dictionary<DateTime, Measurement>();
-            foreach (var measurement in measurements)
-            {
-                measurement.IsChecked = false;
-                dictionary.AddWithCheck(measurement.Timestamp, measurement, tag);
-            }
-            return dictionary;
-        }
-
-        private static double? GetValueWithDefault(double? parameterInput, bool useNull, double fallback) =>
-            parameterInput ?? (useNull ? (double?) null : fallback);
-
-        private static double Max(double value1, double value2)
-        {
-            if (double.IsNaN(value1))
-            {
-                return value2;
-            }
-            return double.IsNaN(value2) ? value1 : Math.Max(value1, value2);
-        }
-
-        private static double Min(double value1, double value2)
-        {
-            if (double.IsNaN(value1))
-            {
-                return value2;
-            }
-            return double.IsNaN(value2) ? value1 : Math.Min(value1, value2);
-        }
 
         private void CompareExpectedToActuals(IReadOnlyDictionary<DateTime, Measurement> actualDictionary)
         {
@@ -148,24 +102,15 @@ namespace SupportFunctions
             {
                 actualDictionary.TryGetValue(expectedEntry.Timestamp, out var actual);
                 var comparison = new MeasurementComparison(expectedEntry, actual, _tolerance, _compareType);
-                if (actual != null)
-                {
-                    actual.IsChecked = true;
-                }
+                if (actual != null) actual.IsChecked = true;
                 _result.AddWithCheck(expectedEntry.Timestamp, comparison, "expected");
             }
         }
 
         private string CreateGraph(Dictionary<string, string> rawParameters)
         {
-            if (_result.Count == 0)
-            {
-                return NoDataCaption;
-            }
-            if (!_compareType.IsNumeric())
-            {
-                return "no numeric comparison";
-            }
+            if (_result.Count == 0) return NoDataCaption;
+            if (!_compareType.IsNumeric()) return "no numeric comparison";
 
             var parameters = new TimeSeriesGraphParameters(rawParameters);
             var startTimestamp = parameters.StartTimestamp;
@@ -174,10 +119,7 @@ namespace SupportFunctions
             var minValue = GetValueWithDefault(parameters.MinValue, recalculateNeeded, MinValue);
             var maxValue = GetValueWithDefault(parameters.MaxValue, recalculateNeeded, MaxValue);
             var dataSubset = recalculateNeeded ? _result.Subset(startTimestamp, endTimestamp) : _result;
-            if (dataSubset.Count == 0)
-            {
-                return NoDataCaption;
-            }
+            if (dataSubset.Count == 0) return NoDataCaption;
             var yDimension = Dimension.GetExtremeValues(dataSubset.Values, minValue, maxValue);
             startTimestamp = startTimestamp ?? dataSubset.Keys.First();
             endTimestamp = endTimestamp ?? dataSubset.Keys.Last();
@@ -202,11 +144,7 @@ namespace SupportFunctions
                     new Collection<string> {TimestampCaption, comparison.Timestamp.ActualValueOut},
                     new Collection<string> {ValueCaption, string.Empty + comparison.Value.ValueMessage},
                     new Collection<string> {DeltaCaption, string.Empty + comparison.Value.DeltaMessage},
-                    new Collection<string>
-                    {
-                        DeltaPercentageCaption,
-                        string.Empty + comparison.Value.DeltaPercentageMessage
-                    },
+                    new Collection<string> {DeltaPercentageCaption, string.Empty + comparison.Value.DeltaPercentageMessage},
                     new Collection<string> {IsGoodCaption, string.Empty + comparison.IsGood.ValueMessage},
                     new Collection<string> {IssueCaption, comparison.OutcomeMessage}
                 };
@@ -215,19 +153,28 @@ namespace SupportFunctions
             return rows;
         }
 
+        private static Dictionary<DateTime, Measurement> DictionaryFrom(IEnumerable<Measurement> measurements, string tag)
+        {
+            var dictionary = new Dictionary<DateTime, Measurement>();
+            foreach (var measurement in measurements)
+            {
+                measurement.IsChecked = false;
+                dictionary.AddWithCheck(measurement.Timestamp, measurement, tag);
+            }
+            return dictionary;
+        }
+
         // most functions visible to FitSharp require the comparison to be run first, 
         // but we don't want to execute the comparison in the constructor. This method provides 
         // a wrapper around the comparison execution so the property/method code becomes simpler.
         private T DoOperation<T>(Func<TimeSeriesComparison, T> operation)
         {
-            if (_result.Count == 0)
-            {
-                RunComparison();
-            }
+            if (_result.Count == 0) RunComparison();
             return operation(this);
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "FitSharp interface spec")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "FitSharp interface spec"),
+         Documentation("Table interface, providing full details about the comparison.")]
         public Collection<object> DoTable(Collection<Collection<object>> tableIn)
         {
             var renderer = new TableRenderer<IMeasurementComparison>(GetTableValues);
@@ -235,13 +182,16 @@ namespace SupportFunctions
             return resultTable;
         }
 
+        private static double? GetValueWithDefault(double? parameterInput, bool useNull, double fallback) =>
+            parameterInput ?? (useNull ? (double?) null : fallback);
+
+        [Documentation("html img element with an in-line base-64 html image containing a chart of the comparison")]
         public string Graph() => Graph(new Dictionary<string, string>());
 
-        public string Graph(Dictionary<string, string> rawParameters)
-        {
-            return DoOperation(comparison => comparison.CreateGraph(rawParameters));
-        }
+        [Documentation("Graph with optional parameters: Width, Height, StartTimestamp, EndTimestamp, MinValue, MaxValue")]
+        public string Graph(Dictionary<string, string> rawParameters) => DoOperation(comparison => comparison.CreateGraph(rawParameters));
 
+        [Documentation("Shorthand for Graph with a certain width and height; other parameters default")]
         public string GraphX(int width, int height)
         {
             var dict = new Dictionary<string, string>
@@ -252,11 +202,22 @@ namespace SupportFunctions
             return Graph(dict);
         }
 
-        public Collection<object> Query()
+        private static double Max(double value1, double value2)
         {
-            return DoOperation(comparison => comparison.CreateQueryResult());
+            if (double.IsNaN(value1)) return value2;
+            return double.IsNaN(value2) ? value1 : Math.Max(value1, value2);
         }
 
+        private static double Min(double value1, double value2)
+        {
+            if (double.IsNaN(value1)) return value2;
+            return double.IsNaN(value2) ? value1 : Math.Min(value1, value2);
+        }
+
+        [Documentation("Query interface, returning the comparison failures")]
+        public Collection<object> Query() => DoOperation(comparison => comparison.CreateQueryResult());
+
+        [Documentation("Execute a comparison. Normally done implicitly")]
         public void RunComparison()
         {
             // Load both time series if needed
@@ -264,10 +225,7 @@ namespace SupportFunctions
             _expected.Load();
             _actual.Load();
 
-            if (_expected.Measurements.Count + _actual.Measurements.Count == 0)
-            {
-                return;
-            }
+            if (_expected.Measurements.Count + _actual.Measurements.Count == 0) return;
 
             var actualDictionary = DictionaryFrom(_actual.Measurements, "actual");
             var metaDataExpected = new TimeSeriesMetadata<Measurement>(_expected.Measurements, point => point.Value);
@@ -288,8 +246,7 @@ namespace SupportFunctions
             foreach (var actual in actualDictionary.Values.Where(s => !s.IsChecked))
                 // Add with a check for duplicates that gives a bit more meaningful error than the default message
             {
-                _result.AddWithCheck(actual.Timestamp, new MeasurementComparison(null, actual, _tolerance),
-                    "surplus");
+                _result.AddWithCheck(actual.Timestamp, new MeasurementComparison(null, actual, _tolerance), "surplus");
             }
         }
 

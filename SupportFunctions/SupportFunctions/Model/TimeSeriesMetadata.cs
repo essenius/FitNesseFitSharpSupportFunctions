@@ -35,23 +35,14 @@ namespace SupportFunctions.Model
             {
                 DataType = getValue[0](entry).InferType(DataType);
                 // string is an end state, no need to dig further
-                if (DataType == typeof(string))
-                {
-                    break;
-                }
+                if (DataType == typeof(string)) break;
                 // we dont need min and max for booleans, but we could need to switch to string later
-                if (DataType == typeof(bool))
-                {
-                    continue;
-                }
+                if (DataType == typeof(bool)) continue;
                 // now we know the primary (expected) value is numerical (double, int, long)
                 // So it makes sense to determine the extremes, using secundary (actual) too
                 UpdateExtremes(entry, getValue);
             }
-            if (DataType.IsNumeric())
-            {
-                return;
-            }
+            if (DataType.IsNumeric()) return;
             MaxValue = double.NaN;
             MinValue = double.NaN;
         }
@@ -69,23 +60,11 @@ namespace SupportFunctions.Model
             {
                 // actual values could be non-numerical if the data set is wrong.
                 // since that's what we are here to determine, we need to handle it gracefully
-                if (!valueGetter(entry).InferType().IsNumeric())
-                {
-                    continue;
-                }
+                if (!valueGetter(entry).InferType().IsNumeric()) continue;
                 var value = valueGetter(entry).To<double>();
-                if (double.IsNaN(value) || double.IsInfinity(value))
-                {
-                    continue;
-                }
-                if (value > MaxValue)
-                {
-                    MaxValue = value;
-                }
-                if (value < MinValue)
-                {
-                    MinValue = value;
-                }
+                if (double.IsNaN(value) || double.IsInfinity(value)) continue;
+                if (value > MaxValue) MaxValue = value;
+                if (value < MinValue) MinValue = value;
             }
         }
     }

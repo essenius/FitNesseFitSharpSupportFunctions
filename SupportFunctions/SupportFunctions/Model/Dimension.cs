@@ -29,10 +29,7 @@ namespace SupportFunctions.Model
         {
             get
             {
-                if (Range.IsZero())
-                {
-                    return 0;
-                }
+                if (Range.IsZero()) return 0;
                 var orderOfMagnitude = OrderOfMagnitude(Range);
                 var normalValue = Normalized(Range, orderOfMagnitude);
                 Debug.Assert(normalValue > 0.1, "normalValue > 0.1");
@@ -68,6 +65,13 @@ namespace SupportFunctions.Model
         public bool SnapToGrid { get; }
         private static double Denormalized(double value, int orderOfMagnitude) => value * Math.Pow(10, orderOfMagnitude);
 
+        public void EnsureNonZeroRange(double deltaMin, double deltaPlus)
+        {
+            if (!Range.IsZero()) return;
+            Min -= deltaMin;
+            Max += deltaPlus;
+        }
+
         public static Dimension GetExtremeValues(ICollection<IMeasurementComparison> values, double? minValue,
             double? maxValue)
         {
@@ -89,16 +93,6 @@ namespace SupportFunctions.Model
         {
             Debug.Assert(!value.IsZero(), "!value.IsZero()");
             return Math.Ceiling(Math.Log10(value)).To<int>();
-        }
-
-        public void EnsureNonZeroRange(double deltaMin, double deltaPlus)
-        {
-            if (!Range.IsZero())
-            {
-                return;
-            }
-            Min -= deltaMin;
-            Max += deltaPlus;
         }
     }
 }

@@ -36,6 +36,14 @@ namespace SupportFunctions.Model
 
         public string PageRoot { get; set; }
 
+        private void AddPage(string pageName, IEnumerable<string> lines)
+        {
+            var command = PageRoot + "?addChild&pageName=" + pageName + "&pageContent=";
+            var payload = lines.Aggregate(string.Empty, (current, entry) => current + entry + Linefeed);
+            var resultLines = RestCall(command + Uri.EscapeDataString(payload));
+            Log(resultLines, "AddPage");
+        }
+
         private static void CheckColumnNames(string line)
         {
             var columnNames = ExtractKeyValuePair(line);
@@ -60,82 +68,6 @@ namespace SupportFunctions.Model
             return list;
         }
 
-        private static KeyValuePair<string, string> ExtractKeyValuePair(string line)
-        {
-            var part = line.Split(Pipe);
-            if (part.Length != 4)
-            {
-                throw new FormatException("Row should have 2 cells: Key and Value. Found " + (part.Length - 2) + ": " +
-                                          line);
-            }
-            return new KeyValuePair<string, string>(part[1].Trim(), part[2].Trim());
-        }
-
-        private static bool IsTableLine(string line)
-        {
-            var trimmedLine = line.Trim();
-            char[] trimChars = {'!'};
-            return !string.IsNullOrEmpty(trimmedLine) && trimmedLine.TrimStart(trimChars)[0] == Pipe;
-        }
-
-        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-        private static void Log(IEnumerable<string> data, string title)
-        {
-            using (var file = new StreamWriter("FitNessePage.log", true))
-            {
-                file.WriteLine("---" + title + "---");
-                foreach (var line in data)
-                {
-                    file.WriteLine(line);
-                }
-                file.Close();
-            }
-        }
-
-        private static IEnumerable<string> ReadLines(Stream stream)
-        {
-            using (var reader = new StreamReader(stream))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    yield return line;
-                }
-            }
-        }
-
-        private static bool TableIsNamed(string line, string tableName)
-        {
-            var parts = line.Split(Pipe);
-            // first and last are always empty. But also other parts could be, so don't remove empty ones
-            if (parts.Length != 4 && parts.Length != 6)
-            {
-                return false;
-            }
-            if (!parts[1].EqualsIgnoreCase("dictionary"))
-            {
-                return false;
-            }
-            if (parts.Length == 4)
-            {
-                return parts[2].EqualsIgnoreCase(tableName);
-            }
-            if (!parts[2].EqualsIgnoreCase("given") &&
-                !parts[2].EqualsIgnoreCase("having"))
-            {
-                return false;
-            }
-            return parts[3].EqualsIgnoreCase("name") && parts[4].EqualsIgnoreCase(tableName);
-        }
-
-        private void AddPage(string pageName, IEnumerable<string> lines)
-        {
-            var command = PageRoot + "?addChild&pageName=" + pageName + "&pageContent=";
-            var payload = lines.Aggregate(string.Empty, (current, entry) => current + entry + Linefeed);
-            var resultLines = RestCall(command + Uri.EscapeDataString(payload));
-            Log(resultLines, "AddPage");
-        }
-
         public void DeletePage(string page)
         {
             var command = FullPageName(page) + "?deletePage&confirmed=yes";
@@ -145,15 +77,9 @@ namespace SupportFunctions.Model
 
         public bool DeleteTableFromPage(string tableName, string pageName)
         {
-            if (!GetPageContent(pageName))
-            {
-                return false;
-            }
+            if (!GetPageContent(pageName)) return false;
             var index = FindTableNamed(tableName);
-            if (IsAtEnd(index))
-            {
-                return false;
-            }
+            if (IsAtEnd(index)) return false;
             RemoveTableAt(index);
             SavePage(pageName);
             return true;
@@ -167,6 +93,16 @@ namespace SupportFunctions.Model
                 lineNo++;
             }
             return lineNo;
+        }
+
+        private static KeyValuePair<string, string> ExtractKeyValuePair(string line)
+        {
+            var part = line.Split(Pipe);
+            if (part.Length != 4)
+            {
+                throw new FormatException("Row should have 2 cells: Key and Value. Found " + (part.Length - 2) + ": " + line);
+            }
+            return new KeyValuePair<string, string>(part[1].Trim(), part[2].Trim());
         }
 
         private Dictionary<string, string> ExtractTableAt(int lineNo)
@@ -187,10 +123,7 @@ namespace SupportFunctions.Model
             while (searchPosition < _line.Count)
             {
                 var tableStartLineNo = FindTableStartFrom(searchPosition);
-                if (IsAtEnd(tableStartLineNo) || TableIsNamed(_line[tableStartLineNo], tableName))
-                {
-                    return tableStartLineNo;
-                }
+                if (IsAtEnd(tableStartLineNo) || TableIsNamed(_line[tableStartLineNo], tableName)) return tableStartLineNo;
                 searchPosition = DoUntilTableEndFrom(tableStartLineNo + 1, s => { });
             }
             return searchPosition;
@@ -198,10 +131,7 @@ namespace SupportFunctions.Model
 
         private int FindTableStartFrom(int lineNo)
         {
-            while (lineNo < _line.Count && !IsTableLine(_line[lineNo]))
-            {
-                lineNo++;
-            }
+            while (lineNo < _line.Count && !IsTableLine(_line[lineNo])) lineNo++;
             return lineNo;
         }
 
@@ -211,10 +141,6 @@ namespace SupportFunctions.Model
         {
             var uri = FullPageName(pageName) + "?pageData";
             _line = RestCall(uri);
-//            {
-//                if (responseStream == null) return false;
-//                _line = ReadLines(responseStream).ToList();
-//            }
             return _line.Count > 0;
         }
 
@@ -226,14 +152,8 @@ namespace SupportFunctions.Model
             var table = CreateTable(tableName, dictionary).ToList();
 
             // make sure there is at least one non-table line between two tables
-            if (NeedSpacerAtStart(index))
-            {
-                table.Insert(0, string.Empty);
-            }
-            if (NeedSpacerAtEnd(index))
-            {
-                table.Add(string.Empty);
-            }
+            if (NeedSpacerAtStart(index)) table.Insert(0, string.Empty);
+            if (NeedSpacerAtEnd(index)) table.Add(string.Empty);
 
             if (index < _line.Count)
             {
@@ -247,27 +167,54 @@ namespace SupportFunctions.Model
 
         private bool IsAtEnd(int index) => index >= _line.Count;
 
+        private static bool IsTableLine(string line)
+        {
+            var trimmedLine = line.Trim();
+            char[] trimChars = {'!'};
+            return !string.IsNullOrEmpty(trimmedLine) && trimmedLine.TrimStart(trimChars)[0] == Pipe;
+        }
+
         public Dictionary<string, string> LoadTableFromPage(string tableName, string page)
         {
             var emptyDictionary = new Dictionary<string, string>();
-            if (!GetPageContent(page))
-            {
-                return emptyDictionary;
-            }
+            if (!GetPageContent(page)) return emptyDictionary;
             var index = FindTableNamed(tableName);
             return IsAtEnd(index) ? emptyDictionary : ExtractTableAt(index);
+        }
+
+        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
+        private static void Log(IEnumerable<string> data, string title)
+        {
+            using (var file = new StreamWriter("FitNessePage.log", true))
+            {
+                file.WriteLine("---" + title + "---");
+                foreach (var line in data)
+                {
+                    file.WriteLine(line);
+                }
+                file.Close();
+            }
         }
 
         private bool NeedSpacerAtEnd(int index) => index < _line.Count && IsTableLine(_line[index]);
 
         private bool NeedSpacerAtStart(int index) => index > 0 && IsTableLine(_line[index - 1]);
 
+        private static IEnumerable<string> ReadLines(Stream stream)
+        {
+            using (var reader = new StreamReader(stream))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    yield return line;
+                }
+            }
+        }
+
         private void RemoveTableAt(int index)
         {
-            while (IsTableLine(_line[index]))
-            {
-                _line.RemoveAt(index);
-            }
+            while (IsTableLine(_line[index])) _line.RemoveAt(index);
         }
 
         protected virtual List<string> RestCall(string uri)
@@ -309,10 +256,7 @@ namespace SupportFunctions.Model
             {
                 // we already have a page, so we need to check if we need to overwrite a table or add a new one
                 var index = FindTableNamed(tableName);
-                if (!IsAtEnd(index))
-                {
-                    RemoveTableAt(index);
-                }
+                if (!IsAtEnd(index)) RemoveTableAt(index);
                 InsertTableAt(tableName, dictionary, index);
                 SavePage(pageName);
             }
@@ -321,6 +265,17 @@ namespace SupportFunctions.Model
                 // page didn't exist, so create a new one with just the table
                 AddPage(pageName, CreateTable(tableName, dictionary));
             }
+        }
+
+        private static bool TableIsNamed(string line, string tableName)
+        {
+            var parts = line.Split(Pipe);
+            // first and last are always empty. But also other parts could be, so don't remove empty ones
+            if (parts.Length != 4 && parts.Length != 6) return false;
+            if (!parts[1].EqualsIgnoreCase("dictionary")) return false;
+            if (parts.Length == 4) return parts[2].EqualsIgnoreCase(tableName);
+            if (!parts[2].EqualsIgnoreCase("given") && !parts[2].EqualsIgnoreCase("having")) return false;
+            return parts[3].EqualsIgnoreCase("name") && parts[4].EqualsIgnoreCase(tableName);
         }
     }
 }

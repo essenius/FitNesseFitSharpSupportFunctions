@@ -24,12 +24,12 @@ namespace SupportFunctionsTest
     [TestClass]
     public class TimeSeriesChartTest
     {
+        [SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "False positive")]
+        public TestContext TestContext { get; set; }
+
         public static double SecondOrderResponse(double time, double zeta, double omega, double theta) =>
             1 - Math.Exp(-zeta * omega * time) / Math.Sqrt(1 - Math.Pow(zeta, 2)) *
             Math.Sin(Math.Sqrt(1 - Math.Pow(zeta, 2)) * omega * time + theta);
-
-        [SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "False positive")]
-        public TestContext TestContext { get; set; }
 
         [TestMethod, TestCategory("Unit"), DeploymentItem("TestData\\Base64MinutesTimeRange.html")]
         public void TimeSeriesChartMinutesTimeTest()
@@ -41,8 +41,7 @@ namespace SupportFunctionsTest
             const double maxY = 50;
             table.Add(startTimestamp, new MeasurementComparisonMock("49.95", "49.95", CompareOutcome.None));
             table.Add(startTimestamp.AddSeconds(9660), new MeasurementComparisonMock("-0.50", "-0.50", CompareOutcome.None));
-            table.Add(startTimestamp.AddSeconds(19320),
-                new MeasurementComparisonMock("3.00", "3.20", CompareOutcome.OutsideToleranceIssue));
+            table.Add(startTimestamp.AddSeconds(19320), new MeasurementComparisonMock("3.00", "3.20", CompareOutcome.OutsideToleranceIssue));
 
             var endTimestamp = table.Last().Key;
             var base64Result = new TimeSeriesChart().ChartInHtmlFor(table,
@@ -69,14 +68,8 @@ namespace SupportFunctionsTest
                 var timestamp = startTimestamp.AddSeconds(time);
                 var expectedValue = SecondOrderResponse(time, zetaExpected, omega, theta);
                 var actualValue = SecondOrderResponse(time, zetaActual, omega, theta);
-                if (actualValue > maxY)
-                {
-                    maxY = actualValue;
-                }
-                if (actualValue < minY)
-                {
-                    minY = actualValue;
-                }
+                if (actualValue > maxY) maxY = actualValue;
+                if (actualValue < minY) minY = actualValue;
 
                 var okValue = time < 12 || time > 16 && time < 25 || time > 25.5;
 
@@ -107,8 +100,7 @@ namespace SupportFunctionsTest
             const double minY = 49.93;
             const double maxY = 50.02;
             table.Add(startTimestamp, new MeasurementComparisonMock("49.95", "49.95", CompareOutcome.None));
-            table.Add(startTimestamp.AddSeconds(1),
-                new MeasurementComparisonMock("50.0", "50.0", CompareOutcome.None));
+            table.Add(startTimestamp.AddSeconds(1), new MeasurementComparisonMock("50.0", "50.0", CompareOutcome.None));
             var base64Result = new TimeSeriesChart().ChartInHtmlFor(table,
                 new AxisLimits(startTimestamp, startTimestamp.AddSeconds(1), new Dimension(minY, maxY)),
                 new Size(800, 600));

@@ -19,17 +19,15 @@ using SupportFunctions.Utilities;
 namespace SupportFunctions
 {
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Used by FitSharp"),
-     SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global", Justification = "Used by FitSharp")]
+     SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global", Justification = "Used by FitSharp"),
+     Documentation("Time series assignable to a symbol")]
     public class TimeSeries
     {
         public TimeSeries() => Measurements = new Collection<Measurement>();
 
         public TimeSeries(string input) : this()
         {
-            if (string.IsNullOrEmpty(input))
-            {
-                return;
-            }
+            if (string.IsNullOrEmpty(input)) return;
             var inputParts = input.Split('#');
             Path = inputParts[0].Trim();
             TimestampColumn = GetColumn(inputParts, 1, TimestampColumn);
@@ -37,67 +35,44 @@ namespace SupportFunctions
             IsGoodColumn = GetColumn(inputParts, 3, IsGoodColumn);
         }
 
-        public static Dictionary<string, string> FixtureDocumentation { get; } = new Dictionary<string, string>
-        {
-            {string.Empty, "Time series assignable to a symbol"},
-            {nameof(BeginTable), "Used by Decision Table"},
-            {nameof(Execute), "Used by Decision Table"},
-            {nameof(FileName), "The file name of the loaded CSV file"},
-            {nameof(IsGood), "Decision table column"},
-            {nameof(IsGoodColumn), "Name of the Is Good column in the CSV file"},
-            {
-                nameof(Parse),
-                "Create a new time series object from a CSV file. Input format: fileName#TimestampColumn#VaueColumn#IsGoodColumn#. If column names are omitted, default names Timestamp, Value and IsGood are taken"
-            },
-            {
-                nameof(Path), "Path in use for this data set. Can be empty if the data is constructed via a Decision table"
-            },
-            {nameof(Timestamp), "Decision table column"},
-            {nameof(TimestampColumn), "Name of the Timestamp column in the CSV file"},
-            {nameof(Value), "Decision table column"},
-            {nameof(ValueColumn), "Name of the Value column in the CSV file"}
-        };
-
+        [Documentation("The file name of the loaded CSV file")]
         public string FileName
         {
             get
             {
-                if (string.IsNullOrEmpty(Path))
-                {
-                    return null;
-                }
+                if (string.IsNullOrEmpty(Path)) return null;
                 var filePart = Path.Split('#')[0];
                 return System.IO.Path.GetFileName(filePart);
             }
         }
 
+        [Documentation("Name of the Is Good column in the CSV file")]
         public string IsGoodColumn { get; set; } = "isgood";
+
         internal Collection<Measurement> Measurements { get; }
+
+        [Documentation("Path in use for this data set. Can be empty if the data is constructed via a Decision table")]
         public string Path { get; set; }
+
+        [Documentation("Name of the Timestamp column in the CSV file")]
         public string TimestampColumn { get; set; } = "timestamp";
+
+        [Documentation("Name of the Value column in the CSV file")]
         public string ValueColumn { get; set; } = "value";
+
+        internal void AddMeasurement(Measurement measurement) => Measurements.Add(measurement);
 
         private static string GetColumn(IReadOnlyList<string> input, int index, string defaultValue)
         {
-            if (input.Count <= index)
-            {
-                return defaultValue;
-            }
+            if (input.Count <= index) return defaultValue;
             var content = input[index].Trim();
             return string.IsNullOrEmpty(content) ? defaultValue : content;
         }
 
-        public static TimeSeries Parse(string input) => new TimeSeries(input);
-
-        internal void AddMeasurement(Measurement measurement) => Measurements.Add(measurement);
-
         internal void Load()
         {
             // the series can already be pre-populated; then _path is null
-            if (string.IsNullOrEmpty(Path))
-            {
-                return;
-            }
+            if (string.IsNullOrEmpty(Path)) return;
             var csvTable = new CsvTable();
             csvTable.LoadFrom(Path);
             var timestampIndex = csvTable.HeaderIndex(TimestampColumn);
@@ -105,13 +80,16 @@ namespace SupportFunctions
             var qualityIndex = csvTable.HeaderIndex(IsGoodColumn);
 
             Measurements.Clear();
-            foreach (var entry in csvTable.Data
-                .Where(t => !(string.IsNullOrEmpty(t[valueIndex]) && string.IsNullOrEmpty(t[qualityIndex]))))
+            foreach (var entry in csvTable.Data.Where(t => !(string.IsNullOrEmpty(t[valueIndex]) && string.IsNullOrEmpty(t[qualityIndex]))))
             {
                 var measurement = new Measurement(entry[timestampIndex], entry[valueIndex], entry[qualityIndex]);
                 Measurements.Add(measurement);
             }
         }
+
+        [Documentation("Create a new time series object from a CSV file. Input format: fileName#TimestampColumn#VaueColumn#IsGoodColumn#. " +
+                       "If column names are omitted, default names Timestamp, Value and IsGood are taken")]
+        public static TimeSeries Parse(string input) => new TimeSeries(input);
 
         // keep under the hat for now.
         internal void SaveTo(string path)
@@ -130,22 +108,26 @@ namespace SupportFunctions
 
         #region Decision Table interface
 
+        [Documentation("Used by Decision Table")]
         public void BeginTable() => Measurements.Clear();
 
+        [Documentation("Decision table column")]
         public bool IsGood { set; get; }
+
+        [Documentation("Decision table column")]
         public Date Timestamp { set; get; }
+
+        [Documentation("Decision table column")]
         public string Value { set; get; }
 
+        [Documentation("Used by Decision Table")]
         public void Execute()
         {
             var measurement = new Measurement(Timestamp, Value, IsGood);
             Measurements.Add(measurement);
         }
 
-        public void Reset()
-        {
-            IsGood = true;
-        }
+        public void Reset() => IsGood = true;
 
         #endregion
     }

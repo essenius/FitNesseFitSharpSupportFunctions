@@ -13,21 +13,12 @@ using System.Collections.Generic;
 
 namespace SupportFunctions
 {
+    [Documentation("Timing functions for rudimentary performance tests")]
     public class Stopwatch
     {
         private readonly Dictionary<string, System.Diagnostics.Stopwatch> _stopwatchDictionary;
 
         public Stopwatch() => _stopwatchDictionary = new Dictionary<string, System.Diagnostics.Stopwatch>();
-
-        public static Dictionary<string, string> FixtureDocumentation { get; } = new Dictionary<string, string>
-        {
-            {string.Empty, "Timing functions for rudimentary performance tests"},
-            {nameof(ReadStopwatch), "Return the elapsed time in seconds of a stopwatch"},
-            {nameof(ResetStopwatch), "Reset a stopwatch to 0"},
-            {nameof(RestartStopwatch), "Reset a stopwatch to 0 and start counting"},
-            {nameof(StartStopwatch), "Start (or continue) a stopwatch"},
-            {nameof(StopStopwatch), "Stop a stopwatch and return elapsed time in seconds"}
-        };
 
         private System.Diagnostics.Stopwatch GetStopwatch(string id)
         {
@@ -44,14 +35,19 @@ namespace SupportFunctions
             return stopwatch;
         }
 
+        [Documentation("Return the elapsed time in seconds of a stopwatch")]
         public double ReadStopwatch(string id) => GetStopwatch(id).ElapsedMilliseconds / 1000.0;
 
+        [Documentation("Reset a stopwatch to 0")]
         public void ResetStopwatch(string id) => GetStopwatch(id).Reset();
 
+        [Documentation("Reset a stopwatch to 0 and start counting")]
         public void RestartStopwatch(string id) => GetStopwatch(id).Restart();
 
+        [Documentation("Start (or continue) a stopwatch")]
         public void StartStopwatch(string id) => GetStopwatch(id).Start();
 
+        [Documentation("Stop a stopwatch and return elapsed time in seconds")]
         public double StopStopwatch(string id)
         {
             GetStopwatch(id).Stop();

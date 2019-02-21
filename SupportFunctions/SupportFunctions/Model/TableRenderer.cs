@@ -41,44 +41,29 @@ namespace SupportFunctions.Model
                 ? _allHeaders
                 : new Collection<string>(tableIn[0].Select(s => s.ToString()).ToList());
             ValidateAndAlignHeaders();
-            var returnValue = new Collection<object>
-            {
-                TableHeader()
-            };
+            var returnValue = new Collection<object> {TableHeader()};
 
-            foreach (var entry in input)
-            {
-                returnValue.Add(TableRow(entry));
-            }
+            foreach (var entry in input) returnValue.Add(TableRow(entry));
             return returnValue;
         }
 
         private Collection<object> TableHeader()
         {
             var returnValue = new Collection<object>();
-            foreach (var header in _desiredColumns)
-            {
-                returnValue.Add(header.Report());
-            }
+            foreach (var header in _desiredColumns) returnValue.Add(header.Report());
             return returnValue;
         }
 
         private Collection<object> TableRow(T resultEntry)
         {
             var returnValue = new Collection<object>();
-            foreach (var column in _desiredColumns)
-            {
-                returnValue.Add(_getField[column](resultEntry));
-            }
+            foreach (var column in _desiredColumns) returnValue.Add(_getField[column](resultEntry));
             return returnValue;
         }
 
         private void ValidateAndAlignHeaders()
         {
-            if (_desiredColumns.Equals(_allHeaders))
-            {
-                return;
-            }
+            if (_desiredColumns.Equals(_allHeaders)) return;
             for (var i = 0; i < _desiredColumns.Count; i++)
             {
                 if (!_allHeaders.Contains(_desiredColumns[i], StringComparer.OrdinalIgnoreCase))

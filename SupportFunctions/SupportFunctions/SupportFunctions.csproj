@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DocumentationAttribute.cs" />
     <Compile Include="Model\AxisLimits.cs" />
     <Compile Include="Model\CellComparison.cs" />
     <Compile Include="CsvComparison.cs" />

@@ -19,17 +19,17 @@ namespace SupportFunctions.Model
         private readonly RegistryKey _baseKey;
 
         public RegistryWrapper() => _baseKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
-        private static string InternationalLocation => "Control Panel\\International";
-
-        private static string ShortDateFormatLocation => "sShortDate";
-
-        private static string TimeFormatLocation => "sTimeFormat";
 
         public string DateTimeFormat => ShortDateFormat + " " + TimeFormat;
+        private static string InternationalLocation => "Control Panel\\International";
 
         public string ShortDateFormat => InternationalValue(ShortDateFormatLocation).ToString();
 
+        private static string ShortDateFormatLocation => "sShortDate";
+
         public string TimeFormat => InternationalValue(TimeFormatLocation).ToString();
+
+        private static string TimeFormatLocation => "sTimeFormat";
 
         private object InternationalValue(string key)
         {

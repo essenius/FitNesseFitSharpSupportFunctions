@@ -39,10 +39,7 @@ namespace SupportFunctionsTest
             Assert.IsFalse(1.0.HasMinimalDifferenceWith(-1.0));
             const double value1 = .1 * 10;
             var value2 = 0D;
-            for (var ctr = 0; ctr < 10; ctr++)
-            {
-                value2 += .1;
-            }
+            for (var ctr = 0; ctr < 10; ctr++) value2 += .1;
             Assert.IsTrue(value1.HasMinimalDifferenceWith(value2));
             Assert.IsTrue(9.87654321E100.HasMinimalDifferenceWith(9.87654321E100 * Math.Pow(10, 5) * Math.Pow(10, -5)));
             Assert.IsFalse(0.3333333333.HasMinimalDifferenceWith(0.33333333333));

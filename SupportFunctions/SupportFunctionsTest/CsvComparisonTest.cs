@@ -59,10 +59,7 @@ namespace SupportFunctionsTest
                 new[] {"Attr3", "", "Vapor", "Liquid"}
             };
             var baseTable = new CsvTable(baseHeaders);
-            foreach (var entry in baseData)
-            {
-                baseTable.Data.Add(entry);
-            }
+            foreach (var entry in baseData) baseTable.Data.Add(entry);
 
             var actualHeaders = new[] {"Key", "Stream1", "Stream2"};
             var actualdata = new Collection<string[]>
@@ -87,10 +84,7 @@ namespace SupportFunctionsTest
             };
 
             var actualTable = new CsvTable(actualHeaders);
-            foreach (var entry in actualdata)
-            {
-                actualTable.Data.Add(entry);
-            }
+            foreach (var entry in actualdata) actualTable.Data.Add(entry);
             var csvComparison = new CsvComparison(baseTable, actualTable, Tolerance.Parse("1%"));
             Assert.AreEqual(expectedResult.Count, csvComparison.ErrorCount(), "Error count");
             var i = 0;
@@ -146,10 +140,7 @@ namespace SupportFunctionsTest
          SuppressMessage("ReSharper", "UnusedVariable", Justification = "forcing exception")]
         public void CsvComparisonWrongHeaderTest()
         {
-            var desiredHeaders = new Collection<Collection<object>>
-            {
-                new Collection<object> {"Wrong"}
-            };
+            var desiredHeaders = new Collection<Collection<object>> { new Collection<object> {"Wrong"} };
             var csvComparison = new CsvComparison(null, null, null);
             var result = csvComparison.DoTable(desiredHeaders);
         }

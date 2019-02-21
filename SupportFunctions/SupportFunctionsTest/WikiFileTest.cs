@@ -24,16 +24,6 @@ namespace SupportFunctionsTest
         private static string ImageCode(string leaf) =>
             Invariant($"<img src='http://files/testResults/wiki/files/testResults/wiki{leaf}'/>");
 
-        //[TestMethod, TestCategory("read")]
-        public void ReadFile()
-        {
-            var imageArray = File.ReadAllBytes("C:\\Users\\Rik.Essenius\\Downloads\\Free-Converter.com-jpeg-55695127.emf");
-            foreach (var b in imageArray)
-            {
-                Console.Write("0x" + b.ToString("X2") + ", ");
-            }
-        }
-
         [TestMethod, TestCategory("Unit")]
         public void WikiFileMimeTypeTest()
         {
@@ -175,10 +165,7 @@ namespace SupportFunctionsTest
             var wikiFolder = Path.Combine(root, "files\\testResults\\TestPage");
             Directory.CreateDirectory(wikiFolder);
             var dir = new DirectoryInfo(wikiFolder);
-            foreach (var file in dir.EnumerateFiles("*test*.rik"))
-            {
-                file.Delete();
-            }
+            foreach (var file in dir.EnumerateFiles("*test*.rik")) file.Delete();
             var a = wikiFile.UniquePathFor("test.rik", 0);
             Assert.IsTrue(a.EndsWith("000101010000000000_test_1.rik"), "test 1");
             File.Create(a).Close();
@@ -200,8 +187,7 @@ namespace SupportFunctionsTest
             Assert.IsNotNull(file);
             var timestamp = Path.GetFileNameWithoutExtension(file).Substring(0, 18);
             var endTime = DateTime.Now.ToString(format, culture);
-            Assert.IsTrue(string.Compare(startTime, timestamp, StringComparison.Ordinal) <= 0,
-                $"{startTime} <= {timestamp}");
+            Assert.IsTrue(string.Compare(startTime, timestamp, StringComparison.Ordinal) <= 0, $"{startTime} <= {timestamp}");
             Assert.IsTrue(string.Compare(timestamp, endTime, StringComparison.Ordinal) <= 0, $"{timestamp} <= {endTime}");
         }
 

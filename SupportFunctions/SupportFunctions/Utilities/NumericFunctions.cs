@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using static System.Globalization.CultureInfo;
 
@@ -35,10 +36,7 @@ namespace SupportFunctions.Utilities
 
         public static int FractionalDigits(this object value)
         {
-            if (!value.IsNumeric())
-            {
-                return 0;
-            }
+            if (!value.IsNumeric()) return 0;
             var splitE = value.ToString().Split('E', 'e');
             var eValue = splitE.Length > 1 ? -splitE[1].To<int>() : 0;
             var splitPoint = splitE[0].Split('.');
@@ -46,20 +44,16 @@ namespace SupportFunctions.Utilities
             return fractionDigits;
         }
 
+        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator", Justification = "Done intentionally")]
         public static bool HasMinimalDifferenceWith(this double value1, double value2, int units = 1)
         {
             var lValue1 = BitConverter.DoubleToInt64Bits(value1);
             var lValue2 = BitConverter.DoubleToInt64Bits(value2);
 
             // If the signs are different, return false except for +0 and -0.
-            if (lValue1 >> 63 != lValue2 >> 63)
-                // ReSharper disable once CompareOfFloatsByEqualityOperator - done intentionally
-            {
-                return value1 == value2;
-            }
+            if (lValue1 >> 63 != lValue2 >> 63) return value1 == value2;
 
             var diff = Math.Abs(lValue1 - lValue2);
-
             return diff <= units;
         }
 
@@ -69,18 +63,11 @@ namespace SupportFunctions.Utilities
 
         public static bool IsNumeric(this object expression)
         {
-            if (expression == null)
-            {
-                return false;
-            }
+            if (expression == null) return false;
+
             // somewhat tricky. The invariant culture understands Infinity and the current culture ∞.
-            if (double.TryParse(Convert.ToString(expression, InvariantCulture), NumberStyles.Any,
-                NumberFormatInfo.InvariantInfo, out _))
-            {
-                return true;
-            }
-            return double.TryParse(Convert.ToString(expression, CurrentCulture), NumberStyles.Any,
-                NumberFormatInfo.CurrentInfo, out _);
+            if (double.TryParse(Convert.ToString(expression, InvariantCulture), NumberStyles.Any, NumberFormatInfo.InvariantInfo, out _)) return true;
+            return double.TryParse(Convert.ToString(expression, CurrentCulture), NumberStyles.Any, NumberFormatInfo.CurrentInfo, out _);
         }
 
         public static bool IsZero(this double value) => value.HasMinimalDifferenceWith(0D);
@@ -88,10 +75,7 @@ namespace SupportFunctions.Utilities
         public static object RoundedTo(this object value, int? fractionDigits)
         {
             // if we can't perform the rounding, just take the original value
-            if (fractionDigits == null || !value.IsNumeric() || fractionDigits.Value < 0 || fractionDigits.Value > 15)
-            {
-                return value;
-            }
+            if (fractionDigits == null || !value.IsNumeric() || fractionDigits.Value < 0 || fractionDigits.Value > 15) return value;
             return Math.Round(Convert.ToDouble(value, InvariantCulture), fractionDigits.Value);
         }
     }

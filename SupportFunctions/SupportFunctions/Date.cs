@@ -10,7 +10,6 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -24,7 +23,8 @@ namespace SupportFunctions
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Date",
          Justification = "Date is more natural for use in FitNesse"),
-     SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Entry point for FitSharp")]
+     SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Entry point for FitSharp"),
+     Documentation("Date class assignable to a FitNesse symbol")]
     public class Date
     {
         public Date(long ticks) => DateTime = new DateTime(ticks);
@@ -32,43 +32,55 @@ namespace SupportFunctions
         public Date(DateTime date) => DateTime = date;
 
         public Date(string input) => DateTime = input.To<DateTime>();
-        public static string DefaultFormat { get; set; } = DateTimeFormatInfo.InvariantInfo.SortableDateTimePattern;
 
-        public static Dictionary<string, string> FixtureDocumentation { get; } = new Dictionary<string, string>
-        {
-            {string.Empty, "Date class assignable to a FitNesse symbol"},
-            {nameof(AddDays), "Add a number of days. Can be negative and/or contain fractions"},
-            {nameof(AddHours), "Add a number of hours. Can be negative and/or contain fractions"},
-            {nameof(DateTime), "Return the underlying DateTime object"},
-            {nameof(DefaultFormat), "The default date/time format. If not set, SortableDateTimePattern is taken."},
-            {"set_" + nameof(DefaultFormat), "Set the default date/time format (.Net specification)"},
-            {nameof(Formatted), "Return the date in the specified format (.Net specification)"},
-            {nameof(Parse), "Parse a string into a date object. FitNesse calls this when using as a parameter"},
-            {nameof(ParseFormatted), "Parse a string into a date object using a specific date format."},
-            {nameof(ResetDefaultFormat), "Reset the default date/time format to SortableDateTimePattern"},
-            {nameof(Ticks), "Return the Ticks representation"},
-            {nameof(TimeFormat), "Return the time format"},
-            {nameof(ToLocal), "Return the date converted to local time"},
-            {nameof(ToUtc), "Return the date converted to UTC"},
-            {nameof(ToLocalFormat), "Return the date in the user's default formatting"},
-            {nameof(ShortDateFormat), "Return the current short date format"}
-        };
-
-        public static string ShortDateFormat => new RegistryWrapper().ShortDateFormat;
-
-        public static string TimeFormat => new RegistryWrapper().TimeFormat;
-
+        [Documentation("Return the underlying DateTime object")]
         public DateTime DateTime { get; }
 
+        [Documentation("The default date/time format. If not set, SortableDateTimePattern is taken.")]
+        public static string DefaultFormat { get; set; } = DateTimeFormatInfo.InvariantInfo.SortableDateTimePattern;
+
+        //public static Dictionary<string, string> FixtureDocumentation { get; } = new Dictionary<string, string>
+        //{
+        //{string.Empty, "Date class assignable to a FitNesse symbol"},
+        //{nameof(AddDays), "Add a number of days. Can be negative and/or contain fractions"},
+        //{nameof(AddHours), "Add a number of hours. Can be negative and/or contain fractions"},
+        //{nameof(DateTime), "Return the underlying DateTime object"},
+        //{nameof(DefaultFormat), "The default date/time format. If not set, SortableDateTimePattern is taken."},
+        //{"set_" + nameof(DefaultFormat), "Set the default date/time format (.Net specification)"},
+        //{nameof(Formatted), "Return the date in the specified format (.Net specification)"},
+        //{nameof(Parse), "Parse a string into a date object. FitNesse calls this when using as a parameter"},
+        //{nameof(ParseFormatted), "Parse a string into a date object using a specific date format."},
+        //{nameof(ResetDefaultFormat), "Reset the default date/time format to SortableDateTimePattern"},
+        //{nameof(Ticks), "Return the Ticks representation"},
+        //{nameof(TimeFormat), "Return the time format"},
+        //{nameof(ToLocal), "Return the date converted to local time"},
+        //{nameof(ToUtc), "Return the date converted to UTC"},
+        //{nameof(ToLocalFormat), "Return the date in the user's default formatting"},
+        //{nameof(ShortDateFormat), "Return the current short date format"}
+        //};
+
+        [Documentation("Return the current short date format")]
+        public static string ShortDateFormat => new RegistryWrapper().ShortDateFormat;
+
+        [Documentation("Return the Ticks representation")]
         public long Ticks => DateTime.Ticks;
 
+        [Documentation("Return the time format")]
+        public static string TimeFormat => new RegistryWrapper().TimeFormat;
+
+        [Documentation("Return the date in the user's default formatting")]
         public string ToLocalFormat => DateTime.Formatted(new RegistryWrapper().DateTimeFormat);
 
-        /// <summary>
-        ///     The function that FitNesse calls when it parses Date parameters
-        /// </summary>
-        /// <param name="input">the input to be parsed</param>
-        /// <returns>a new Date object based in the input</returns>
+        [Documentation("Add a number of days. Can be negative and/or contain fractions")]
+        public Date AddDays(double days) => new Date(DateTime.AddDays(days));
+
+        [Documentation("Add a number of hours. Can be negative and/or contain fractions")]
+        public Date AddHours(double hours) => new Date(DateTime.AddHours(hours));
+
+        [Documentation("Return the date in the specified format (.Net specification)")]
+        public string Formatted(string format) => DateTime.Formatted(format);
+
+        [Documentation("Parse a string into a date object. FitNesse calls this when using as a parameter")]
         public static Date Parse(string input)
         {
             Debug.Assert(input != null, "input != null");
@@ -88,6 +100,7 @@ namespace SupportFunctions
             }
         }
 
+        [Documentation("Parse a string into a date object using a specific date format.")]
         public static Date ParseFormatted(string input, string format)
         {
             Debug.Assert(input != null, "input != null");
@@ -96,21 +109,18 @@ namespace SupportFunctions
             return new Date(dateTime);
         }
 
+        [Documentation("Reset the default date/time format to SortableDateTimePattern")]
         public static void ResetDefaultFormat()
         {
             DefaultFormat = DateTimeFormatInfo.InvariantInfo.SortableDateTimePattern;
         }
 
-        public Date AddDays(double days) => new Date(DateTime.AddDays(days));
-
-        public Date AddHours(double hours) => new Date(DateTime.AddHours(hours));
-
-        public string Formatted(string format) => DateTime.Formatted(format);
-
+        [Documentation("Return the date converted to local time")]
         public Date ToLocal() => new Date(DateTime.ToLocalTime());
 
         public override string ToString() => DateTime.Formatted(DefaultFormat);
 
+        [Documentation("Return the date converted to UTC")]
         public Date ToUtc() => new Date(DateTime.ToUniversalTime());
     }
 }

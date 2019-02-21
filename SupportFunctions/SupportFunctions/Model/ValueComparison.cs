@@ -29,16 +29,15 @@ namespace SupportFunctions.Model
         private const string ValueIssueCaption = "[{1}] expected [{0}]";
         private const string WithinToleranceCaption = "{1} ~= {0}";
 
-        private readonly Dictionary<CompareOutcome, string> _messageDictionary = new Dictionary
-            <CompareOutcome, string>
-            {
-                {CompareOutcome.Missing, MissingCaption},
-                {CompareOutcome.None, NoneCaption},
-                {CompareOutcome.OutsideToleranceIssue, OutsideToleranceCaption},
-                {CompareOutcome.Surplus, SurplusCaption},
-                {CompareOutcome.ValueIssue, ValueIssueCaption},
-                {CompareOutcome.WithinTolerance, WithinToleranceCaption}
-            };
+        private readonly Dictionary<CompareOutcome, string> _messageDictionary = new Dictionary<CompareOutcome, string>
+        {
+            {CompareOutcome.Missing, MissingCaption},
+            {CompareOutcome.None, NoneCaption},
+            {CompareOutcome.OutsideToleranceIssue, OutsideToleranceCaption},
+            {CompareOutcome.Surplus, SurplusCaption},
+            {CompareOutcome.ValueIssue, ValueIssueCaption},
+            {CompareOutcome.WithinTolerance, WithinToleranceCaption}
+        };
 
         public ValueComparison(object expected, object actual, Tolerance tolerance = null, Type compareType = null)
         {
@@ -77,10 +76,7 @@ namespace SupportFunctions.Model
         {
             get
             {
-                if (!IsToleranceUsed || ToleranceBase == null)
-                {
-                    return string.Empty;
-                }
+                if (!IsToleranceUsed || ToleranceBase == null) return string.Empty;
                 var deltaPercentage = DeltaOut?.To<double>() / ToleranceBase;
                 var result = deltaPercentage == null || double.IsInfinity(deltaPercentage.Value)
                     ? string.Empty
@@ -97,33 +93,11 @@ namespace SupportFunctions.Model
 
         public string TableResult(string message)
         {
-            if (string.IsNullOrEmpty(message))
-            {
-                return string.Empty.Report();
-            }
+            if (string.IsNullOrEmpty(message)) return string.Empty.Report();
             return IsOk(Outcome) ? message.Pass() : message.Fail();
         }
 
         public string ValueMessage => string.Format(InvariantCulture, _messageDictionary[Outcome], ExpectedValueOut, ActualValueOut);
-
-        public static bool IsOk(CompareOutcome outcome) => outcome == CompareOutcome.None || outcome == CompareOutcome.WithinTolerance;
-
-        private static CompareOutcome? OutcomeWithNullInput(object expected, object actual)
-        {
-            if (expected == null && actual == null)
-            {
-                return CompareOutcome.None;
-            }
-            if (expected == null)
-            {
-                return CompareOutcome.Surplus;
-            }
-            if (actual == null)
-            {
-                return CompareOutcome.Missing;
-            }
-            return null;
-        }
 
         private CompareOutcome DoubleComparison()
         {
@@ -134,24 +108,18 @@ namespace SupportFunctions.Model
             ActualValueOut = roundedActual.To<string>();
 
             // We align the precision of the delta to that of the expected/actual values 
-            if (precision == null)
-            {
-                precision = Math.Max(ExpectedValueIn.FractionalDigits(), ActualValueIn.FractionalDigits());
-            }
+            if (precision == null) precision = Math.Max(ExpectedValueIn.FractionalDigits(), ActualValueIn.FractionalDigits());
             DeltaOut = delta.RoundedTo(precision).To<string>();
 
-            return delta <= Tolerance.Value
-                ? CompareOutcome.WithinTolerance
-                : CompareOutcome.OutsideToleranceIssue;
+            return delta <= Tolerance.Value ? CompareOutcome.WithinTolerance : CompareOutcome.OutsideToleranceIssue;
         }
 
         private void InferCompareTypeIfNotSpecified()
         {
-            if (CompareType == null)
-            {
-                CompareType = ActualValueIn.InferType(ExpectedValueIn.InferType());
-            }
+            if (CompareType == null) CompareType = ActualValueIn.InferType(ExpectedValueIn.InferType());
         }
+
+        public static bool IsOk(CompareOutcome outcome) => outcome == CompareOutcome.None || outcome == CompareOutcome.WithinTolerance;
 
         private CompareOutcome LongComparison()
         {
@@ -163,12 +131,17 @@ namespace SupportFunctions.Model
                 : CompareOutcome.OutsideToleranceIssue;
         }
 
+        private static CompareOutcome? OutcomeWithNullInput(object expected, object actual)
+        {
+            if (expected == null && actual == null) return CompareOutcome.None;
+            if (expected == null) return CompareOutcome.Surplus;
+            if (actual == null) return CompareOutcome.Missing;
+            return null;
+        }
+
         private string RoundViaTolerance(object target)
         {
-            if (target == null)
-            {
-                return null;
-            }
+            if (target == null) return null;
             var compareType = CompareType ?? target.To<string>().InferType();
             return (Tolerance != null && compareType.IsFloatingPoint() && target.IsNumeric()
                 ? target.To<double>().RoundedTo(Tolerance.Precision)
@@ -180,18 +153,12 @@ namespace SupportFunctions.Model
             ActualValueOut = RoundViaTolerance(ActualValueIn);
             ExpectedValueOut = RoundViaTolerance(ExpectedValueIn);
             var outcome = OutcomeWithNullInput(ExpectedValueIn, ActualValueIn);
-            if (outcome != null)
-            {
-                return outcome.Value;
-            }
+            if (outcome != null) return outcome.Value;
 
             // now we are sure neither ExpectedIn nor ActualIn is null
             // start doing a plain text comparison. If we have an exact match, we're done (no issues)
             // edge case: ∞ not equal to Infinity
-            if (ExpectedValueIn.Equals(ActualValueIn))
-            {
-                return CompareOutcome.None;
-            }
+            if (ExpectedValueIn.Equals(ActualValueIn)) return CompareOutcome.None;
 
             // if the compare type is not specified we have indivudual comparisons, and 
             // expected/actual values may have different types. So then get a compatible type.
@@ -225,10 +192,7 @@ namespace SupportFunctions.Model
             }
 
             // Fail if the comparison is non-numerical or the tolerance is 0. An exact match would have caught a pass.
-            if (IsZeroToleranceComparison)
-            {
-                return CompareOutcome.ValueIssue;
-            }
+            if (IsZeroToleranceComparison) return CompareOutcome.ValueIssue;
 
             // the calculation for floats and ints is slightly different because of the precision
             return CompareType.IsFloatingPoint() ? DoubleComparison() : LongComparison();

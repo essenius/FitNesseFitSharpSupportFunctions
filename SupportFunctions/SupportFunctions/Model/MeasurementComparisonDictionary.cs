@@ -22,8 +22,7 @@ namespace SupportFunctions.Model
         {
         }
 
-        private MeasurementComparisonDictionary(
-            IDictionary<DateTime, IMeasurementComparison> inDictionary) : base(inDictionary)
+        private MeasurementComparisonDictionary(IDictionary<DateTime, IMeasurementComparison> inDictionary) : base(inDictionary)
         {
         }
 

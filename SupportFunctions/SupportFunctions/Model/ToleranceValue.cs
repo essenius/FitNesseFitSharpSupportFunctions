@@ -82,10 +82,7 @@ namespace SupportFunctions.Model
         private void UpdateValues()
         {
             _appliedValue = IsAbsolute ? Value : Math.Abs(DataRange ?? 0) * Value;
-            if (SignificantDigits == null || _appliedValue.IsZero())
-            {
-                return;
-            }
+            if (SignificantDigits == null || _appliedValue.IsZero()) return;
             var desiredPrecision = Math.Max(Math.Ceiling(-Math.Log10(_appliedValue)) + SignificantDigits.Value - 1, 0);
             Precision = Convert.ToInt32(desiredPrecision);
         }

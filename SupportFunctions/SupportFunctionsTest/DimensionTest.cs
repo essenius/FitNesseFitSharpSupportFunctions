@@ -58,8 +58,7 @@ namespace SupportFunctionsTest
             var expected = TestContext.DataRow["interval"].To<double>();
             var dimension = new Dimension(0, range, false);
             var actual = dimension.GridlineInterval;
-            Assert.IsTrue(expected.HasMinimalDifferenceWith(actual),
-                $"Range: {range} expected: {expected} actual: {actual}");
+            Assert.IsTrue(expected.HasMinimalDifferenceWith(actual), $"Range: {range} expected: {expected} actual: {actual}");
         }
 
         [TestMethod, TestCategory("Unit")]

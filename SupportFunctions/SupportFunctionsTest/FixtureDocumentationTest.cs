@@ -26,26 +26,5 @@ namespace SupportFunctionsTest
             Assert.AreEqual("TimeSeries", new TimeSeries().ToString());
             Assert.AreEqual("Comparison", new TimeSeriesComparison(null, null).ToString());
         }
-
-        [TestMethod, TestCategory("Unit")]
-        public void FixtureDocumentationExists()
-        {
-            Assert.IsNotNull(CommonFunctions.FixtureDocumentation);
-            Assert.IsNotNull(CsvComparison.FixtureDocumentation);
-            Assert.IsNotNull(CsvComparisonDifference.FixtureDocumentation);
-            Assert.IsNotNull(CsvTable.FixtureDocumentation);
-            Assert.IsNotNull(Date.FixtureDocumentation);
-            Assert.IsNotNull(DictionaryLibrary.FixtureDocumentation);
-#pragma warning disable 618
-            Assert.IsNotNull(EchoSupport.FixtureDocumentation);
-#pragma warning restore 618
-            Assert.IsNotNull(MachineInfo.FixtureDocumentation);
-            Assert.IsNotNull(Stopwatch.FixtureDocumentation);
-            Assert.IsNotNull(TestControl.FixtureDocumentation);
-            Assert.IsNotNull(TimeSeries.FixtureDocumentation);
-            Assert.IsNotNull(TimeSeriesComparison.FixtureDocumentation);
-            Assert.IsNotNull(Tolerance.FixtureDocumentation);
-            Assert.IsNotNull(UserInfo.FixtureDocumentation);
-        }
     }
 }

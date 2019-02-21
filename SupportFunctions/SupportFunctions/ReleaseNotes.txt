@@ -2,3 +2,4 @@
 1.5.7 Refactored UniqueDateTime (removed duplication), added Date.ToLocal, Date.ToUtc, CommonFunctions.ToUtc(Date), CommonFunctions.ToLocal(Date). Added WaitSeconds test.
 2.0.1 Added documentation for several APIs
 2.0.2 Removed deprecated MemoFunction
+2.1.0 Replaced FixtureExplorer dictionary by [Documentation] attributes

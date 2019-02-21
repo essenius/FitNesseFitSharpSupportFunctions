@@ -31,10 +31,7 @@ namespace SupportFunctionsTest
                 new[] {"Attr4", data4}
             };
             var resultTable = new CsvTable(headers);
-            foreach (var entry in data)
-            {
-                resultTable.Data.Add(entry);
-            }
+            foreach (var entry in data) resultTable.Data.Add(entry);
             return resultTable;
         }
 
@@ -61,18 +58,12 @@ namespace SupportFunctionsTest
             var i = 0;
             foreach (Collection<object> row in difference.Query())
             {
-                Assert.AreEqual(expectedDifference[i][0], CsvComparisonTest.QueryValue(row, "Row No"),
-                    $"Query Entry #{i}.RowNo");
-                Assert.AreEqual(expectedDifference[i][1], CsvComparisonTest.QueryValue(row, "Row Name"),
-                    $"Query Entry #{i}.Row");
-                Assert.AreEqual(expectedDifference[i][2], CsvComparisonTest.QueryValue(row, "Column No"),
-                    $"Query Entry #{i}.ColumnNo");
-                Assert.AreEqual(expectedDifference[i][3], CsvComparisonTest.QueryValue(row, "Column Name"),
-                    $"Query Entry #{i}.Column");
-                Assert.AreEqual(expectedDifference[i][4], CsvComparisonTest.QueryValue(row, "Value"),
-                    $"Query Entry #{i}.Value");
-                Assert.AreEqual(expectedDifference[i][5], CsvComparisonTest.QueryValue(row, "Delta"),
-                    $"Query Entry #{i}.Delta");
+                Assert.AreEqual(expectedDifference[i][0], CsvComparisonTest.QueryValue(row, "Row No"), $"Query Entry #{i}.RowNo");
+                Assert.AreEqual(expectedDifference[i][1], CsvComparisonTest.QueryValue(row, "Row Name"), $"Query Entry #{i}.Row");
+                Assert.AreEqual(expectedDifference[i][2], CsvComparisonTest.QueryValue(row, "Column No"), $"Query Entry #{i}.ColumnNo");
+                Assert.AreEqual(expectedDifference[i][3], CsvComparisonTest.QueryValue(row, "Column Name"), $"Query Entry #{i}.Column");
+                Assert.AreEqual(expectedDifference[i][4], CsvComparisonTest.QueryValue(row, "Value"), $"Query Entry #{i}.Value");
+                Assert.AreEqual(expectedDifference[i][5], CsvComparisonTest.QueryValue(row, "Delta"), $"Query Entry #{i}.Delta");
                 i++;
             }
 

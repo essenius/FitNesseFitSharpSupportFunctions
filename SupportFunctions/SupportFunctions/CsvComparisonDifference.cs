@@ -17,6 +17,7 @@ using SupportFunctions.Model;
 
 namespace SupportFunctions
 {
+    [Documentation("Comparing the difference between two comparisons.")]
     public class CsvComparisonDifference
     {
         private readonly CsvComparison _set1;
@@ -29,26 +30,20 @@ namespace SupportFunctions
             _set2 = set2;
         }
 
-        public static Dictionary<string, string> FixtureDocumentation { get; } = new Dictionary<string, string>
-        {
-            {string.Empty, "Comparing the difference between two comparisons."},
-            {nameof(DoTable), "The result of the comparison difference in a Table Table format"},
-            {nameof(ErrorCount), "The number of items with a different comparison error"},
-            {nameof(Query), "Return the different errors between two comparisons in a Query Table format"}
-        };
-
+        [Documentation("The number of items with a different comparison error")]
         public int ErrorCount => Result.Count();
 
         private IEnumerable<CellComparison> Result => _result ?? (_result = _set1.DeltaWith(_set2));
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "FitNesse API spec")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "FitNesse API spec"),
+         Documentation("The result of the comparison difference in a Table Table format")]
         public Collection<object> DoTable(Collection<Collection<object>> tableIn)
         {
             var renderer = new TableRenderer<CellComparison>(CsvComparison.GetTableValues);
             return renderer.MakeTableTable(Result, tableIn);
         }
 
+        [Documentation("Return the different errors between two comparisons in a Query Table format")]
         public Collection<object> Query() => CsvComparison.MakeQueryTable(Result);
 
         public override string ToString() => "CsvComparisonDifference";

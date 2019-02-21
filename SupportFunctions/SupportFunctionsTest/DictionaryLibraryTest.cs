@@ -170,10 +170,8 @@ namespace SupportFunctionsTest
 
             const string pageContent =
                 "comments\n\n" +
-                "!| Dictionary | not ok |\n| Key | Value |\n| key1 | value 1 |\n| key2 | value 2 |\n| key3 | value 3 |\n\n" +
-                "more comments\n\n" +
-                "!| Dictionary | replace |\n| Key | Value |\n| key4 | value 4 |\n| key5 | value 5 |\n| key6 | value 6 |\n\n " +
-                "yet more comments\n\n" +
+                "!| Dictionary | not ok |\n| Key | Value |\n| key1 | value 1 |\n| key2 | value 2 |\n| key3 | value 3 |\n\nmore comments\n\n" +
+                "!| Dictionary | replace |\n| Key | Value |\n| key4 | value 4 |\n| key5 | value 5 |\n| key6 | value 6 |\n\n yet more comments\n\n" +
                 "!| Dictionary | not ok 2 |\n| Key | Value |\n| 7 | 8 |\n\nand even more comments\n";
 
             var saver = new DictionaryLibrary
@@ -187,12 +185,9 @@ namespace SupportFunctionsTest
             saver.SaveTableToPage(tableName, PageName);
             var expected = PageDataRequest + DeletePageRequest + AddChildPartialRequest +
                            "comments\n\n" +
-                           "!| Dictionary | not ok |\n| Key | Value |\n| key1 | value 1 |\n| key2 | value 2 |\n| key3 | value 3 |\n" +
-                           "\nmore comments\n\n" +
-                           DictionaryHeader(tableName) + "|key9|value 9|\n|key10|value 10|\n|key11|value 11|\n" +
-                           "\n yet more comments\n\n" +
-                           "!| Dictionary | not ok 2 |\n| Key | Value |\n| 7 | 8 |\n" +
-                           "\nand even more comments\n" + FitNessePageTest.UriSeparator;
+                           "!| Dictionary | not ok |\n| Key | Value |\n| key1 | value 1 |\n| key2 | value 2 |\n| key3 | value 3 |\n\nmore comments\n\n" +
+                           DictionaryHeader(tableName) + "|key9|value 9|\n|key10|value 10|\n|key11|value 11|\n\n yet more comments\n\n" +
+                           "!| Dictionary | not ok 2 |\n| Key | Value |\n| 7 | 8 |\n\nand even more comments\n" + FitNessePageTest.UriSeparator;
             Assert.AreEqual(expected, (saver.MyFitNessePage as FitNessePageMock)?.UsedUri);
         }
 
@@ -215,10 +210,7 @@ namespace SupportFunctionsTest
         {
             const string fileName = "test.txt";
             var lib = new DictionaryLibrary();
-            if (File.Exists(fileName))
-            {
-                File.Delete(fileName);
-            }
+            if (File.Exists(fileName)) File.Delete(fileName);
             Assert.IsFalse(lib.WaitForFile(fileName));
             File.Create(fileName).Close();
             Assert.IsTrue(lib.WaitForFile(fileName));

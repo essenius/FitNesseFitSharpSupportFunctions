@@ -39,26 +39,17 @@ namespace SupportFunctions.Model
 
         public string Caption => _captionDictionary[_timeUnit];
 
-        private static TimeUnits TimeUnitFor(double range)
-        {
-            if (range < 0.01)
-            {
-                return TimeUnits.Milliseconds;
-            }
-            if (range < 600D)
-            {
-                return TimeUnits.Seconds;
-            }
-            if (range < 12D * 3600D)
-            {
-                return TimeUnits.Minutes;
-            }
-            return range < 3D * 24D * 3600D ? TimeUnits.Hours : TimeUnits.Days;
-        }
-
         public double ConvertFromSeconds(double secondValue) => secondValue / _conversionFactors[_timeUnit];
 
         public double ConvertToSeconds(double displayValue) => displayValue * _conversionFactors[_timeUnit];
+
+        private static TimeUnits TimeUnitFor(double range)
+        {
+            if (range < 0.01) return TimeUnits.Milliseconds;
+            if (range < 600D) return TimeUnits.Seconds;
+            if (range < 12D * 3600D) return TimeUnits.Minutes;
+            return range < 3D * 24D * 3600D ? TimeUnits.Hours : TimeUnits.Days;
+        }
 
         private enum TimeUnits
         {

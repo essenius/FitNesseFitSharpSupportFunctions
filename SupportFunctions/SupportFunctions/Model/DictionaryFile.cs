@@ -29,6 +29,13 @@ namespace SupportFunctions.Model
 
         public double TimeoutSeconds { get; set; } = 1.0;
 
+        public bool Delete()
+        {
+            if (!File.Exists(_fileName)) return false;
+            File.Delete(_fileName);
+            return !File.Exists(_fileName);
+        }
+
         private static bool IsFileLocked(string file)
         {
             try
@@ -44,24 +51,13 @@ namespace SupportFunctions.Model
             }
         }
 
-        public bool Delete()
-        {
-            if (!File.Exists(_fileName))
-            {
-                return false;
-            }
-            File.Delete(_fileName);
-            return !File.Exists(_fileName);
-        }
-
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "bad rule")]
         public Dictionary<string, string> Load()
         {
             var dictionary = new Dictionary<string, string>();
             try
             {
-                dictionary = new JavaScriptSerializer()
-                    .Deserialize<Dictionary<string, string>>(File.ReadAllText(_fileName));
+                dictionary = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(File.ReadAllText(_fileName));
                 return dictionary;
             }
             catch (ArgumentException)

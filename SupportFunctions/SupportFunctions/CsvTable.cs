@@ -20,7 +20,7 @@ using static System.FormattableString;
 
 namespace SupportFunctions
 {
-    [SuppressMessage("ReSharper", "UnusedParameter.Global")]
+    [SuppressMessage("ReSharper", "UnusedParameter.Global"), Documentation("CSV file handling. Used by Time Series")]
     public class CsvTable
     {
         private string[] _headers;
@@ -29,65 +29,37 @@ namespace SupportFunctions
 
         public CsvTable(string[] headers) : this() => _headers = headers;
 
-        public static Dictionary<string, string> FixtureDocumentation { get; } = new Dictionary<string, string>
-        {
-            {string.Empty, "CSV file handling. Used by Time Series"},
-            {nameof(Parse), "Load a CSV Table from the specified file"},
-            {nameof(ColumnCount), "The number of columns in the CSV file"},
-            {nameof(DoTable), "Show the content of the CSV file in Table format"},
-            {nameof(LoadFrom), "Load a CSV Table from the specified file"},
-            {nameof(Query), "Return the CSV Table as a Query result"},
-            {nameof(RowCount), "The number of rows in the CSV file"}
-        };
-
+        [Documentation("The number of columns in the CSV file")]
         public int ColumnCount => _headers.Length;
 
         internal Collection<string[]> Data { get; }
 
+        [Documentation("The number of rows in the CSV file")]
         public int RowCount => Data.Count;
 
         private static string AddQuotesIfNeeded(string entry)
         {
-            var needsQuotes =
-                entry.Contains(",") || entry.Contains("\"") || entry.Contains("\r") || entry.Contains("\n");
-
+            var needsQuotes = entry.Contains(",") || entry.Contains("\"") || entry.Contains("\r") || entry.Contains("\n");
             entry = entry.Replace("\"", "\"\"");
-
-            if (needsQuotes)
-            {
-                return "\"" + entry + "\"";
-            }
+            if (needsQuotes) return "\"" + entry + "\"";
             return entry;
-        }
-
-        public static CsvTable Parse(string input)
-        {
-            var csvTable = new CsvTable();
-            csvTable.LoadFrom(input);
-            return csvTable;
         }
 
         internal string DataCell(int row, int column) => row >= RowCount || column >= ColumnCount ? null : Data[row][column];
 
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "inputTable",
-             Justification = "FitNesse interface spec"),
-         SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "FitNesse interface spec")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "inputTable", Justification = "FitNesse interface spec"),
+         SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "FitNesse interface spec"),
+         Documentation("Show the content of the CSV file in Table format")]
         public Collection<Collection<string>> DoTable(Collection<Collection<string>> inputTable)
         {
             var returnObject = new Collection<Collection<string>>();
             var row = new Collection<string>();
-            foreach (var headerCell in _headers)
-            {
-                row.Add("report:" + headerCell);
-            }
+            foreach (var headerCell in _headers) row.Add("report:" + headerCell);
             returnObject.Add(row);
             foreach (var line in Data)
             {
                 row = new Collection<string>();
-                foreach (var cell in line)
-                {
-                    row.Add("report:" + cell);
-                }
+                foreach (var cell in line) row.Add("report:" + cell);
                 returnObject.Add(row);
             }
             return returnObject;
@@ -99,18 +71,13 @@ namespace SupportFunctions
         {
             for (var i = 0; i < _headers.Length; i++)
             {
-                if (_headers[i].Equals(headerName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return i;
-                }
+                if (_headers[i].Equals(headerName, StringComparison.OrdinalIgnoreCase)) return i;
             }
             throw new ArgumentException(Invariant($"Header name {headerName} not recognized"));
         }
 
-        public void LoadFrom(string path)
-        {
-            LoadFrom(path, ",", "#", true);
-        }
+        [Documentation("Load a CSV Table from the specified file")]
+        public void LoadFrom(string path) => LoadFrom(path, ",", "#", true);
 
         private void LoadFrom(string path, string delimiter, string comment, bool fieldsInQuotes)
         {
@@ -131,6 +98,15 @@ namespace SupportFunctions
             }
         }
 
+        [Documentation("Load a CSV Table from the specified file")]
+        public static CsvTable Parse(string input)
+        {
+            var csvTable = new CsvTable();
+            csvTable.LoadFrom(input);
+            return csvTable;
+        }
+
+        [Documentation("Return the CSV Table as a Query result")]
         public Collection<object> Query()
         {
             var returnObject = new Collection<object>();

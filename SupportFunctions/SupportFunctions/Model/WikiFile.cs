@@ -10,7 +10,6 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
@@ -27,21 +26,16 @@ namespace SupportFunctions.Model
         private const string TestResultsFolder = "files\\testResults";
 
         private readonly string _wikiPage;
-
         private readonly string _wikiPagePath;
         private readonly string _wikiRoot;
 
+        [Documentation("Experimental. Do not use")]
         public WikiFile(string wikiRoot, string wikiPage)
         {
             _wikiRoot = wikiRoot;
             _wikiPage = Path.Combine(TestResultsFolder, wikiPage);
             _wikiPagePath = Path.Combine(wikiRoot, _wikiPage);
         }
-
-        public static Dictionary<string, string> FixtureDocumentation { get; } = new Dictionary<string, string>
-        {
-            {string.Empty, "Experimental. Do not use"}
-        };
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public static string MimeType(byte[] imageData)
@@ -56,34 +50,13 @@ namespace SupportFunctions.Model
                         id = img.RawFormat.Guid;
                     }
                 }
-                if (id == ImageFormat.Jpeg.Guid || id == ImageFormat.Exif.Guid)
-                {
-                    return "image/jpeg";
-                }
-                if (id == ImageFormat.Png.Guid)
-                {
-                    return "image/png";
-                }
-                if (id == ImageFormat.Gif.Guid)
-                {
-                    return "image/gif";
-                }
-                if (id == ImageFormat.Bmp.Guid || id == ImageFormat.MemoryBmp.Guid)
-                {
-                    return "image/bmp";
-                }
-                if (id == ImageFormat.Icon.Guid)
-                {
-                    return "image/ico";
-                }
-                if (id == ImageFormat.Tiff.Guid)
-                {
-                    return "image/tiff";
-                }
-                if (id == ImageFormat.Emf.Guid)
-                {
-                    return "image/x-emf";
-                }
+                if (id == ImageFormat.Jpeg.Guid || id == ImageFormat.Exif.Guid) return "image/jpeg";
+                if (id == ImageFormat.Png.Guid) return "image/png";
+                if (id == ImageFormat.Gif.Guid) return "image/gif";
+                if (id == ImageFormat.Bmp.Guid || id == ImageFormat.MemoryBmp.Guid) return "image/bmp";
+                if (id == ImageFormat.Icon.Guid) return "image/ico";
+                if (id == ImageFormat.Tiff.Guid) return "image/tiff";
+                if (id == ImageFormat.Emf.Guid) return "image/x-emf";
             }
             catch (Exception)
             {
@@ -97,10 +70,7 @@ namespace SupportFunctions.Model
 
         public string UniquePathFor(string baseName, long ticks)
         {
-            if (baseName == null)
-            {
-                baseName = string.Empty;
-            }
+            if (baseName == null) baseName = string.Empty;
             var name = Path.GetFileNameWithoutExtension(baseName);
             var extension = Path.GetExtension(baseName);
             var timestamp = new DateTime(ticks).ToString("yyyyMMddHHmmssffff", CultureInfo.InvariantCulture);

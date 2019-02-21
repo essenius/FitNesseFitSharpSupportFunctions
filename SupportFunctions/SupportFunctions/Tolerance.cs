@@ -16,6 +16,7 @@ using static System.FormattableString;
 
 namespace SupportFunctions
 {
+    [Documentation("Tolerance for flating point time series comparisons")]
     public class Tolerance
     {
         private readonly List<ToleranceValue> _toleranceValues = new List<ToleranceValue>();
@@ -24,18 +25,7 @@ namespace SupportFunctions
         private int? _precision;
         private double _value;
 
-        public static Dictionary<string, string> FixtureDocumentation { get; } = new Dictionary<string, string>
-        {
-            {string.Empty, "Tolerance for flating point time series comparisons"},
-            {nameof(DataRange), "The range that is the basis for relative tolerances"},
-            {
-                nameof(Parse),
-                "Parse desired tolerance. Format: one or more tolerance specs separated by semicolon. Double for absolutes. percentage for relative compared to expected data range. Example: 0.001;0.1%"
-            },
-            {nameof(Precision), "The calculated precision for the comparison results"},
-            {nameof(Value), "The tolerance value that is applied in the comparison"}
-        };
-
+        [Documentation("The range that is the basis for relative tolerances")]
         public double? DataRange
         {
             get => _dataRange;
@@ -46,6 +36,7 @@ namespace SupportFunctions
             }
         }
 
+        [Documentation("The calculated precision for the comparison results")]
         public int? Precision
         {
             get
@@ -55,6 +46,7 @@ namespace SupportFunctions
             }
         }
 
+        [Documentation("The tolerance value that is applied in the comparison")]
         public double Value
         {
             get
@@ -64,6 +56,14 @@ namespace SupportFunctions
             }
         }
 
+        private void AddToleranceValue(ToleranceValue toleranceValue)
+        {
+            _toleranceValues.Add(toleranceValue);
+            _isDirty = true;
+        }
+
+        [Documentation("Parse desired tolerance. Format: one or more tolerance specs separated by semicolon. " +
+                       "Double for absolutes. percentage for relative compared to expected data range. Example: 0.001;0.1%")]
         public static Tolerance Parse(string input)
         {
             var returnValue = new Tolerance();
@@ -74,12 +74,6 @@ namespace SupportFunctions
             }
             Debug.Assert(returnValue._isDirty, "returnValue._isDirty");
             return returnValue;
-        }
-
-        private void AddToleranceValue(ToleranceValue toleranceValue)
-        {
-            _toleranceValues.Add(toleranceValue);
-            _isDirty = true;
         }
 
         public override string ToString()
@@ -96,20 +90,14 @@ namespace SupportFunctions
 
         private void UpdateValues()
         {
-            if (!_isDirty)
-            {
-                return;
-            }
+            if (!_isDirty) return;
             var maxTolerance = 0.0;
             int? precision = null;
             foreach (var toleranceValue in _toleranceValues)
             {
                 toleranceValue.DataRange = DataRange;
                 var newTolerance = toleranceValue.AppliedValue;
-                if (!(newTolerance > maxTolerance))
-                {
-                    continue;
-                }
+                if (!(newTolerance > maxTolerance)) continue;
                 maxTolerance = newTolerance;
                 precision = toleranceValue.Precision;
             }

@@ -19,20 +19,14 @@ namespace SupportFunctionsTest
         public static double? ToNullableDouble(this object input)
         {
             double? output = null;
-            if (double.TryParse(input.ToString(), out var result))
-            {
-                output = result;
-            }
+            if (double.TryParse(input.ToString(), out var result)) output = result;
             return output;
         }
 
         public static int? ToNullableInt(this object input)
         {
             int? output = null;
-            if (int.TryParse(input.ToString(), out var result))
-            {
-                output = result;
-            }
+            if (int.TryParse(input.ToString(), out var result)) output = result;
             return output;
         }
 

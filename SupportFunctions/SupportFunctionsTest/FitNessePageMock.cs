@@ -31,15 +31,9 @@ namespace SupportFunctionsTest
         protected override List<string> RestCall(string uri)
         {
             UsedUri += Uri.UnescapeDataString(uri) + FitNessePageTest.UriSeparator;
-            if (_inputText == null)
-            {
-                return new List<string>();
-            }
+            if (_inputText == null) return new List<string>();
             var result = _inputText.Split('\n').ToList();
-            if (string.IsNullOrEmpty(result.Last()))
-            {
-                result.RemoveAt(result.Count - 1);
-            }
+            if (string.IsNullOrEmpty(result.Last())) result.RemoveAt(result.Count - 1);
             return result;
         }
     }
