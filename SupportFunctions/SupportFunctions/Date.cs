@@ -39,26 +39,6 @@ namespace SupportFunctions
         [Documentation("The default date/time format. If not set, SortableDateTimePattern is taken.")]
         public static string DefaultFormat { get; set; } = DateTimeFormatInfo.InvariantInfo.SortableDateTimePattern;
 
-        //public static Dictionary<string, string> FixtureDocumentation { get; } = new Dictionary<string, string>
-        //{
-        //{string.Empty, "Date class assignable to a FitNesse symbol"},
-        //{nameof(AddDays), "Add a number of days. Can be negative and/or contain fractions"},
-        //{nameof(AddHours), "Add a number of hours. Can be negative and/or contain fractions"},
-        //{nameof(DateTime), "Return the underlying DateTime object"},
-        //{nameof(DefaultFormat), "The default date/time format. If not set, SortableDateTimePattern is taken."},
-        //{"set_" + nameof(DefaultFormat), "Set the default date/time format (.Net specification)"},
-        //{nameof(Formatted), "Return the date in the specified format (.Net specification)"},
-        //{nameof(Parse), "Parse a string into a date object. FitNesse calls this when using as a parameter"},
-        //{nameof(ParseFormatted), "Parse a string into a date object using a specific date format."},
-        //{nameof(ResetDefaultFormat), "Reset the default date/time format to SortableDateTimePattern"},
-        //{nameof(Ticks), "Return the Ticks representation"},
-        //{nameof(TimeFormat), "Return the time format"},
-        //{nameof(ToLocal), "Return the date converted to local time"},
-        //{nameof(ToUtc), "Return the date converted to UTC"},
-        //{nameof(ToLocalFormat), "Return the date in the user's default formatting"},
-        //{nameof(ShortDateFormat), "Return the current short date format"}
-        //};
-
         [Documentation("Return the current short date format")]
         public static string ShortDateFormat => new RegistryWrapper().ShortDateFormat;
 

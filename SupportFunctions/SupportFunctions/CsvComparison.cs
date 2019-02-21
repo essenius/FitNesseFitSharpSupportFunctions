@@ -60,17 +60,6 @@ namespace SupportFunctions
             _result = null;
         }
 
-        //public static Dictionary<string, string> FixtureDocumentation { get; } = new Dictionary<string, string>
-        // {
-        //{string.Empty, "Comparing two CSVs"},
-        //{nameof(DoTable), "The result of the comparison in a Table Table format"},
-        //{nameof(DeltaWith), "Inernal use only"},
-        //{nameof(ErrorCount), "The number of items with a comparison error"},
-        //{nameof(MakeQueryTable), "Inernal use only"},
-        //{nameof(Parse), "Enables assigning a FitNesse symbol to parameters of this type"},
-        //{nameof(Query), "Return the errors of a CSV comparison in a Query Table format"}
-        //};
-
         private List<CellComparison> Result
         {
             get
