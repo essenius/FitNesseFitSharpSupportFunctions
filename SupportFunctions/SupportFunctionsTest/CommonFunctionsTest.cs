@@ -24,7 +24,7 @@ namespace SupportFunctionsTest
         public void CommonFunctionsCloneSymbolTest() => Assert.AreEqual(5, CommonFunctions.CloneSymbol(5));
 
         [TestMethod, TestCategory("Unit")]
-        public void CommonFunctionsConcatTest() => Assert.AreEqual("abc", CommonFunctions.Concat(new[] {"a", "b", "c"}));
+        public void CommonFunctionsConcatenateTest() => Assert.AreEqual("abc", CommonFunctions.Concatenate(new[] {"a", "b", "c"}));
 
         [TestMethod, TestCategory("Unit")]
         public void CommonFunctionsDateTests()

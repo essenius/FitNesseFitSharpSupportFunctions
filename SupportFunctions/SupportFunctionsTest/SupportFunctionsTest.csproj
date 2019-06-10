@@ -102,6 +102,7 @@
     <Compile Include="FixtureDocumentationTest.cs" />
     <Compile Include="StopExceptionTest.cs" />
     <Compile Include="DocumentationAttributeTest.cs" />
+    <Compile Include="CsvComparisonDataTest.cs" />
     <Compile Include="ValueComparisonMock.cs" />
     <Compile Include="ValueComparisonTest.cs" />
     <Compile Include="WikiFileTest.cs" />

@@ -51,16 +51,13 @@ namespace SupportFunctionsTest
             Assert.AreEqual(expectedResult, base64Result);
         }
 
-        [TestMethod, TestCategory("Unit"), DeploymentItem("TestData\\Base64SecondOrderResponseLimitedY.html")]
-        public void TimeSeriesChartSecondOrderResponseTest()
+        private static MeasurementComparisonDictionary SecondOrderGraphWithValueIssues(DateTime startTimestamp)
         {
             var table = new MeasurementComparisonDictionary();
-
             const double zetaExpected = 0.205;
             const double zetaActual = 0.2;
             const double omega = 1;
             const double theta = Math.PI / 2;
-            var startTimestamp = DateTime.Today;
             var minY = double.MaxValue;
             var maxY = double.MinValue;
             for (double time = 0; time <= 30; time += 0.5)
@@ -78,7 +75,13 @@ namespace SupportFunctionsTest
                     actualValue.To<string>(),
                     okValue ? CompareOutcome.None : CompareOutcome.ValueIssue));
             }
-
+            return table;
+        }
+        [TestMethod, TestCategory("Unit"), DeploymentItem("TestData\\Base64SecondOrderResponseLimitedY.html")]
+        public void TimeSeriesChartSecondOrderResponseTest()
+        {
+            var startTimestamp = DateTime.Today;
+            var table = SecondOrderGraphWithValueIssues(startTimestamp);
             var endTimestamp = table.Last().Key;
             using (var timeSeriesChart = new TimeSeriesChart())
             {

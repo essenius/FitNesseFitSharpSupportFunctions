@@ -13,7 +13,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("SupportFunctionsTest")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Test assembly for SupportFunctions fixture")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rik Essenius")]
 [assembly: AssemblyProduct("SupportFunctionsTest")]
@@ -22,4 +22,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: Guid("3449c7d4-4817-446f-8a4f-b72fd818de29")]
-[assembly: AssemblyVersion("2.1.0")]
+[assembly: AssemblyVersion("2.2.0")]

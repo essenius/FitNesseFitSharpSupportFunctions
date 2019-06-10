@@ -24,6 +24,7 @@ namespace SupportFunctions
     [SuppressMessage("ReSharper", "UnusedParameter.Global"), Documentation("Comparing two CSVs")]
     public class CsvComparison
     {
+        private const string CellCaption = "Cell";
         private const string ColumnNameCaption = "Column Name";
         private const string ColumnNoCaption = "Column No";
         private const string CsvComparisonCaption = "CsvComparison";
@@ -37,9 +38,10 @@ namespace SupportFunctions
         internal static readonly Dictionary<string, Func<CellComparison, object>> GetTableValues =
             new Dictionary<string, Func<CellComparison, object>>
             {
-                {RowNoCaption, result => DisplayRow(result.Row).Report()},
+                {CellCaption, result => CellReference(result.Row, result.Column).Report()},
+                {RowNoCaption, result => RowReference(result.Row).Report()},
                 {RowNameCaption, result => result.RowName.Report()},
-                {ColumnNoCaption, result => DisplayColumn(result.Column).Report()},
+                {ColumnNoCaption, result => ColumnReference(result.Column).Report()},
                 {ColumnNameCaption, result => result.ColumnName.Report()},
                 {ValueCaption, result => result.Cell.TableResult(result.Cell.ValueMessage)},
                 {DeltaCaption, result => result.Cell.TableResult(result.Cell.DeltaMessage)},
@@ -64,10 +66,47 @@ namespace SupportFunctions
         {
             get
             {
-                RunComparison();
+                if (_result != null) return _result;
+                // safety net, should only occur in certain unit tests
+                if (_baseTable == null) return null;
+
+                const int headerRowNo = -1;
+
+                //Data contains a list of rows, not a list of columns
+                var maxRows = Math.Max(_baseTable.RowCount, _comparedTable.RowCount);
+                var maxColumns = Math.Max(_baseTable.ColumnCount, _comparedTable.ColumnCount);
+                _result = new List<CellComparison>();
+                var rowName = _baseTable.Header(0);
+                for (var column = 0; column < maxColumns; column++)
+                {
+                    var columnName = _baseTable.Header(column);
+                    var comparison = new CellComparison(headerRowNo, rowName, column, columnName, columnName, _comparedTable.Header(column),
+                        _tolerance);
+                    if (!comparison.Cell.IsOk()) _result.Add(comparison);
+                }
+
+                for (var row = 0; row < maxRows; row++)
+                {
+                    var currentRow = _baseTable.DataCell(row, 0);
+                    for (var column = 0; column < _baseTable.Data[row].Length; column++)
+                    {
+                        var currentColumn = _baseTable.Header(column);
+                        var expectedValue = _baseTable.DataCell(row, column);
+                        var actualValue = _comparedTable.DataCell(row, column);
+                        // reset tolerance range to force recalculating per comparison
+                        _tolerance.DataRange = null;
+                        var comparison = new CellComparison(row, currentRow, column, currentColumn, expectedValue, actualValue, _tolerance);
+                        if (!comparison.Cell.IsOk()) _result.Add(comparison);
+                    }
+                }
                 return _result;
             }
         }
+
+        // the way Excel refers to individual cells, e.g. A1, AC39
+        private static string CellReference(int rowNo, int columnNo) => columnNo.ToExcelColumnName() + RowReference(rowNo);
+
+        private static string ColumnReference(int columnNo) => Invariant($"{columnNo + 1} ({columnNo.ToExcelColumnName()})");
 
         internal IEnumerable<CellComparison> DeltaWith(CsvComparison otherComparison)
         {
@@ -77,15 +116,9 @@ namespace SupportFunctions
             return difference;
         }
 
-        private static string DisplayColumn(int columnNo) => Invariant($"{columnNo + 1} ({columnNo.ToExcelColumnName()})");
-
-        // header is -1, internal data row counting starts at 0. 
-        // People used to Excel will expect counting to start at 1
-        private static string DisplayRow(int rowNo) => Invariant($"{rowNo + 2}");
-
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures"), SuppressMessage("Microsoft.Usage",
-             "CA1801:ReviewUnusedParameters", MessageId = "tableIn",
-             Justification = "FitNesse API spec"), Documentation("The result of the comparison in a Table Table format")]
+             "CA1801:ReviewUnusedParameters", MessageId = "tableIn", Justification = "FitNesse API spec"),
+         Documentation("The result of the comparison in a Table Table format")]
         public Collection<object> DoTable(Collection<Collection<object>> tableIn)
         {
             var renderer = new TableRenderer<CellComparison>(GetTableValues);
@@ -94,6 +127,21 @@ namespace SupportFunctions
 
         [Documentation("The number of items with a comparison error")]
         public int ErrorCount() => Result.Count;
+
+        [Documentation("The errors, in a hashtable")]
+        public Dictionary<string, string> Errors()
+        {
+            var result = new Dictionary<string, string>();
+            foreach (var entry in Result)
+            {
+                result.Add(CellReference(entry.Row, entry.Column) + " [" + entry.ColumnName + "/" + entry.RowName + "]",
+                    entry.Cell.ValueMessage + " (" +
+                    (string.IsNullOrEmpty(entry.Cell.DeltaMessage) ? "" : "Delta:" + entry.Cell.DeltaMessage + ", ") +
+                    (string.IsNullOrEmpty(entry.Cell.DeltaPercentageMessage) ? "" : entry.Cell.DeltaPercentageMessage + ", ") +
+                    entry.Cell.Outcome + ")");
+            }
+            return result;
+        }
 
         internal static Collection<object> MakeQueryTable(IEnumerable<CellComparison> result)
         {
@@ -114,9 +162,10 @@ namespace SupportFunctions
 
         private static Collection<object> QueryRow(CellComparison row) => new Collection<object>
         {
-            new Collection<object> {RowNoCaption, DisplayRow(row.Row)},
+            new Collection<object> {CellCaption, CellReference(row.Row, row.Column)},
+            new Collection<object> {RowNoCaption, RowReference(row.Row)},
             new Collection<object> {RowNameCaption, row.RowName},
-            new Collection<object> {ColumnNoCaption, DisplayColumn(row.Column)},
+            new Collection<object> {ColumnNoCaption, ColumnReference(row.Column)},
             new Collection<object> {ColumnNameCaption, row.ColumnName},
             new Collection<object> {ValueCaption, row.Cell.ValueMessage},
             new Collection<object> {DeltaCaption, row.Cell.DeltaMessage},
@@ -124,56 +173,9 @@ namespace SupportFunctions
             new Collection<object> {IssueCaption, row.Cell.Outcome.ToString()}
         };
 
-        private void RunComparison()
-        {
-            if (_result != null)
-            {
-                return;
-            }
-
-            // safety net, should only occur in certain unit tests
-            if (_baseTable == null)
-            {
-                return;
-            }
-
-            const int headerRowNo = -1;
-
-            //Data contains a list of rows, not a list of columns
-            var maxRows = Math.Max(_baseTable.RowCount, _comparedTable.RowCount);
-            var maxColumns = Math.Max(_baseTable.ColumnCount, _comparedTable.ColumnCount);
-            _result = new List<CellComparison>();
-            var rowName = _baseTable.Header(0);
-            for (var column = 0; column < maxColumns; column++)
-            {
-                var columnName = _baseTable.Header(column);
-                var comparison = new CellComparison(headerRowNo, rowName, column, columnName, columnName,
-                    _comparedTable.Header(column), _tolerance);
-                if (!comparison.Cell.IsOk())
-                {
-                    _result.Add(comparison);
-                }
-            }
-
-            for (var row = 0; row < maxRows; row++)
-            {
-                var currentRow = _baseTable.DataCell(row, 0);
-                for (var column = 0; column < _baseTable.Data[row].Length; column++)
-                {
-                    var currentColumn = _baseTable.Header(column);
-                    var expectedValue = _baseTable.DataCell(row, column);
-                    var actualValue = _comparedTable.DataCell(row, column);
-                    // reset tolerance range to force recalculating per comparison
-                    _tolerance.DataRange = null;
-                    var comparison = new CellComparison(row, currentRow, column, currentColumn, expectedValue,
-                        actualValue, _tolerance);
-                    if (!comparison.Cell.IsOk())
-                    {
-                        _result.Add(comparison);
-                    }
-                }
-            }
-        }
+        // header is -1, internal data row counting starts at 0. 
+        // People used to Excel will expect counting to start at 1
+        private static string RowReference(int rowNo) => Invariant($"{rowNo + 2}");
 
         public override string ToString() => CsvComparisonCaption;
 

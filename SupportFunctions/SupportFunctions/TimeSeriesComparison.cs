@@ -202,6 +202,14 @@ namespace SupportFunctions
             return Graph(dict);
         }
 
+        private void MarkUncoveredActualsAsSurplus(Dictionary<DateTime, Measurement> actualDictionary)
+        {
+            foreach (var actual in actualDictionary.Values.Where(s => !s.IsChecked))
+            {
+                _result.AddWithCheck(actual.Timestamp, new MeasurementComparison(null, actual, _tolerance), "surplus");
+            }
+        }
+
         private static double Max(double value1, double value2)
         {
             if (double.IsNaN(value1)) return value2;
@@ -242,12 +250,7 @@ namespace SupportFunctions
             SetTimeSpanSeconds();
 
             CompareExpectedToActuals(actualDictionary);
-            // If we have any actuals that we didn't cover yet, mark them as surplus
-            foreach (var actual in actualDictionary.Values.Where(s => !s.IsChecked))
-                // Add with a check for duplicates that gives a bit more meaningful error than the default message
-            {
-                _result.AddWithCheck(actual.Timestamp, new MeasurementComparison(null, actual, _tolerance), "surplus");
-            }
+            MarkUncoveredActualsAsSurplus(actualDictionary);
         }
 
         private void SetTimeSpanSeconds()

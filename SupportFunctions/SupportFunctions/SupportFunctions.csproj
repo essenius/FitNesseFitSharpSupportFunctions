@@ -108,9 +108,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="AllRulesButCA1062.ruleset" />
-    <None Include="SupportFunctions.nuspec">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="CustomDictionary.xml" />

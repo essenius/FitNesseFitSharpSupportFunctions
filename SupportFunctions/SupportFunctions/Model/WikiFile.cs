@@ -10,6 +10,7 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
@@ -40,6 +41,18 @@ namespace SupportFunctions.Model
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public static string MimeType(byte[] imageData)
         {
+            var formatDictionary = new Dictionary<Guid, string>
+            {
+                {ImageFormat.Jpeg.Guid, "image/jpeg"},
+                {ImageFormat.Exif.Guid, "image/jpeg"},
+                {ImageFormat.Png.Guid, "image/png"},
+                {ImageFormat.Gif.Guid, "image/gif"},
+                {ImageFormat.Bmp.Guid, "image/bmp"},
+                {ImageFormat.MemoryBmp.Guid, "image/bmp"},
+                {ImageFormat.Icon.Guid, "image/ico"},
+                {ImageFormat.Tiff.Guid, "image/tiff"},
+                {ImageFormat.Emf.Guid, "image/x-emf"}
+            };
             try
             {
                 Guid id;
@@ -50,13 +63,7 @@ namespace SupportFunctions.Model
                         id = img.RawFormat.Guid;
                     }
                 }
-                if (id == ImageFormat.Jpeg.Guid || id == ImageFormat.Exif.Guid) return "image/jpeg";
-                if (id == ImageFormat.Png.Guid) return "image/png";
-                if (id == ImageFormat.Gif.Guid) return "image/gif";
-                if (id == ImageFormat.Bmp.Guid || id == ImageFormat.MemoryBmp.Guid) return "image/bmp";
-                if (id == ImageFormat.Icon.Guid) return "image/ico";
-                if (id == ImageFormat.Tiff.Guid) return "image/tiff";
-                if (id == ImageFormat.Emf.Guid) return "image/x-emf";
+                if (formatDictionary.ContainsKey(id)) return formatDictionary[id];
             }
             catch (Exception)
             {

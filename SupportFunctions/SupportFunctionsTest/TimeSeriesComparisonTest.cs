@@ -130,9 +130,8 @@ namespace SupportFunctionsTest
             var timeSeriesComparison = string.IsNullOrEmpty(toleranceString)
                 ? new TimeSeriesComparison(expectedSeries, actualSeries)
                 : new TimeSeriesComparison(expectedSeries, actualSeries, Tolerance.Parse(toleranceString));
-            var displayTolerance = ColumnWithDefault(TestContext.DataRow, "displayTolerance", string.Empty)?.ToString();
+            //var displayTolerance = ColumnWithDefault(TestContext.DataRow, "displayTolerance", string.Empty)?.ToString();
             var result = timeSeriesComparison.DoTable(null);
-            const string fail = "fail:";
 
             Assert.IsTrue(result.Count > 0, $"Result count = 0 for {testCase}");
             var header = result[0] as Collection<object>;
@@ -143,7 +142,17 @@ namespace SupportFunctionsTest
             Assert.AreEqual("report:Delta %", header[3], $"Delta % Header for {testCase}");
             Assert.AreEqual("report:Is Good", header[4], $"Is Good Header for {testCase}");
 
+            CheckDataRows(expectedResults, result, testCase);
+
+            Assert.AreEqual(TestContext.DataRow["failures"].To<long>(), timeSeriesComparison.FailureCount, $"FailureCount {testCase}");
+            Assert.AreEqual(TestContext.DataRow["datapoints"].To<long>(), timeSeriesComparison.PointCount, $"PointCount {testCase}");
+            Assert.AreEqual(TestContext.DataRow["usedTolerance"].ToString(), timeSeriesComparison.UsedTolerance, $"UsedTolerance {testCase}");
+        }
+
+        private static void CheckDataRows(Dictionary<string, Dictionary<string, string>> expectedResults, IEnumerable<object> result, string testCase)
+        {
             // check the data rows only - we already did the header
+            const string fail = "fail:";
             foreach (Collection<object> row in result.Skip(1))
             {
                 var timestamp = GetTimestamp(row[0].ToString());
@@ -166,9 +175,6 @@ namespace SupportFunctionsTest
                     Assert.AreEqual(entry.Value, actualResult[entry.Key], $"{entry.Key}@{testCase}[{timestamp}]");
                 }
             }
-            Assert.AreEqual(TestContext.DataRow["failures"].To<long>(), timeSeriesComparison.FailureCount, $"FailureCount {testCase}");
-            Assert.AreEqual(TestContext.DataRow["datapoints"].To<long>(), timeSeriesComparison.PointCount, $"PointCount {testCase}");
-            Assert.AreEqual(TestContext.DataRow["usedTolerance"].ToString(), timeSeriesComparison.UsedTolerance, $"UsedTolerance {testCase}");
         }
 
         [TestMethod, TestCategory("Unit")]

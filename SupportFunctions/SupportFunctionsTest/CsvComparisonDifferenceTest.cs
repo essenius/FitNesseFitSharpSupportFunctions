@@ -51,31 +51,33 @@ namespace SupportFunctionsTest
 
             var expectedDifference = new List<List<string>>
             {
-                new List<string> {"2", "Attr1", "2 (B)", "Stream1", "102.1 != 100", "2.1"},
-                new List<string> {"4", "Attr3", "2 (B)", "Stream1", "97.5 != 100", "2.5"}
+                new List<string> {"B2", "2", "Attr1", "2 (B)", "Stream1", "102.1 != 100", "2.1"},
+                new List<string> {"B4", "4", "Attr3", "2 (B)", "Stream1", "97.5 != 100", "2.5"}
             };
 
             var i = 0;
             foreach (Collection<object> row in difference.Query())
             {
-                Assert.AreEqual(expectedDifference[i][0], CsvComparisonTest.QueryValue(row, "Row No"), $"Query Entry #{i}.RowNo");
-                Assert.AreEqual(expectedDifference[i][1], CsvComparisonTest.QueryValue(row, "Row Name"), $"Query Entry #{i}.Row");
-                Assert.AreEqual(expectedDifference[i][2], CsvComparisonTest.QueryValue(row, "Column No"), $"Query Entry #{i}.ColumnNo");
-                Assert.AreEqual(expectedDifference[i][3], CsvComparisonTest.QueryValue(row, "Column Name"), $"Query Entry #{i}.Column");
-                Assert.AreEqual(expectedDifference[i][4], CsvComparisonTest.QueryValue(row, "Value"), $"Query Entry #{i}.Value");
-                Assert.AreEqual(expectedDifference[i][5], CsvComparisonTest.QueryValue(row, "Delta"), $"Query Entry #{i}.Delta");
+                Assert.AreEqual(expectedDifference[i][0], CsvComparisonTest.QueryValue(row, "Cell"), $"Query Entry #{i}.Cell");
+                Assert.AreEqual(expectedDifference[i][1], CsvComparisonTest.QueryValue(row, "Row No"), $"Query Entry #{i}.RowNo");
+                Assert.AreEqual(expectedDifference[i][2], CsvComparisonTest.QueryValue(row, "Row Name"), $"Query Entry #{i}.Row");
+                Assert.AreEqual(expectedDifference[i][3], CsvComparisonTest.QueryValue(row, "Column No"), $"Query Entry #{i}.ColumnNo");
+                Assert.AreEqual(expectedDifference[i][4], CsvComparisonTest.QueryValue(row, "Column Name"), $"Query Entry #{i}.Column");
+                Assert.AreEqual(expectedDifference[i][5], CsvComparisonTest.QueryValue(row, "Value"), $"Query Entry #{i}.Value");
+                Assert.AreEqual(expectedDifference[i][6], CsvComparisonTest.QueryValue(row, "Delta"), $"Query Entry #{i}.Delta");
                 i++;
             }
 
             i = 0;
             foreach (Collection<object> row in difference.DoTable(null).Skip(1))
             {
-                Assert.AreEqual("report:" + expectedDifference[i][0], row[0], $"Table Entry #{i}.RowNo");
-                Assert.AreEqual("report:" + expectedDifference[i][1], row[1], $"Table Entry #{i}.Row");
-                Assert.AreEqual("report:" + expectedDifference[i][2], row[2], $"Table Entry #{i}.ColumnNo");
-                Assert.AreEqual("report:" + expectedDifference[i][3], row[3], $"Table Entry #{i}.Column");
-                Assert.AreEqual("fail:" + expectedDifference[i][4], row[4], $"Table Entry #{i}.Value");
-                Assert.AreEqual("fail:" + expectedDifference[i][5], row[5], $"Table Entry #{i}.Delta");
+                Assert.AreEqual("report:" + expectedDifference[i][0], row[0], $"Table Entry #{i}.Cell");
+                Assert.AreEqual("report:" + expectedDifference[i][1], row[1], $"Table Entry #{i}.RowNo");
+                Assert.AreEqual("report:" + expectedDifference[i][2], row[2], $"Table Entry #{i}.Row");
+                Assert.AreEqual("report:" + expectedDifference[i][3], row[3], $"Table Entry #{i}.ColumnNo");
+                Assert.AreEqual("report:" + expectedDifference[i][4], row[4], $"Table Entry #{i}.Column");
+                Assert.AreEqual("fail:" + expectedDifference[i][5], row[5], $"Table Entry #{i}.Value");
+                Assert.AreEqual("fail:" + expectedDifference[i][6], row[6], $"Table Entry #{i}.Delta");
                 i++;
             }
             Assert.AreEqual(expectedDifference.Count, difference.ErrorCount, "Table ErrorCount");

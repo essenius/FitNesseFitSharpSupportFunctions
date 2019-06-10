@@ -15,18 +15,15 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("SupportFunctions")]
-[assembly: AssemblyDescription("Fixture support functions such as Echo, Times Series, Dictionary Library objects")]
+[assembly: AssemblyDescription("Fixture support functions such as Echo, Times Series, Dictionary Library objects, date functions")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rik Essenius")]
 [assembly: AssemblyProduct("SupportFunctions")]
 [assembly: AssemblyCopyright("Copyright © Rik Essenius 2015-2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(false)]
 [assembly: Guid("9dad152f-4c9e-4729-a71c-7b5573da2f6d")]
-
-// don't forget release notes in the nuspec file
-[assembly: AssemblyVersion("2.1.0")]
+[assembly: AssemblyVersion("2.2.0")]
 [assembly: InternalsVisibleTo("SupportFunctionsTest")]

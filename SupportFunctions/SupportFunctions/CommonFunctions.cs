@@ -59,8 +59,11 @@ namespace SupportFunctions
         [Documentation("Alias for Echo. Required by FitNesse to enable use of symbols in decision table results.")]
         public static object CloneSymbol(object symbol) => symbol;
 
+        [Obsolete("Use Concatenate instead")]
+        public static string Concat(string[] input) => Concatenate(input);
+
         [Documentation("Concatenate a list of values into a single string value")]
-        public static string Concat(string[] input) => input.Aggregate(string.Empty, (current, entry) => current + entry);
+        public static string Concatenate(string[] input) => input.Aggregate(string.Empty, (current, entry) => current + entry);
 
         [Documentation("Return a date using a specific format (using standard .Net convention)")]
         public static string DateFormatted(Date date, string format)

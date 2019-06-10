@@ -1,10 +1,8 @@
 |Script|Common Functions                                              |
-|check |concat|[simple string]            |simple string              |
-|check |concat|[1, 2, 3]                  |123                        |
+|check |concatenate|[simple string]            |simple string         |
+|check |concatenate|[1, 2, 3]                  |123                   |
 |check |echo  |!{name:luke, category:jedi}|!{name:luke, category:jedi}|
 
 |Script|Dictionary Library                                                                               |
 |check |get|name|from|!{name:bob, addr:here}                                                         |bob|
 |check |get|name|from|<table><tr><td>id</td><td>1</td></tr><tr><td>name</td><td>han</td></tr></table>|han|
-
-

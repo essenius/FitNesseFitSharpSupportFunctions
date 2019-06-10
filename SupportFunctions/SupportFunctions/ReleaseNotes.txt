@@ -3,3 +3,7 @@
 2.0.1 Added documentation for several APIs
 2.0.2 Removed deprecated MemoFunction
 2.1.0 Replaced FixtureExplorer dictionary by [Documentation] attributes
+2.2.0 Introduced Errors field for CsvComparison script fixture, returning a hash table of errors (null if none).
+      Introduced Cell column in CsvComparison query and table tables, returning cell reference in Excel format.
+      Added Concatenate in CommonFunctions to replace Concat, and deprecated Concat. 
+	  Refactored some methods with high complexity and class coupling 

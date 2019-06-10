@@ -24,6 +24,22 @@ namespace SupportFunctionsTest
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "False positive")]
         public TestContext TestContext { get; set; }
 
+        private void AssertBoolEqual(string expected, string actual, string testName)
+        {
+            if (!string.IsNullOrEmpty(expected))
+            {
+                Assert.AreEqual(expected.To<bool>(), actual.To<bool>(), testName);
+            }
+        }
+
+        private void AssertStringEqual(string expected, string actual, string testName)
+        {
+            if (!string.IsNullOrEmpty(expected))
+            {
+                Assert.AreEqual(expected, actual ?? string.Empty, testName);
+            }
+        }
+
         [TestMethod, TestCategory("Unit"), DeploymentItem("SupportFunctionsTest\\TestData.xml"),
          DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", "|DataDirectory|\\TestData.xml", "MeasurementCompare",
              DataAccessMethod.Sequential)]
@@ -31,22 +47,31 @@ namespace SupportFunctionsTest
         {
             var testName = "Test " + TestContext.DataRow["testcase"];
 
-            Measurement expected;
-            if (string.IsNullOrEmpty(TestContext.DataRow["expectedTimestamp"].ToString()))
-            {
-                expected = null;
-            }
-            else
-            {
-                expected = new Measurement
-                {
-                    Timestamp = DateTime.Parse(TestContext.DataRow["expectedTimestamp"].ToString()),
-                    Value = TestContext.DataRow["expectedValue"].ToString(),
-                    IsGood = TestContext.DataRow["expectedIsGood"].To<bool>(),
-                    IsChecked = false
-                };
-            }
+            var expected = PrepareExpected();
+            var actual = PrepareActual();
 
+            var compareTypeString = TestContext.DataRow.ValueIfExists("compareType");
+            var tolerance = Tolerance.Parse(TestContext.DataRow["tolerance"].ToString());
+            var compareType = string.IsNullOrEmpty(compareTypeString) ? expected?.Value.InferType() : Type.GetType(compareTypeString);
+            if (compareType == null) $"compareType == null for {testName}".Log();
+            ("Precision parsed:" + tolerance.Precision).Log();
+
+            var actualResult = new MeasurementComparison(expected, actual, tolerance, compareType);
+
+            Assert.AreEqual(TestContext.DataRow["issue"].ToString(), actualResult.OutcomeMessage, testName + "-Issue");
+
+            AssertStringEqual(TestContext.DataRow.ValueIfExists("resultExpectedValue"), actualResult.Value.ExpectedValueOut,
+                testName + "-ExpectedValue");
+            AssertStringEqual(TestContext.DataRow.ValueIfExists("resultActualValue"), actualResult.Value.ActualValueOut, testName + "-ActualValue");
+            AssertStringEqual(TestContext.DataRow.ValueIfExists("resultDelta"), actualResult.Value.DeltaOut, testName + "-Delta");
+
+            AssertBoolEqual(TestContext.DataRow.ValueIfExists("resultExpectedIsGood"), actualResult.IsGood.ExpectedValueOut,
+                testName + "-ExpectedIsGood");
+            AssertBoolEqual(TestContext.DataRow.ValueIfExists("resultActualIsGood"), actualResult.IsGood.ActualValueOut, testName + "-ActualIsGood");
+        }
+
+        private Measurement PrepareActual()
+        {
             Measurement actual;
             if (string.IsNullOrEmpty(TestContext.DataRow["actualTimestamp"].ToString()))
             {
@@ -64,43 +89,27 @@ namespace SupportFunctionsTest
                     IsChecked = !string.IsNullOrEmpty(actualIsChecked) && actualIsChecked.To<bool>()
                 };
             }
+            return actual;
+        }
 
-            var compareTypeString = TestContext.DataRow.ValueIfExists("compareType");
-            var tolerance = Tolerance.Parse(TestContext.DataRow["tolerance"].ToString());
-            var compareType = string.IsNullOrEmpty(compareTypeString)
-                ? expected?.Value.InferType()
-                : Type.GetType(compareTypeString);
-            if (compareType == null) $"compareType == null for {testName}".Log();
-            ("Precision parsed:" + tolerance.Precision).Log();
-
-            var actualResult = new MeasurementComparison(expected, actual, tolerance, compareType);
-
-            Assert.AreEqual(TestContext.DataRow["issue"].ToString(), actualResult.OutcomeMessage, testName + "-Issue");
-            var resultExpectedValue = TestContext.DataRow.ValueIfExists("resultExpectedValue");
-            if (!string.IsNullOrEmpty(resultExpectedValue))
+        private Measurement PrepareExpected()
+        {
+            Measurement expected;
+            if (string.IsNullOrEmpty(TestContext.DataRow["expectedTimestamp"].ToString()))
             {
-                Assert.AreEqual(resultExpectedValue, actualResult.Value.ExpectedValueOut ?? string.Empty, testName + "-ExpectedValue");
+                expected = null;
             }
-            var resultActualValue = TestContext.DataRow.ValueIfExists("resultActualValue");
-            if (!string.IsNullOrEmpty(resultActualValue))
+            else
             {
-                Assert.AreEqual(resultActualValue, actualResult.Value.ActualValueOut ?? string.Empty, testName + "-ActualValue");
+                expected = new Measurement
+                {
+                    Timestamp = DateTime.Parse(TestContext.DataRow["expectedTimestamp"].ToString()),
+                    Value = TestContext.DataRow["expectedValue"].ToString(),
+                    IsGood = TestContext.DataRow["expectedIsGood"].To<bool>(),
+                    IsChecked = false
+                };
             }
-            var resultDelta = TestContext.DataRow.ValueIfExists("resultDelta");
-            if (!string.IsNullOrEmpty(resultDelta))
-            {
-                Assert.AreEqual(resultDelta, actualResult.Value.DeltaOut ?? string.Empty, testName + "-Delta");
-            }
-            var resultExpectedIsGood = TestContext.DataRow.ValueIfExists("resultExpectedIsGood");
-            if (!string.IsNullOrEmpty(resultExpectedIsGood))
-            {
-                Assert.AreEqual(resultExpectedIsGood.To<bool>(), actualResult.IsGood.ExpectedValueOut.To<bool>(), testName + "-ExpectedIsGood");
-            }
-            var resultActualIsGood = TestContext.DataRow.ValueIfExists("resultActualIsGood");
-            if (!string.IsNullOrEmpty(resultActualIsGood))
-            {
-                Assert.AreEqual(resultActualIsGood.To<bool>(), actualResult.IsGood.ActualValueOut.To<bool>(), testName + "ActualIsGood");
-            }
+            return expected;
         }
     }
 }
