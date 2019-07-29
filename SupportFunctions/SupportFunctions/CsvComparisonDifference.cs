@@ -35,8 +35,7 @@ namespace SupportFunctions
 
         private IEnumerable<CellComparison> Result => _result ?? (_result = _set1.DeltaWith(_set2));
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "FitNesse API spec"),
-         Documentation("The result of the comparison difference in a Table Table format")]
+        [Documentation("The result of the comparison difference in a Table Table format")]
         public Collection<object> DoTable(Collection<Collection<object>> tableIn)
         {
             var renderer = new TableRenderer<CellComparison>(CsvComparison.GetTableValues);

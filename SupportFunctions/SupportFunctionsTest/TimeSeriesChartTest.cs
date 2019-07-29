@@ -44,11 +44,14 @@ namespace SupportFunctionsTest
             table.Add(startTimestamp.AddSeconds(19320), new MeasurementComparisonMock("3.00", "3.20", CompareOutcome.OutsideToleranceIssue));
 
             var endTimestamp = table.Last().Key;
-            var base64Result = new TimeSeriesChart().ChartInHtmlFor(table,
-                new AxisLimits(startTimestamp, endTimestamp, new Dimension(minY, maxY)),
-                new Size(800, 600));
-            var expectedResult = File.ReadAllText("Base64MinutesTimeRange.html");
-            Assert.AreEqual(expectedResult, base64Result);
+            using (var chart = new TimeSeriesChart())
+            {
+                var base64Result = chart.ChartInHtmlFor(table,
+                    new AxisLimits(startTimestamp, endTimestamp, new Dimension(minY, maxY)),
+                    new Size(800, 600));
+                var expectedResult = File.ReadAllText("Base64MinutesTimeRange.html");
+                Assert.AreEqual(expectedResult, base64Result);
+            }
         }
 
         private static MeasurementComparisonDictionary SecondOrderGraphWithValueIssues(DateTime startTimestamp)
@@ -104,11 +107,14 @@ namespace SupportFunctionsTest
             const double maxY = 50.02;
             table.Add(startTimestamp, new MeasurementComparisonMock("49.95", "49.95", CompareOutcome.None));
             table.Add(startTimestamp.AddSeconds(1), new MeasurementComparisonMock("50.0", "50.0", CompareOutcome.None));
-            var base64Result = new TimeSeriesChart().ChartInHtmlFor(table,
-                new AxisLimits(startTimestamp, startTimestamp.AddSeconds(1), new Dimension(minY, maxY)),
-                new Size(800, 600));
-            var expectedResult = File.ReadAllText("Base64SmallRange.html");
-            Assert.AreEqual(expectedResult, base64Result);
+            using (var chart = new TimeSeriesChart())
+            { 
+                var base64Result = chart.ChartInHtmlFor(table,
+                    new AxisLimits(startTimestamp, startTimestamp.AddSeconds(1), new Dimension(minY, maxY)),
+                    new Size(800, 600));
+                var expectedResult = File.ReadAllText("Base64SmallRange.html");
+                Assert.AreEqual(expectedResult, base64Result);
+            }
         }
     }
 }

@@ -21,7 +21,6 @@ using static System.FormattableString;
 
 namespace SupportFunctions
 {
-    [SuppressMessage("ReSharper", "UnusedParameter.Global"), Documentation("Comparing two CSVs")]
     public class CsvComparison
     {
         private const string CellCaption = "Cell";
@@ -116,9 +115,7 @@ namespace SupportFunctions
             return difference;
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures"), SuppressMessage("Microsoft.Usage",
-             "CA1801:ReviewUnusedParameters", MessageId = "tableIn", Justification = "FitNesse API spec"),
-         Documentation("The result of the comparison in a Table Table format")]
+        [Documentation("The result of the comparison in a Table Table format")]
         public Collection<object> DoTable(Collection<Collection<object>> tableIn)
         {
             var renderer = new TableRenderer<CellComparison>(GetTableValues);
@@ -153,8 +150,8 @@ namespace SupportFunctions
             return rows;
         }
 
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "input", Justification = "FitNesse requirement"),
-         Documentation("Enables assigning a FitNesse symbol to parameters of this type")]
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "FitNesse requirement"),
+         SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "FitNesse requirement")]
         public static CsvComparison Parse(string input) => null;
 
         [Documentation("Return the errors of a CSV comparison in a Query Table format")]

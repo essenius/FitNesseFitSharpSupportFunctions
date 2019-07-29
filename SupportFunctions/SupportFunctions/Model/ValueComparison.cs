@@ -186,7 +186,7 @@ namespace SupportFunctions.Model
             // or with different cultures such as ∞ vs Infinity).
             // Since this can also occur due to rounding, we return WithinTolerance rather than None if we don't
             // find something like Infinity in the actual out value
-            if (ExpectedValueOut.Equals(actualValue.To<string>()))
+            if (ExpectedValueOut.Equals(actualValue.To<string>(),StringComparison.Ordinal))
             {
                 return ActualValueOut.Contains("Infinity") ? CompareOutcome.None : CompareOutcome.WithinTolerance;
             }

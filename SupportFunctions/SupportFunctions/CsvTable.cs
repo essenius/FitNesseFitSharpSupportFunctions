@@ -47,9 +47,9 @@ namespace SupportFunctions
 
         internal string DataCell(int row, int column) => row >= RowCount || column >= ColumnCount ? null : Data[row][column];
 
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "inputTable", Justification = "FitNesse interface spec"),
-         SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "FitNesse interface spec"),
-         Documentation("Show the content of the CSV file in Table format")]
+        [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "FitNesse interface spec")]
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "FitNesse interface spec")]
+        [Documentation("Show the content of the CSV file in Table format")]
         public Collection<Collection<string>> DoTable(Collection<Collection<string>> inputTable)
         {
             var returnObject = new Collection<Collection<string>>();

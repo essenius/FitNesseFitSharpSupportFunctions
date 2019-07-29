@@ -12,6 +12,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using SupportFunctions.Model;
 using SupportFunctions.Utilities;
@@ -98,7 +99,7 @@ namespace SupportFunctions
             foreach (var measurement in Measurements)
             {
                 csvTable.Data.Add(new[]
-                    {measurement.Timestamp.ToRoundTripFormat(), measurement.Value, measurement.IsGood.ToString()});
+                    {measurement.Timestamp.ToRoundTripFormat(), measurement.Value, measurement.IsGood.ToString(CultureInfo.InvariantCulture)});
             }
             csvTable.SaveTo(path);
         }

@@ -102,12 +102,11 @@ namespace SupportFunctionsTest
         }
 
         [TestMethod, TestCategory("Unit"),
-         ExpectedExceptionWithMessage(typeof(FormatException), "Row should have 2 cells: Key and Value. Found 1: ||"),
-         SuppressMessage("ReSharper", "UnusedVariable", Justification = "forcing exception")]
+         ExpectedExceptionWithMessage(typeof(FormatException), "Row should have 2 cells: Key and Value. Found 1: ||")]
         public void FitNessePageExtractKeyValuePairFailsTest()
         {
             var target = new PrivateType(typeof(FitNessePage));
-            var kvp = (KeyValuePair<string, string>)target.InvokeStatic("ExtractKeyValuePair", "||");
+            var _ = (KeyValuePair<string, string>)target.InvokeStatic("ExtractKeyValuePair", "||");
         }
 
         [TestMethod, TestCategory("Unit")]

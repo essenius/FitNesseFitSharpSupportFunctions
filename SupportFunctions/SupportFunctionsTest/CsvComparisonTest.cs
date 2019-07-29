@@ -51,13 +51,12 @@ namespace SupportFunctionsTest
         public void CsvComparisonParseExists() => Assert.IsNull(CsvComparison.Parse(null));
 
         [TestMethod, TestCategory("Unit"), ExpectedExceptionWithMessage(typeof(ArgumentException),
-             "Wrong: No such header. Recognised values: Cell, Row No, Row Name, Column No, Column Name, Value, Delta, Delta %, Issue."),
-         SuppressMessage("ReSharper", "UnusedVariable", Justification = "forcing exception")]
+             "Wrong: No such header. Recognised values: Cell, Row No, Row Name, Column No, Column Name, Value, Delta, Delta %, Issue.")]
         public void CsvComparisonWrongHeaderTest()
         {
             var desiredHeaders = new Collection<Collection<object>> { new Collection<object> {"Wrong"} };
             var csvComparison = new CsvComparison(null, null, null);
-            var result = csvComparison.DoTable(desiredHeaders);
+            var _ = csvComparison.DoTable(desiredHeaders);
         }
     }
 }

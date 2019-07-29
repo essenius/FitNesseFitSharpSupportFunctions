@@ -16,7 +16,8 @@ using SupportFunctions.Model;
 
 namespace SupportFunctions
 {
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Used by FitSharp"), Documentation("Functions for handling libraries")]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Used by FitSharp"), 
+     Documentation("Functions for handling libraries")]
     public class DictionaryLibrary
     {
         private const string DefaultFileName = "DictionaryStore.json";

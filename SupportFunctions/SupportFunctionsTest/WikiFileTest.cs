@@ -153,7 +153,7 @@ namespace SupportFunctionsTest
             Assert.AreEqual("image/jpeg", WikiFile.MimeType(jpg));
             Assert.AreEqual("image/png", WikiFile.MimeType(png));
             Assert.AreEqual("image/tiff", WikiFile.MimeType(tiff));
-            Assert.AreEqual("image/unknown", WikiFile.MimeType(new byte[] { }));
+            Assert.AreEqual("image/unknown", WikiFile.MimeType(Array.Empty<byte>()));
             Assert.AreEqual("image/x-emf", WikiFile.MimeType(emf));
         }
 

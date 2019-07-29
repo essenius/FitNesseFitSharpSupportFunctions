@@ -121,6 +121,7 @@ namespace SupportFunctions.Model
         ~TimeSeriesChart() => Dispose(false);
 
         [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer", Justification = "conflicts with CA2000")]
+        [SuppressMessage("Style", "IDE0017:Simplify object initialization", Justification = "conflicts with CA2000")]
         private void InitChart(Size size)
         {
             _chart = new Chart();
@@ -131,6 +132,7 @@ namespace SupportFunctions.Model
         }
 
         [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer", Justification = "conflicts with CA2000")]
+        [SuppressMessage("Style", "IDE0017:Simplify object initialization", Justification = "conflicts with CA2000")]
         private void InitChartArea()
         {
             _area = new ChartArea(ChartAreaName);

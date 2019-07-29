@@ -114,7 +114,7 @@ namespace SupportFunctions
         [Documentation("Return the input parameter. Useful for initializing symbols")]
         public static object Echo(object input) => input;
 
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
+        //[SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
         private static object Evaluate(string expression, Type type, IEnumerable<string> parameters)
         {
             // making use of the fact that DataTables come with a handy eval function
