@@ -40,8 +40,7 @@ namespace SupportFunctions.Model
         {
             var command = PageRoot + "?addChild&pageName=" + pageName + "&pageContent=";
             var payload = lines.Aggregate(string.Empty, (current, entry) => current + entry + Linefeed);
-            var resultLines = RestCall(command + Uri.EscapeDataString(payload));
-            Log(resultLines, "AddPage");
+            var _ = RestCall(command + Uri.EscapeDataString(payload));
         }
 
         private static void CheckColumnNames(string line)

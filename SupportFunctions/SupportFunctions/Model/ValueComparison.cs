@@ -116,6 +116,9 @@ namespace SupportFunctions.Model
 
         private void InferCompareTypeIfNotSpecified()
         {
+            // if the compare type is not specified we have indivudual comparisons, and 
+            // expected/actual values may have different types. So then get a compatible type.
+
             if (CompareType == null) CompareType = ActualValueIn.InferType(ExpectedValueIn.InferType());
         }
 
@@ -123,8 +126,9 @@ namespace SupportFunctions.Model
 
         private CompareOutcome LongComparison()
         {
+            Debug.Assert(Tolerance != null, "Tolerance != null");
             var delta = Math.Abs(ExpectedValueIn.To<long>() - ActualValueIn.To<long>());
-            var roundedTolerance = (Tolerance?.Value ?? 0).To<long>();
+            var roundedTolerance = Tolerance.Value.To<long>();
             DeltaOut = delta.To<string>();
             return delta <= roundedTolerance
                 ? CompareOutcome.WithinTolerance
@@ -160,8 +164,6 @@ namespace SupportFunctions.Model
             // edge case: ∞ not equal to Infinity
             if (ExpectedValueIn.Equals(ActualValueIn)) return CompareOutcome.None;
 
-            // if the compare type is not specified we have indivudual comparisons, and 
-            // expected/actual values may have different types. So then get a compatible type.
             InferCompareTypeIfNotSpecified();
 
             object actualValue;
@@ -174,8 +176,6 @@ namespace SupportFunctions.Model
                 return CompareOutcome.ValueIssue;
             }
 
-            // If we have a tolerance with a numerical comparison and the data range was not set,
-            // we need to set it via the current expected value, to calculate the absolute tolerance
             if (IsNumericalComparisonWithoutToleranceRange)
             {
                 Tolerance.DataRange = ExpectedValueIn.To<double>();

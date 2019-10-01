@@ -7,3 +7,5 @@
       Introduced Cell column in CsvComparison query and table tables, returning cell reference in Excel format.
       Added Concatenate in CommonFunctions to replace Concat, and deprecated Concat. 
 	  Refactored some methods with high complexity and class coupling 
+2.3.0 Introduced RegexEscape and RegexUnescape. Removed some debugging info and eliminated unnecessary code. 
+      Extracted RowColumnComparer into its own file. 

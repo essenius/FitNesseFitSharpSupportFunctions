@@ -79,6 +79,7 @@
     <Compile Include="Model\IMeasurementComparison.cs" />
     <Compile Include="Model\IValueComparison.cs" />
     <Compile Include="Model\MeasurementComparison.cs" />
+    <Compile Include="Model\RowColumnComparer.cs" />
     <Compile Include="Utilities\NumericFunctions.cs" />
     <Compile Include="Model\RegistryWrapper.cs" />
     <Compile Include="Utilities\StringFunctions.cs" />

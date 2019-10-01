@@ -69,28 +69,18 @@ namespace SupportFunctions.Model
 
         internal string ChartDataFor(MeasurementComparisonDictionary sourceData, AxisLimits limits, Size size)
         {
-            Invariant($"Incoming Y: {limits.Y.Min} - {limits.Y.Max}").Log();
             InitChart(size);
-
             var timeUnit = limits.TimeUnit;
             limits.EnsureNonZeroRanges();
-
-            Invariant($"X axis rounded: {limits.X.GridlineMin} - {limits.X.GridlineMax}").Log();
-            Invariant($"Y axis rounded: {limits.Y.GridlineMin} - {limits.Y.GridlineMax}").Log();
-
-            var isXAsisVisible = limits.X.GridlineMax >= 0 && limits.X.GridlineMin <= 0;
-
             Debug.Assert(limits.StartTimestamp != null, "limits.StartTimestamp != null");
-
             InitSeries(sourceData, limits.StartTimestamp, timeUnit);
             InitChartArea();
             SetAxisDimensions(_area.AxisX, XAxisTitleTemplate.FillIn(timeUnit.Caption), limits.X);
             SetAxisDimensions(_area.AxisY, YAxisTitle, limits.Y);
-            if (isXAsisVisible) _area.AxisY.Crossing = 0.0;
+            _area.AxisY.Crossing = 0.0;
             _chart.ChartAreas.Add(_area);
             _chart.Legends.Add(new Legend(ChartLegend));
             _chart.Legends[ChartLegend].DockedToChartArea = ChartAreaName;
-
             return AsBase64String(ChartImageFormat.Png);
         }
 
@@ -177,7 +167,6 @@ namespace SupportFunctions.Model
 
         private static void SetAxisDimensions(Axis axis, string title, Dimension dimension)
         {
-            Invariant($"Axis: {dimension.GridlineMin} - {dimension.GridlineMax}: {dimension.GridlineInterval}").Log();
             axis.Minimum = dimension.GridlineMin;
             axis.Maximum = dimension.SnapToGrid ? dimension.GridlineMax : dimension.Max;
             axis.Interval = dimension.GridlineInterval;

@@ -145,7 +145,7 @@ namespace SupportFunctionsTest
             Assert.AreEqual(errorExpectation.Count, result.Count, "Same number of errors");
             foreach (var pair in errorExpectation)
             {
-                Assert.IsTrue(result.TryGetValue(pair.Key, out string value));
+                Assert.IsTrue(result.TryGetValue(pair.Key, out var value));
                 Assert.AreEqual(pair.Value, value, "Value for " + pair.Key);
             }
         }

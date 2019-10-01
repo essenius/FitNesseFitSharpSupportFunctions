@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using SupportFunctions.Utilities;
 using static System.FormattableString;
@@ -40,18 +41,10 @@ namespace SupportFunctions
         public static long Ticks => UniqueDateTime.NowTicks;
 
         [Documentation("Add a number of days to a date. Value can contain fractions and be negative")]
-        public static Date AddDaysTo(double days, Date date)
-        {
-            Debug.Assert(date != null, "date != null");
-            return date.AddDays(days);
-        }
+        public static Date AddDaysTo(double days, Date date) => date.AddDays(days);
 
         [Documentation("Add a number of hours to a date. Value can contain fractions and be negative")]
-        public static Date AddHoursTo(double hours, Date date)
-        {
-            Debug.Assert(date != null, "date != null");
-            return date.AddHours(hours);
-        }
+        public static Date AddHoursTo(double hours, Date date) => date.AddHours(hours);
 
         [Documentation("Calculate the result of a numerical expression. Shorthand for Evaluate As with type double.")]
         public static object Calculate(string expression) => Evaluate(expression, typeof(double), null);
@@ -134,6 +127,12 @@ namespace SupportFunctions
                 return dataTable.Rows[0]["Eval"];
             }
         }
+
+        [Documentation("Escape a string for literal use in Regex expression (converts characters that need escaping)")]
+        public static string RegexEscape(string input) => Regex.Escape(input);
+
+        [Documentation("Unescape a Regex string (converts escaped characters)")]
+        public static string RegexUnescape(string input) => Regex.Unescape(input);
 
         [Documentation("Evaluate an expression and return the result as a specified type. " +
                        "Supported types are bool, date, decimal, double, int, long, string, " +

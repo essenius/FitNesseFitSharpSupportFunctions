@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using SupportFunctions.Model;
@@ -175,17 +174,5 @@ namespace SupportFunctions
         private static string RowReference(int rowNo) => Invariant($"{rowNo + 2}");
 
         public override string ToString() => CsvComparisonCaption;
-
-        private class RowColumnComparer : IEqualityComparer<CellComparison>
-        {
-            public bool Equals(CellComparison x, CellComparison y)
-            {
-                Debug.Assert(x != null, nameof(x) + " != null");
-                Debug.Assert(y != null, nameof(y) + " != null");
-                return x.Row == y.Row && x.Column == y.Column;
-            }
-
-            public int GetHashCode(CellComparison x) => ((x.Row.GetHashCode() << 5) + x.Row.GetHashCode()) ^ x.Column.GetHashCode();
-        }
     }
 }

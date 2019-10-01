@@ -12,7 +12,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Linq;
 using SupportFunctions.Model;
 using SupportFunctions.Utilities;
@@ -72,7 +71,7 @@ namespace SupportFunctions
 
         internal void Load()
         {
-            // the series can already be pre-populated; then _path is null
+            // the series can already be pre-populated; then Path is null
             if (string.IsNullOrEmpty(Path)) return;
             var csvTable = new CsvTable();
             csvTable.LoadFrom(Path);
@@ -88,7 +87,7 @@ namespace SupportFunctions
             }
         }
 
-        [Documentation("Create a new time series object from a CSV file. Input format: fileName#TimestampColumn#VaueColumn#IsGoodColumn#. " +
+        [Documentation("Create a new time series object from a CSV file. Input format: fileName#TimestampColumn#ValueColumn#IsGoodColumn#. " +
                        "If column names are omitted, default names Timestamp, Value and IsGood are taken")]
         public static TimeSeries Parse(string input) => new TimeSeries(input);
 
@@ -99,7 +98,7 @@ namespace SupportFunctions
             foreach (var measurement in Measurements)
             {
                 csvTable.Data.Add(new[]
-                    {measurement.Timestamp.ToRoundTripFormat(), measurement.Value, measurement.IsGood.ToString(CultureInfo.InvariantCulture)});
+                    {measurement.Timestamp.ToRoundTripFormat(), measurement.Value, measurement.IsGood.To<string>()});
             }
             csvTable.SaveTo(path);
         }

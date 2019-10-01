@@ -19,11 +19,8 @@ namespace SupportFunctionsTest
     {
         public ExpectedExceptionWithMessageAttribute(Type exceptionType) => ExceptionType = exceptionType;
 
-        public ExpectedExceptionWithMessageAttribute(Type exceptionType, string expectedMessage)
-        {
-            ExceptionType = exceptionType;
+        public ExpectedExceptionWithMessageAttribute(Type exceptionType, string expectedMessage): this(exceptionType) => 
             ExpectedMessage = expectedMessage;
-        }
 
         private Type ExceptionType { get; }
 
@@ -45,7 +42,6 @@ namespace SupportFunctionsTest
             {
                 Assert.AreEqual(ExpectedMessage, actualMessage);
             }
-            ("ExpectedExceptionWithMessageAttribute:" + e.Message).Log();
         }
     }
 }

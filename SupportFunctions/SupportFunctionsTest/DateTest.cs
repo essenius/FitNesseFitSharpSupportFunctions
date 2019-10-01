@@ -12,6 +12,7 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SupportFunctions;
+using SupportFunctions.Utilities;
 
 namespace SupportFunctionsTest
 {
@@ -72,7 +73,7 @@ namespace SupportFunctionsTest
         public void DateParseTicksTest()
         {
             var now1 = DateTime.Today.Ticks;
-            var now = Date.Parse(now1.ToString()).Ticks;
+            var now = Date.Parse(now1.To<string>()).Ticks;
             Assert.AreEqual(now1, now);
         }
 

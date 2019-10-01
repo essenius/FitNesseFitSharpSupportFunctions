@@ -24,7 +24,7 @@ namespace SupportFunctionsTest
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "False positive")]
         public TestContext TestContext { get; set; }
 
-        private void AssertBoolEqual(string expected, string actual, string testName)
+        private static void AssertBoolEqual(string expected, string actual, string testName)
         {
             if (!string.IsNullOrEmpty(expected))
             {
@@ -32,7 +32,7 @@ namespace SupportFunctionsTest
             }
         }
 
-        private void AssertStringEqual(string expected, string actual, string testName)
+        private static void AssertStringEqual(string expected, string actual, string testName)
         {
             if (!string.IsNullOrEmpty(expected))
             {

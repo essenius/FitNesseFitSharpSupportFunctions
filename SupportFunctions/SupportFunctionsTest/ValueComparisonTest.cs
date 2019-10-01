@@ -61,5 +61,6 @@ namespace SupportFunctionsTest
                 Assert.AreEqual(resultDelta, comparison.DeltaOut ?? string.Empty, testName + "-Delta");
             }
         }
+
     }
 }

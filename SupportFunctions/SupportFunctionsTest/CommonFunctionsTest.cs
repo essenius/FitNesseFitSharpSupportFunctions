@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SupportFunctions;
 using SupportFunctions.Utilities;
@@ -25,6 +26,9 @@ namespace SupportFunctionsTest
 
         [TestMethod, TestCategory("Unit")]
         public void CommonFunctionsConcatenateTest() => Assert.AreEqual("abc", CommonFunctions.Concatenate(new[] {"a", "b", "c"}));
+
+        [Obsolete("Use Concatenate instead"), TestMethod, TestCategory("Unit")]
+        public void CommonFunctionsConcatTest() => Assert.AreEqual("ab", CommonFunctions.Concat(new[] { "a", "b" }));
 
         [TestMethod, TestCategory("Unit")]
         public void CommonFunctionsDateTests()
@@ -70,8 +74,8 @@ namespace SupportFunctionsTest
         public void CommonFunctionsDoOnTest()
         {
             const int maxInt = int.MaxValue;
-            var maxIntString = maxInt.ToString();
-            var tooBigForInt = (1L + maxInt).ToString();
+            var maxIntString = maxInt.To<string>();
+            var tooBigForInt = (1L + maxInt).To<string>();
             const string testString = @"abcdef";
             Assert.AreEqual("de", CommonFunctions.DoOnWithParams("Substring", testString, "3", "2"));
             Assert.AreEqual("def", CommonFunctions.DoOnWithParam("Substring", testString, "3"));
@@ -102,6 +106,13 @@ namespace SupportFunctionsTest
 
         [TestMethod, TestCategory("Unit")]
         public void CommonFunctionsEchoTest() => Assert.AreEqual("abc", CommonFunctions.Echo("abc"));
+
+        [TestMethod, TestCategory("Unit")]
+        public void CommonFunctionsEscapeRegexTest()
+        {
+            Assert.AreEqual(@"a\\b", CommonFunctions.RegexEscape(@"a\b"));
+            Assert.AreEqual(@"a\b", CommonFunctions.RegexUnescape(@"a\\b"));
+        }
 
         [TestMethod, TestCategory("Unit")]
         public void CommonFunctionsEvaluateAsTest()
@@ -188,7 +199,7 @@ namespace SupportFunctionsTest
         {
             var firstCheck = UniqueDateTime.NowTicks;
             ("firstCheck:" + firstCheck).Log();
-            var stringDate = new DateTime(firstCheck).ToString(@"dd-MMM-yyyy HH:mm:ss.fffffff");
+            var stringDate = new DateTime(firstCheck).ToString(@"dd-MMM-yyyy HH:mm:ss.fffffff", CultureInfo.InvariantCulture);
             stringDate.Log();
             var ticks1 = CommonFunctions.Ticks;
             ("ticks1:" + ticks1 + " (" + (ticks1 - firstCheck) + ")").Log();
@@ -197,13 +208,13 @@ namespace SupportFunctionsTest
             Assert.IsTrue(firstCheck < ticks1, "firstCheck < ticks1");
             Assert.IsTrue(ticks1 < secondCheck, "ticks1 < secondCheck");
             var ticksElapsed1 = CommonFunctions.TicksSince(Date.Parse(stringDate));
-            var ticksElapsed2 = CommonFunctions.TicksSince(Date.Parse(firstCheck.ToString()));
+            var ticksElapsed2 = CommonFunctions.TicksSince(Date.Parse(firstCheck.To<string>()));
             ("ticks elapsed 1:" + ticksElapsed1).Log();
             ("ticks elapsed 2:" + ticksElapsed2).Log();
 
             Assert.IsTrue(ticksElapsed1 > 0);
             Assert.IsTrue(ticksElapsed2 > ticksElapsed1);
-            var ticksBetween = CommonFunctions.TicksBetweenAnd(Date.Parse(firstCheck.ToString()),Date.Parse(secondCheck.ToString()));
+            var ticksBetween = CommonFunctions.TicksBetweenAnd(Date.Parse(firstCheck.To<string>()),Date.Parse(secondCheck.To<string>()));
             ("Ticks between: " + ticksBetween).Log();
             Assert.IsTrue(ticksBetween > 0);
             var ticks2 = CommonFunctions.Ticks;

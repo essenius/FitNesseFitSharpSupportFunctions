@@ -49,13 +49,8 @@ namespace SupportFunctions.Model
         // These two are a bit tricky. Max/GridlineInterval shoud become integer, but floats sometimes have precision errors. 
         // So we round the value first. If we round it to 5 digits, the difference wouldn't be visible anyway.
         // Then the ceiling or floor kicks in to drag the outer gridline up or down
-        public double GridlineMax => GridlineInterval.IsZero()
-            ? 0D
-            : Math.Ceiling(Math.Round(Max / GridlineInterval, 5)) * GridlineInterval;
-
-        public double GridlineMin => GridlineInterval.IsZero()
-            ? 0D
-            : Math.Floor(Math.Round(Min / GridlineInterval, 5)) * GridlineInterval;
+        public double GridlineMax => GridlineInterval.IsZero() ? 0D : Math.Ceiling(Math.Round(Max / GridlineInterval, 5)) * GridlineInterval;
+        public double GridlineMin => GridlineInterval.IsZero() ? 0D : Math.Floor(Math.Round(Min / GridlineInterval, 5)) * GridlineInterval;
 
         public double Max { get; private set; }
         public double Min { get; private set; }

@@ -16,7 +16,7 @@ using static System.FormattableString;
 
 namespace SupportFunctions
 {
-    [Documentation("Tolerance for flating point time series comparisons")]
+    [Documentation("Tolerance for floating point time series comparisons")]
     public class Tolerance
     {
         private readonly List<ToleranceValue> _toleranceValues = new List<ToleranceValue>();

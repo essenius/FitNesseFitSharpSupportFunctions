@@ -23,8 +23,6 @@ namespace SupportFunctionsTest
             Outcome = outcome;
         }
 
-        public Type CompareType { get; set; }
-
         public string ActualValueOut { get; }
 
         public string DeltaMessage => string.Empty;

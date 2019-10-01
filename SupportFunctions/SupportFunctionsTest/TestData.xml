@@ -298,4 +298,5 @@
   <ValueCompare testcase="15--Infinity Text" expected="-∞" actual="-Infinity" tolerance="0.0001"
                 compareType="System.Double"
                 issue="None" resultExpected="-Infinity" resultActual="-Infinity" />
+
 </items>
