@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2019 Rik Essenius
+﻿// Copyright 2017-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -20,9 +20,6 @@ namespace SupportFunctionsTest
     [TestClass]
     public class CsvComparisonTest
     {
-        internal static object QueryValue(Collection<object> queryRow, string key) =>
-            (from Collection<object> entry in queryRow where entry[0].Equals(key) select entry[1]).FirstOrDefault();
-
         [TestMethod, TestCategory("Integration"),
          DeploymentItem("TestData\\StreamData1.csv"),
          DeploymentItem("TestData\\StreamData2.csv")]
@@ -43,7 +40,7 @@ namespace SupportFunctionsTest
             Assert.AreEqual("A11", QueryValue(errorRow, "Column Name"));
             Assert.AreEqual("0.01 != 0", QueryValue(errorRow, "Value"));
             Assert.AreEqual("0.01", QueryValue(errorRow, "Delta"));
-            Assert.IsTrue(string.IsNullOrEmpty(QueryValue(errorRow,"Delta %").ToString()));
+            Assert.IsTrue(string.IsNullOrEmpty(QueryValue(errorRow, "Delta %").ToString()));
         }
 
         [TestMethod, TestCategory("Unit")]
@@ -53,9 +50,12 @@ namespace SupportFunctionsTest
              "Wrong: No such header. Recognised values: Cell, Row No, Row Name, Column No, Column Name, Value, Delta, Delta %, Issue.")]
         public void CsvComparisonWrongHeaderTest()
         {
-            var desiredHeaders = new Collection<Collection<object>> { new Collection<object> {"Wrong"} };
+            var desiredHeaders = new Collection<Collection<object>> {new Collection<object> {"Wrong"}};
             var csvComparison = new CsvComparison(null, null, null);
             var _ = csvComparison.DoTable(desiredHeaders);
         }
+
+        internal static object QueryValue(Collection<object> queryRow, string key) =>
+            (from Collection<object> entry in queryRow where entry[0].Equals(key) select entry[1]).FirstOrDefault();
     }
 }

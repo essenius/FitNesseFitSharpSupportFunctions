@@ -56,7 +56,7 @@ namespace SupportFunctions
         /// <summary>CSV comparison</summary>
         /// <param name="baseTable">The table being compared</param>
         /// <param name="comparedTable">the table being compared to</param>
-        /// <param name="tolerance">the tolerance applied. See <see cref="Tolerance.Parse"/></param>
+        /// <param name="tolerance">the tolerance applied. See <see cref="Tolerance.Parse" /></param>
         public CsvComparison(CsvTable baseTable, CsvTable comparedTable, Tolerance tolerance)
         {
             _baseTable = baseTable;

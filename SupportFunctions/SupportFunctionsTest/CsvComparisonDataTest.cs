@@ -65,6 +65,32 @@ namespace SupportFunctionsTest
         }
 
         [TestMethod, TestCategory("Unit")]
+        public void CsvComparisonDataErrorsTest()
+        {
+            var errorExpectation = new Dictionary<string, string>
+            {
+                {"D1 [Stream3/Key]", "[Stream3] missing (Missing)"},
+                {"C2 [Stream2/Attr1]", "101.1 != 100 (Delta:1.1, 1.1 %, OutsideToleranceIssue)"},
+                {"D2 [Stream3/Attr1]", "[3900] missing (Missing)"},
+                {"A3 [Key/Attr2]", "[Attr4] expected [Attr2] (ValueIssue)"},
+                {"B3 [Stream1/Attr2]", "[n/a] expected [2] (ValueIssue)"},
+                {"C3 [Stream2/Attr2]", "[0] expected [n/a] (ValueIssue)"},
+                {"D3 [Stream3/Attr2]", "[n/a] missing (Missing)"},
+                {"A4 [Key/Attr3]", "[Attr3] missing (Missing)"},
+                {"B4 [Stream1/Attr3]", "[] missing (Missing)"},
+                {"C4 [Stream2/Attr3]", "[Vapor] missing (Missing)"},
+                {"D4 [Stream3/Attr3]", "[Liquid] missing (Missing)"}
+            };
+            var result = _csvComparison.Errors();
+            Assert.AreEqual(errorExpectation.Count, result.Count, "Same number of errors");
+            foreach (var pair in errorExpectation)
+            {
+                Assert.IsTrue(result.TryGetValue(pair.Key, out var value));
+                Assert.AreEqual(pair.Value, value, "Value for " + pair.Key);
+            }
+        }
+
+        [TestMethod, TestCategory("Unit")]
         public void CsvComparisonDataQueryTest()
         {
             Assert.AreEqual(_expectedResult.Count, _csvComparison.ErrorCount(), "Error count");
@@ -95,7 +121,10 @@ namespace SupportFunctionsTest
                 new[] {"Attr3", "", "Vapor", "Liquid"}
             };
             _baseTable = new CsvTable(_baseHeaders);
-            foreach (var entry in _baseData) _baseTable.Data.Add(entry);
+            foreach (var entry in _baseData)
+            {
+                _baseTable.Data.Add(entry);
+            }
 
             _actualHeaders = new[] {"Key", "Stream1", "Stream2"};
             _actualdata = new Collection<string[]>
@@ -120,34 +149,11 @@ namespace SupportFunctionsTest
             };
 
             _actualTable = new CsvTable(_actualHeaders);
-            foreach (var entry in _actualdata) _actualTable.Data.Add(entry);
-            _csvComparison = new CsvComparison(_baseTable, _actualTable, Tolerance.Parse("1%"));
-        }
-
-        [TestMethod, TestCategory("Unit")]
-        public void CsvComparisonDataErrorsTest()
-        {
-            var errorExpectation = new Dictionary<string, string>
+            foreach (var entry in _actualdata)
             {
-                {"D1 [Stream3/Key]", "[Stream3] missing (Missing)"},
-                {"C2 [Stream2/Attr1]", "101.1 != 100 (Delta:1.1, 1.1 %, OutsideToleranceIssue)"},
-                {"D2 [Stream3/Attr1]", "[3900] missing (Missing)"},
-                {"A3 [Key/Attr2]", "[Attr4] expected [Attr2] (ValueIssue)"},
-                {"B3 [Stream1/Attr2]", "[n/a] expected [2] (ValueIssue)"},
-                {"C3 [Stream2/Attr2]", "[0] expected [n/a] (ValueIssue)"},
-                {"D3 [Stream3/Attr2]", "[n/a] missing (Missing)"},
-                {"A4 [Key/Attr3]", "[Attr3] missing (Missing)"},
-                {"B4 [Stream1/Attr3]", "[] missing (Missing)"},
-                {"C4 [Stream2/Attr3]", "[Vapor] missing (Missing)"},
-                {"D4 [Stream3/Attr3]", "[Liquid] missing (Missing)"}
-            };
-            var result = _csvComparison.Errors();
-            Assert.AreEqual(errorExpectation.Count, result.Count, "Same number of errors");
-            foreach (var pair in errorExpectation)
-            {
-                Assert.IsTrue(result.TryGetValue(pair.Key, out var value));
-                Assert.AreEqual(pair.Value, value, "Value for " + pair.Key);
+                _actualTable.Data.Add(entry);
             }
+            _csvComparison = new CsvComparison(_baseTable, _actualTable, Tolerance.Parse("1%"));
         }
     }
 }

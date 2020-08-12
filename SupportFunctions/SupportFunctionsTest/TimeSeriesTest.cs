@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2019 Rik Essenius
+﻿// Copyright 2017-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -22,6 +22,9 @@ namespace SupportFunctionsTest
     [TestClass]
     public class TimeSeriesTest
     {
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "False positive")]
+        public TestContext TestContext { get; set; }
+
         private static TimeSeries CreateTimeSeriesViaDecisionTableInterface(Date timestamp, string value)
         {
             var timeSeries = new TimeSeries(null);
@@ -32,9 +35,6 @@ namespace SupportFunctionsTest
             timeSeries.Execute();
             return timeSeries;
         }
-
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "False positive")]
-        public TestContext TestContext { get; set; }
 
         [TestMethod, TestCategory("Unit")]
         public void TimeSeriesConstructorTest()

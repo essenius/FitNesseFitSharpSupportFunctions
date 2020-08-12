@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2019 Rik Essenius
+﻿// Copyright 2017-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -76,6 +76,34 @@ namespace SupportFunctionsTest
             Assert.AreEqual(expectedIssue, issue[1]);
         }
 
+        private static void CheckDataRows(Dictionary<string, Dictionary<string, string>> expectedResults, IEnumerable<object> result, string testCase)
+        {
+            // check the data rows only - we already did the header
+            const string fail = "fail:";
+            foreach (Collection<object> row in result.Skip(1))
+            {
+                var timestamp = GetTimestamp(row[0].ToString());
+                Assert.IsFalse(string.IsNullOrEmpty(timestamp), $"Timestamp not found in actual result [{row[0]}] for {testCase}");
+                Assert.IsTrue(expectedResults.ContainsKey(timestamp), $"Timestamp [{timestamp}] not found in expected result for {testCase}");
+                var expectedResult = expectedResults[timestamp];
+                var actualResult = new Dictionary<string, object>
+                {
+                    {"pass", (!row.Any(cell => cell.ToString().StartsWith(fail))).ToString()},
+                    {"timestampOut", row[0]},
+                    {"value", row[1]},
+                    {"delta", row[2]},
+                    {"deltaPercentage", row[3]},
+                    {"isGood", row[4]}
+                };
+
+                // only test the ones we have specified in the test data
+                foreach (var entry in expectedResult)
+                {
+                    Assert.AreEqual(entry.Value, actualResult[entry.Key], $"{entry.Key}@{testCase}[{timestamp}]");
+                }
+            }
+        }
+
         private static object ColumnWithDefault(DataRow row, string columnName, object defaultValue)
         {
             return row.Table.Columns.Cast<DataColumn>().Any(column => column.ColumnName == columnName) ? row[columnName] : defaultValue;
@@ -149,34 +177,6 @@ namespace SupportFunctionsTest
             Assert.AreEqual(TestContext.DataRow["usedTolerance"].ToString(), timeSeriesComparison.UsedTolerance, $"UsedTolerance {testCase}");
         }
 
-        private static void CheckDataRows(Dictionary<string, Dictionary<string, string>> expectedResults, IEnumerable<object> result, string testCase)
-        {
-            // check the data rows only - we already did the header
-            const string fail = "fail:";
-            foreach (Collection<object> row in result.Skip(1))
-            {
-                var timestamp = GetTimestamp(row[0].ToString());
-                Assert.IsFalse(string.IsNullOrEmpty(timestamp), $"Timestamp not found in actual result [{row[0]}] for {testCase}");
-                Assert.IsTrue(expectedResults.ContainsKey(timestamp), $"Timestamp [{timestamp}] not found in expected result for {testCase}");
-                var expectedResult = expectedResults[timestamp];
-                var actualResult = new Dictionary<string, object>
-                {
-                    {"pass", (!row.Any(cell => cell.ToString().StartsWith(fail))).ToString()},
-                    {"timestampOut", row[0]},
-                    {"value", row[1]},
-                    {"delta", row[2]},
-                    {"deltaPercentage", row[3]},
-                    {"isGood", row[4]}
-                };
-
-                // only test the ones we have specified in the test data
-                foreach (var entry in expectedResult)
-                {
-                    Assert.AreEqual(entry.Value, actualResult[entry.Key], $"{entry.Key}@{testCase}[{timestamp}]");
-                }
-            }
-        }
-
         [TestMethod, TestCategory("Unit")]
         public void TimeSeriesComparisonFailureCountTest()
         {
@@ -231,6 +231,10 @@ namespace SupportFunctionsTest
             Assert.IsTrue(timeseriesComparison.TimeSpanSeconds.IsZero());
         }
 
+        /// <remarks>
+        ///     These tests may fail as the image generation doesn't always result in the same binaries even though they look the same.
+        ///     TODO: find out a way to make these more resilient
+        /// </remarks>
         [TestMethod, TestCategory("Integration"), DeploymentItem("TestData\\Base64AllBelowXAxis.html")]
         public void TimeSeriesComparisonGraphNumericalAllBelowXAxisTest()
         {
@@ -371,7 +375,7 @@ namespace SupportFunctionsTest
             var result = timeseriesComparison.GraphX(320, 200);
             var expectedResult = File.ReadAllText("Base64SimpleResult.html");
             Assert.AreEqual(expectedResult, result);
-            var parameters = new Dictionary<string, string> { {"start timestamp", "2004-03-24"} };
+            var parameters = new Dictionary<string, string> {{"start timestamp", "2004-03-24"}};
             var result2 = timeseriesComparison.Graph(parameters);
             Assert.AreEqual("no data", result2);
         }

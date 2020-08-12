@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2019 Rik Essenius
+﻿// Copyright 2015-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -64,7 +64,7 @@ namespace SupportFunctionsTest
         {
             var dict = new Dictionary<string, string> {{"key1", "value1"}, {"key2", "value2"}};
             var target = new PrivateType(typeof(FitNessePage));
-            var result = ((List<string>)target.InvokeStatic("CreateTable", "TestTable", dict)).ToArray();
+            var result = ((List<string>) target.InvokeStatic("CreateTable", "TestTable", dict)).ToArray();
             Assert.AreEqual(4, result.Length);
             Assert.AreEqual("!|Dictionary|Having|Name|TestTable|", result[0]);
             Assert.AreEqual("|Key|Value|", result[1]);
@@ -105,14 +105,14 @@ namespace SupportFunctionsTest
         public void FitNessePageExtractKeyValuePairFailsTest()
         {
             var target = new PrivateType(typeof(FitNessePage));
-            var _ = (KeyValuePair<string, string>)target.InvokeStatic("ExtractKeyValuePair", "||");
+            var _ = (KeyValuePair<string, string>) target.InvokeStatic("ExtractKeyValuePair", "||");
         }
 
         [TestMethod, TestCategory("Unit")]
         public void FitNessePageExtractKeyValuePairTest()
         {
             var target = new PrivateType(typeof(FitNessePage));
-            var kvp = (KeyValuePair<string, string>)target.InvokeStatic("ExtractKeyValuePair", "|Sleutel|Waarde|");
+            var kvp = (KeyValuePair<string, string>) target.InvokeStatic("ExtractKeyValuePair", "|Sleutel|Waarde|");
             Assert.AreEqual("Sleutel", kvp.Key);
             Assert.AreEqual("Waarde", kvp.Value);
         }
@@ -180,11 +180,11 @@ namespace SupportFunctionsTest
         public void FitNessePageIsTableLineTest()
         {
             var target = new PrivateType(typeof(FitNessePage));
-            Assert.IsTrue((bool)target.InvokeStatic("IsTableLine", "|Sleutel|Waarde|"), "table line without whitespace");
-            Assert.IsTrue((bool)target.InvokeStatic("IsTableLine", " |Sleutel|Waarde| "), "table line with whitespace");
-            Assert.IsFalse((bool)target.InvokeStatic("IsTableLine", "  "), "just whitespace");
-            Assert.IsFalse((bool)target.InvokeStatic("IsTableLine", "comments"), "comments");
-            Assert.IsFalse((bool)target.InvokeStatic("IsTableLine", "  comments"), "comments with whitespace");
+            Assert.IsTrue((bool) target.InvokeStatic("IsTableLine", "|Sleutel|Waarde|"), "table line without whitespace");
+            Assert.IsTrue((bool) target.InvokeStatic("IsTableLine", " |Sleutel|Waarde| "), "table line with whitespace");
+            Assert.IsFalse((bool) target.InvokeStatic("IsTableLine", "  "), "just whitespace");
+            Assert.IsFalse((bool) target.InvokeStatic("IsTableLine", "comments"), "comments");
+            Assert.IsFalse((bool) target.InvokeStatic("IsTableLine", "  comments"), "comments with whitespace");
         }
 
         [TestMethod, TestCategory("Unit")]
@@ -345,7 +345,7 @@ namespace SupportFunctionsTest
             var target = new PrivateType(typeof(FitNessePage));
             foreach (var testcase in testcases)
             {
-                Assert.IsFalse((bool)target.InvokeStatic("TableIsNamed", testcase, "TestTable"), "Testcase: " + testcase);
+                Assert.IsFalse((bool) target.InvokeStatic("TableIsNamed", testcase, "TestTable"), "Testcase: " + testcase);
             }
         }
 
@@ -361,7 +361,7 @@ namespace SupportFunctionsTest
             var target = new PrivateType(typeof(FitNessePage));
             foreach (var testcase in testcases)
             {
-                Assert.IsTrue((bool)target.InvokeStatic("TableIsNamed", testcase, "TestTable"), "Testcase: " + testcase);
+                Assert.IsTrue((bool) target.InvokeStatic("TableIsNamed", testcase, "TestTable"), "Testcase: " + testcase);
             }
         }
     }

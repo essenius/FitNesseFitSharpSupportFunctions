@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2019 Rik Essenius
+﻿// Copyright 2017-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -31,7 +31,10 @@ namespace SupportFunctionsTest
                 new[] {"Attr4", data4}
             };
             var resultTable = new CsvTable(headers);
-            foreach (var entry in data) resultTable.Data.Add(entry);
+            foreach (var entry in data)
+            {
+                resultTable.Data.Add(entry);
+            }
             return resultTable;
         }
 

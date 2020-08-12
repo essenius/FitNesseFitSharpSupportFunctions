@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2019 Rik Essenius
+﻿// Copyright 2017-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -28,7 +28,7 @@ namespace SupportFunctionsTest
         public void CommonFunctionsConcatenateTest() => Assert.AreEqual("abc", CommonFunctions.Concatenate(new[] {"a", "b", "c"}));
 
         [Obsolete("Use Concatenate instead"), TestMethod, TestCategory("Unit")]
-        public void CommonFunctionsConcatTest() => Assert.AreEqual("ab", CommonFunctions.Concat(new[] { "a", "b" }));
+        public void CommonFunctionsConcatTest() => Assert.AreEqual("ab", CommonFunctions.Concat(new[] {"a", "b"}));
 
         [TestMethod, TestCategory("Unit")]
         public void CommonFunctionsDateTests()
@@ -87,7 +87,7 @@ namespace SupportFunctionsTest
             Assert.AreEqual("System.Int64", CommonFunctions.DoOnWithParams("GetType", tooBigForInt).ToString());
             Assert.AreEqual(false, CommonFunctions.DoOnWithParams("Contains", testString, "dg"));
             Assert.AreEqual(4.0, CommonFunctions.DoOnWithParams("Math.Sqrt", "16.0"));
-            Assert.AreEqual((byte)255, CommonFunctions.DoOn("byte.MaxValue", null));
+            Assert.AreEqual((byte) 255, CommonFunctions.DoOn("byte.MaxValue", null));
             Assert.AreEqual(Math.PI, CommonFunctions.DoOn("Math.PI", string.Empty));
             Assert.AreEqual(string.Empty, CommonFunctions.DoOn("Empty", null));
             Assert.AreEqual(-1M, CommonFunctions.Do("Decimal.MinusOne"));
@@ -124,7 +124,7 @@ namespace SupportFunctionsTest
             Assert.AreEqual(9999999999999999999999999999M,
                 CommonFunctions.EvaluateAs("9999999999999999999999999998. + 1", "decimal"),
                 "99999999999999999999999998. + 1 = 99999999999999999999999999");
-            Assert.IsTrue((bool)CommonFunctions.EvaluateAs("6 > 5", "bool"), "6 > 5");
+            Assert.IsTrue((bool) CommonFunctions.EvaluateAs("6 > 5", "bool"), "6 > 5");
             Assert.AreEqual(2, CommonFunctions.EvaluateAs("8 % 3", "System.Int32"), "8 % 3 = 2");
             Assert.AreEqual(new DateTime(1995, 5, 9), CommonFunctions.EvaluateAs("#9-May-1995#", "System.DateTime"),
                 "#9-May-1995#");
@@ -214,7 +214,7 @@ namespace SupportFunctionsTest
 
             Assert.IsTrue(ticksElapsed1 > 0);
             Assert.IsTrue(ticksElapsed2 > ticksElapsed1);
-            var ticksBetween = CommonFunctions.TicksBetweenAnd(Date.Parse(firstCheck.To<string>()),Date.Parse(secondCheck.To<string>()));
+            var ticksBetween = CommonFunctions.TicksBetweenAnd(Date.Parse(firstCheck.To<string>()), Date.Parse(secondCheck.To<string>()));
             ("Ticks between: " + ticksBetween).Log();
             Assert.IsTrue(ticksBetween > 0);
             var ticks2 = CommonFunctions.Ticks;

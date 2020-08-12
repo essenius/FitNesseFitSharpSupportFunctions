@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2019 Rik Essenius
+﻿// Copyright 2016-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -38,7 +38,7 @@ namespace SupportFunctionsTest
 
             var tolerance = Tolerance.Parse(TestContext.DataRow["tolerance"].ToString());
             ("Precision parsed:" + tolerance.Precision).Log();
-            var issue = (CompareOutcome)Enum.Parse(typeof(CompareOutcome), TestContext.DataRow["issue"].ToString());
+            var issue = (CompareOutcome) Enum.Parse(typeof(CompareOutcome), TestContext.DataRow["issue"].ToString());
 
             var compareTypeString = TestContext.DataRow.ValueIfExists("compareType");
             var compareType = string.IsNullOrEmpty(compareTypeString) ? null : Type.GetType(compareTypeString);
@@ -61,6 +61,5 @@ namespace SupportFunctionsTest
                 Assert.AreEqual(resultDelta, comparison.DeltaOut ?? string.Empty, testName + "-Delta");
             }
         }
-
     }
 }

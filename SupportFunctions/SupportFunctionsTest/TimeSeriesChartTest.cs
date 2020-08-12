@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2019 Rik Essenius
+﻿// Copyright 2017-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -27,6 +27,33 @@ namespace SupportFunctionsTest
         [SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "False positive")]
         public TestContext TestContext { get; set; }
 
+        private static MeasurementComparisonDictionary SecondOrderGraphWithValueIssues(DateTime startTimestamp)
+        {
+            var table = new MeasurementComparisonDictionary();
+            const double zetaExpected = 0.205;
+            const double zetaActual = 0.2;
+            const double omega = 1;
+            const double theta = Math.PI / 2;
+            var minY = double.MaxValue;
+            var maxY = double.MinValue;
+            for (double time = 0; time <= 30; time += 0.5)
+            {
+                var timestamp = startTimestamp.AddSeconds(time);
+                var expectedValue = SecondOrderResponse(time, zetaExpected, omega, theta);
+                var actualValue = SecondOrderResponse(time, zetaActual, omega, theta);
+                if (actualValue > maxY) maxY = actualValue;
+                if (actualValue < minY) minY = actualValue;
+
+                var okValue = time < 12 || time > 16 && time < 25 || time > 25.5;
+
+                table.Add(timestamp, new MeasurementComparisonMock(
+                    expectedValue.To<string>(),
+                    actualValue.To<string>(),
+                    okValue ? CompareOutcome.None : CompareOutcome.ValueIssue));
+            }
+            return table;
+        }
+
         public static double SecondOrderResponse(double time, double zeta, double omega, double theta) =>
             1 - Math.Exp(-zeta * omega * time) / Math.Sqrt(1 - Math.Pow(zeta, 2)) *
             Math.Sin(Math.Sqrt(1 - Math.Pow(zeta, 2)) * omega * time + theta);
@@ -54,32 +81,6 @@ namespace SupportFunctionsTest
             }
         }
 
-        private static MeasurementComparisonDictionary SecondOrderGraphWithValueIssues(DateTime startTimestamp)
-        {
-            var table = new MeasurementComparisonDictionary();
-            const double zetaExpected = 0.205;
-            const double zetaActual = 0.2;
-            const double omega = 1;
-            const double theta = Math.PI / 2;
-            var minY = double.MaxValue;
-            var maxY = double.MinValue;
-            for (double time = 0; time <= 30; time += 0.5)
-            {
-                var timestamp = startTimestamp.AddSeconds(time);
-                var expectedValue = SecondOrderResponse(time, zetaExpected, omega, theta);
-                var actualValue = SecondOrderResponse(time, zetaActual, omega, theta);
-                if (actualValue > maxY) maxY = actualValue;
-                if (actualValue < minY) minY = actualValue;
-
-                var okValue = time < 12 || time > 16 && time < 25 || time > 25.5;
-
-                table.Add(timestamp, new MeasurementComparisonMock(
-                    expectedValue.To<string>(),
-                    actualValue.To<string>(),
-                    okValue ? CompareOutcome.None : CompareOutcome.ValueIssue));
-            }
-            return table;
-        }
         [TestMethod, TestCategory("Unit"), DeploymentItem("TestData\\Base64SecondOrderResponseLimitedY.html")]
         public void TimeSeriesChartSecondOrderResponseTest()
         {
@@ -108,7 +109,7 @@ namespace SupportFunctionsTest
             table.Add(startTimestamp, new MeasurementComparisonMock("49.95", "49.95", CompareOutcome.None));
             table.Add(startTimestamp.AddSeconds(1), new MeasurementComparisonMock("50.0", "50.0", CompareOutcome.None));
             using (var chart = new TimeSeriesChart())
-            { 
+            {
                 var base64Result = chart.ChartInHtmlFor(table,
                     new AxisLimits(startTimestamp, startTimestamp.AddSeconds(1), new Dimension(minY, maxY)),
                     new Size(800, 600));
