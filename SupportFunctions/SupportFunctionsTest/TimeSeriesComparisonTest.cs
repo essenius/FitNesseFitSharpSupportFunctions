@@ -231,10 +231,6 @@ namespace SupportFunctionsTest
             Assert.IsTrue(timeseriesComparison.TimeSpanSeconds.IsZero());
         }
 
-        /// <remarks>
-        ///     These tests may fail as the image generation doesn't always result in the same binaries even though they look the same.
-        ///     TODO: find out a way to make these more resilient
-        /// </remarks>
         [TestMethod, TestCategory("Integration"), DeploymentItem("TestData\\Base64AllBelowXAxis.html")]
         public void TimeSeriesComparisonGraphNumericalAllBelowXAxisTest()
         {

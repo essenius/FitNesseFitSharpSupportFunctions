@@ -88,7 +88,7 @@ namespace SupportFunctions.Model
         {
             //TODO: calculate Y values dynamically
             var chartInBase64 = ChartDataFor(sourceData, limits, size);
-            return Invariant($"<img src=\"data:image/png;base64,{chartInBase64}\" />");
+            return Invariant($"<img src=\"data:image/png;base64,{chartInBase64}\"/>");
         }
 
         private static T ChooseValue<T>(SeriesType seriesType, T expectedValue, T actualValue, T failValue)

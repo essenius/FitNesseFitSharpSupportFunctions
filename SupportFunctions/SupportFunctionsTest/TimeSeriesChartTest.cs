@@ -92,7 +92,7 @@ namespace SupportFunctionsTest
                 var result = timeSeriesChart.ChartDataFor(table,
                     new AxisLimits(startTimestamp, endTimestamp, new Dimension(0.7, 1.7)),
                     new Size(800, 600));
-                result = Invariant($"<img src=\"data:image/png;base64,{result}\" />");
+                result = Invariant($"<img src=\"data:image/png;base64,{result}\"/>");
                 var expectedResult = File.ReadAllText("Base64SecondOrderResponseLimitedY.html");
                 Assert.AreEqual(expectedResult, result);
             }
