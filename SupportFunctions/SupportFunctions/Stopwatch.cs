@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2019 Rik Essenius
+﻿// Copyright 2015-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -13,11 +13,12 @@ using System.Collections.Generic;
 
 namespace SupportFunctions
 {
-    [Documentation("Timing functions for rudimentary performance tests")]
+    /// <summary>Timing functions for rudimentary performance tests</summary>
     public class Stopwatch
     {
         private readonly Dictionary<string, System.Diagnostics.Stopwatch> _stopwatchDictionary;
 
+        /// <summary>Initialize a new Stopwatch</summary>
         public Stopwatch() => _stopwatchDictionary = new Dictionary<string, System.Diagnostics.Stopwatch>();
 
         private System.Diagnostics.Stopwatch GetStopwatch(string id)
@@ -35,19 +36,19 @@ namespace SupportFunctions
             return stopwatch;
         }
 
-        [Documentation("Return the elapsed time in seconds of a stopwatch")]
+        /// <returns>the elapsed time in seconds of a stopwatch</returns>
         public double ReadStopwatch(string id) => GetStopwatch(id).ElapsedMilliseconds / 1000.0;
 
-        [Documentation("Reset a stopwatch to 0")]
+        /// <summary>Reset a stopwatch to 0</summary>
         public void ResetStopwatch(string id) => GetStopwatch(id).Reset();
 
-        [Documentation("Reset a stopwatch to 0 and start counting")]
+        /// <summary>Reset a stopwatch to 0 and start counting</summary>
         public void RestartStopwatch(string id) => GetStopwatch(id).Restart();
 
-        [Documentation("Start (or continue) a stopwatch")]
+        /// <summary>Start (or continue) a stopwatch</summary>
         public void StartStopwatch(string id) => GetStopwatch(id).Start();
 
-        [Documentation("Stop a stopwatch and return elapsed time in seconds")]
+        /// <summary>Stop a stopwatch and return elapsed time in seconds</summary>
         public double StopStopwatch(string id)
         {
             GetStopwatch(id).Stop();

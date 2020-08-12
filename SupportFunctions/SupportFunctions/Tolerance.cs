@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2019 Rik Essenius
+﻿// Copyright 2016-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -16,7 +16,7 @@ using static System.FormattableString;
 
 namespace SupportFunctions
 {
-    [Documentation("Tolerance for floating point time series comparisons")]
+    /// <summary>Tolerance for floating point time series comparisons</summary>
     public class Tolerance
     {
         private readonly List<ToleranceValue> _toleranceValues = new List<ToleranceValue>();
@@ -25,7 +25,7 @@ namespace SupportFunctions
         private int? _precision;
         private double _value;
 
-        [Documentation("The range that is the basis for relative tolerances")]
+        /// <summary>The range that is the basis for relative tolerances</summary>
         public double? DataRange
         {
             get => _dataRange;
@@ -36,7 +36,7 @@ namespace SupportFunctions
             }
         }
 
-        [Documentation("The calculated precision for the comparison results")]
+        /// <summary>The calculated precision for the comparison results</summary>
         public int? Precision
         {
             get
@@ -46,7 +46,7 @@ namespace SupportFunctions
             }
         }
 
-        [Documentation("The tolerance value that is applied in the comparison")]
+        /// <summary>The tolerance value that is applied in the comparison</summary>
         public double Value
         {
             get
@@ -62,8 +62,14 @@ namespace SupportFunctions
             _isDirty = true;
         }
 
-        [Documentation("Parse desired tolerance. Format: one or more tolerance specs separated by semicolon. " +
-                       "Double for absolutes. percentage for relative compared to expected data range. Example: 0.001;0.1%")]
+        /// <summary>
+        ///     Parse desired tolerance. Format: one or more tolerance specs separated by semicolon.
+        ///     Double for absolutes. percentage for relative compared to expected data range. Example: 0.001;0.1%
+        /// </summary>
+        /// <param name="input">
+        ///     one or more tolerance specs separated by semicolon. Double for absolutes. percentage for relative compared to
+        ///     expected data range. Example: 0.001;0.1%
+        /// </param>
         public static Tolerance Parse(string input)
         {
             var returnValue = new Tolerance();
@@ -76,6 +82,7 @@ namespace SupportFunctions
             return returnValue;
         }
 
+        /// <returns>the absolute and relative tolerance in format 'absolute (relative %)'</returns>
         public override string ToString()
         {
             UpdateValues();

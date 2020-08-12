@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2019 Rik Essenius
+﻿// Copyright 2015-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -13,6 +13,8 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member -- not needed as Obsolete.
 
 namespace SupportFunctions
 {

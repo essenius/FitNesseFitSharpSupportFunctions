@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2019 Rik Essenius
+﻿// Copyright 2016-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -20,21 +20,25 @@ using static System.FormattableString;
 
 namespace SupportFunctions
 {
-    [SuppressMessage("ReSharper", "UnusedParameter.Global"), Documentation("CSV file handling. Used by Time Series")]
+    /// <summary>CSV file handling. Used by Time Series</summary>
+    [SuppressMessage("ReSharper", "UnusedParameter.Global")]
     public class CsvTable
     {
         private string[] _headers;
 
+        /// <summary>Initialize new Csv Table</summary>
         public CsvTable() => Data = new Collection<string[]>();
 
+        /// <summary>Create a new CSV table with headers</summary>
+        /// <param name="headers">list of headers</param>
         public CsvTable(string[] headers) : this() => _headers = headers;
 
-        [Documentation("The number of columns in the CSV file")]
+        /// <summary>The number of columns in the CSV file</summary>
         public int ColumnCount => _headers.Length;
 
         internal Collection<string[]> Data { get; }
 
-        [Documentation("The number of rows in the CSV file")]
+        /// <summary>The number of rows in the CSV file</summary>
         public int RowCount => Data.Count;
 
         private static string AddQuotesIfNeeded(string entry)
@@ -47,19 +51,25 @@ namespace SupportFunctions
 
         internal string DataCell(int row, int column) => row >= RowCount || column >= ColumnCount ? null : Data[row][column];
 
-        [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "FitNesse interface spec")]
-        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "FitNesse interface spec")]
-        [Documentation("Show the content of the CSV file in Table format")]
+        /// <summary>Show the content of the CSV file in Table format</summary>
+        [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "FitNesse interface spec"),
+         SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "FitNesse interface spec")]
         public Collection<Collection<string>> DoTable(Collection<Collection<string>> inputTable)
         {
             var returnObject = new Collection<Collection<string>>();
             var row = new Collection<string>();
-            foreach (var headerCell in _headers) row.Add("report:" + headerCell);
+            foreach (var headerCell in _headers)
+            {
+                row.Add("report:" + headerCell);
+            }
             returnObject.Add(row);
             foreach (var line in Data)
             {
                 row = new Collection<string>();
-                foreach (var cell in line) row.Add("report:" + cell);
+                foreach (var cell in line)
+                {
+                    row.Add("report:" + cell);
+                }
                 returnObject.Add(row);
             }
             return returnObject;
@@ -76,7 +86,7 @@ namespace SupportFunctions
             throw new ArgumentException(Invariant($"Header name {headerName} not recognized"));
         }
 
-        [Documentation("Load a CSV Table from the specified file")]
+        /// <summary>Load a CSV Table from the specified file</summary>
         public void LoadFrom(string path) => LoadFrom(path, ",", "#", true);
 
         private void LoadFrom(string path, string delimiter, string comment, bool fieldsInQuotes)
@@ -98,7 +108,7 @@ namespace SupportFunctions
             }
         }
 
-        [Documentation("Load a CSV Table from the specified file")]
+        /// <summary>Load a CSV Table from the specified file</summary>
         public static CsvTable Parse(string input)
         {
             var csvTable = new CsvTable();
@@ -106,7 +116,7 @@ namespace SupportFunctions
             return csvTable;
         }
 
-        [Documentation("Return the CSV Table as a Query result")]
+        /// <returns>the CSV Table as a Query result</returns>
         public Collection<object> Query()
         {
             var returnObject = new Collection<object>();
@@ -134,6 +144,7 @@ namespace SupportFunctions
             File.WriteAllText(path, csvText);
         }
 
+        /// <returns>CsvTable</returns>
         public override string ToString() => "CsvTable";
     }
 }

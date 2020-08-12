@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2019 Rik Essenius
+﻿// Copyright 2017-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -16,34 +16,38 @@ using SupportFunctions.Model;
 
 namespace SupportFunctions
 {
-    [Documentation("Comparing the difference between two comparisons.")]
+    /// <summary>Comparing the difference between two comparisons.</summary>
     public class CsvComparisonDifference
     {
         private readonly CsvComparison _set1;
         private readonly CsvComparison _set2;
         private IEnumerable<CellComparison> _result;
 
+        /// <summary>Initialize a CSV Comparison Difference</summary>
+        /// <param name="set1">first set to compare</param>
+        /// <param name="set2">second set to compare</param>
         public CsvComparisonDifference(CsvComparison set1, CsvComparison set2)
         {
             _set1 = set1;
             _set2 = set2;
         }
 
-        [Documentation("The number of items with a different comparison error")]
+        /// <summary>The number of items with a different comparison error</summary>
         public int ErrorCount => Result.Count();
 
         private IEnumerable<CellComparison> Result => _result ?? (_result = _set1.DeltaWith(_set2));
 
-        [Documentation("The result of the comparison difference in a Table Table format")]
+        /// <summary>The result of the comparison difference in a Table Table format</summary>
         public Collection<object> DoTable(Collection<Collection<object>> tableIn)
         {
             var renderer = new TableRenderer<CellComparison>(CsvComparison.GetTableValues);
             return renderer.MakeTableTable(Result, tableIn);
         }
 
-        [Documentation("Return the different errors between two comparisons in a Query Table format")]
+        /// <returns>the different errors between two comparisons in a Query Table format</returns>
         public Collection<object> Query() => CsvComparison.MakeQueryTable(Result);
 
+        /// <returns>CsvComparisonDifference</returns>
         public override string ToString() => "CsvComparisonDifference";
     }
 }

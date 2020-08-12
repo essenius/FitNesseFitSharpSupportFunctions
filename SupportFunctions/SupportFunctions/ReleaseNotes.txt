@@ -9,3 +9,4 @@
 	  Refactored some methods with high complexity and class coupling 
 2.3.0 Introduced RegexEscape and RegexUnescape. Removed some debugging info and eliminated unnecessary code. 
       Extracted RowColumnComparer into its own file. 
+2.3.1 Introduced XML documentation to replace [Documentation] attributes

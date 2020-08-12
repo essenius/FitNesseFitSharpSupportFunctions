@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2019 Rik Essenius
+﻿// Copyright 2017-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -43,21 +43,30 @@ namespace SupportFunctions.Model
             ValidateAndAlignHeaders();
             var returnValue = new Collection<object> {TableHeader()};
 
-            foreach (var entry in input) returnValue.Add(TableRow(entry));
+            foreach (var entry in input)
+            {
+                returnValue.Add(TableRow(entry));
+            }
             return returnValue;
         }
 
         private Collection<object> TableHeader()
         {
             var returnValue = new Collection<object>();
-            foreach (var header in _desiredColumns) returnValue.Add(header.Report());
+            foreach (var header in _desiredColumns)
+            {
+                returnValue.Add(header.Report());
+            }
             return returnValue;
         }
 
         private Collection<object> TableRow(T resultEntry)
         {
             var returnValue = new Collection<object>();
-            foreach (var column in _desiredColumns) returnValue.Add(_getField[column](resultEntry));
+            foreach (var column in _desiredColumns)
+            {
+                returnValue.Add(_getField[column](resultEntry));
+            }
             return returnValue;
         }
 

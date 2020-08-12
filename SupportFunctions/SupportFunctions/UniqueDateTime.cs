@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2019 Rik Essenius
+﻿// Copyright 2015-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -14,10 +14,12 @@ using System.Threading;
 
 namespace SupportFunctions
 {
+    /// <summary>UniqueDateTime always returns a unique data/time value</summary>
     public static class UniqueDateTime
     {
         private static long _lastTimeStamp = DateTime.Now.Ticks;
 
+        /// <summary>the value of Now in ticks</summary>
         public static long NowTicks
         {
             get
@@ -34,6 +36,7 @@ namespace SupportFunctions
             }
         }
 
+        /// <summary>the value of Now in UTC in ticks</summary>
         public static long UtcNowTicks => new DateTime(NowTicks).ToUniversalTime().Ticks;
     }
 }

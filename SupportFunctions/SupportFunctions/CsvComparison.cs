@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2019 Rik Essenius
+﻿// Copyright 2017-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -20,6 +20,7 @@ using static System.FormattableString;
 
 namespace SupportFunctions
 {
+    /// <summary>Compare two CSV tables</summary>
     public class CsvComparison
     {
         private const string CellCaption = "Cell";
@@ -52,6 +53,10 @@ namespace SupportFunctions
         private readonly Tolerance _tolerance;
         private List<CellComparison> _result;
 
+        /// <summary>CSV comparison</summary>
+        /// <param name="baseTable">The table being compared</param>
+        /// <param name="comparedTable">the table being compared to</param>
+        /// <param name="tolerance">the tolerance applied. See <see cref="Tolerance.Parse"/></param>
         public CsvComparison(CsvTable baseTable, CsvTable comparedTable, Tolerance tolerance)
         {
             _baseTable = baseTable;
@@ -114,17 +119,17 @@ namespace SupportFunctions
             return difference;
         }
 
-        [Documentation("The result of the comparison in a Table Table format")]
+        /// <summary>The result of the comparison in a Table Table format</summary>
         public Collection<object> DoTable(Collection<Collection<object>> tableIn)
         {
             var renderer = new TableRenderer<CellComparison>(GetTableValues);
             return renderer.MakeTableTable(Result, tableIn);
         }
 
-        [Documentation("The number of items with a comparison error")]
+        /// <summary>The number of items with a comparison error</summary>
         public int ErrorCount() => Result.Count;
 
-        [Documentation("The errors, in a hashtable")]
+        /// <summary>The errors, in a hashtable</summary>
         public Dictionary<string, string> Errors()
         {
             var result = new Dictionary<string, string>();
@@ -149,11 +154,14 @@ namespace SupportFunctions
             return rows;
         }
 
+        /// <summary>We need this definition for FitNesse, but we don't need the actual value</summary>
+        /// <param name="input">ignored</param>
+        /// <returns></returns>
         [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "FitNesse requirement"),
          SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "FitNesse requirement")]
         public static CsvComparison Parse(string input) => null;
 
-        [Documentation("Return the errors of a CSV comparison in a Query Table format")]
+        /// <returns>the errors of a CSV comparison in a Query Table format</returns>
         public Collection<object> Query() => MakeQueryTable(Result);
 
         private static Collection<object> QueryRow(CellComparison row) => new Collection<object>
@@ -171,8 +179,12 @@ namespace SupportFunctions
 
         // header is -1, internal data row counting starts at 0. 
         // People used to Excel will expect counting to start at 1
+
+        /// <remarks>People used to Excel will expect counting to start at 1</remarks>
+        /// <param name="rowNo">header is -1, internal data row counting starts at 0</param>
         private static string RowReference(int rowNo) => Invariant($"{rowNo + 2}");
 
+        /// <returns>the caption of the CSV table</returns>
         public override string ToString() => CsvComparisonCaption;
     }
 }

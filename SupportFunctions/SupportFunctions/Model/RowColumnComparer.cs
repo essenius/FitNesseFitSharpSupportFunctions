@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace SupportFunctions.Model
@@ -15,5 +14,4 @@ namespace SupportFunctions.Model
 
         public int GetHashCode(CellComparison x) => ((x.Row.GetHashCode() << 5) + x.Row.GetHashCode()) ^ x.Column.GetHashCode();
     }
-
 }

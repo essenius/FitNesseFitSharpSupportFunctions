@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2019 Rik Essenius
+﻿// Copyright 2016-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -20,7 +20,7 @@ using SupportFunctions.Utilities;
 
 namespace SupportFunctions
 {
-    [Documentation("Compares two time series and reports results tabularly or graphically")]
+    /// <summary>Compares two time series and reports results tabularly or graphically</summary>
     public class TimeSeriesComparison
     {
         private const string DeltaCaption = "Delta";
@@ -53,7 +53,7 @@ namespace SupportFunctions
         private double _minValue;
         private double _timeSpanSeconds;
 
-        [Documentation("Compares two time series and reports results tabularly or graphically")]
+        /// <summary>Compares two time series and reports results tabularly or graphically</summary>
         public TimeSeriesComparison(TimeSeries expected, TimeSeries actual, Tolerance tolerance)
         {
             _expected = expected ?? new TimeSeries();
@@ -62,23 +62,26 @@ namespace SupportFunctions
             _result = new MeasurementComparisonDictionary();
         }
 
+        /// <summary>Initialize a new TimeSeriesComparison with expected and actual time series</summary>
+        /// <param name="expected">Expected time series</param>
+        /// <param name="actual">Actual time series</param>
         public TimeSeriesComparison(TimeSeries expected, TimeSeries actual) : this(expected, actual, Tolerance.Parse(""))
         {
         }
 
-        [Documentation("Timestamp of the first data point")]
+        /// <summary>Timestamp of the first data point</summary>
         public Date BaseTimestamp => DoOperation(comparison => comparison._baseTimestamp);
 
-        [Documentation("the number of failures in the comparison")]
+        /// <summary>the number of failures in the comparison</summary>
         public long FailureCount => DoOperation(comparison => comparison._result.Values.Count(result => !result.IsOk()));
 
-        [Documentation("maximal value of the time series if numerical, 0 if not numerical")]
+        /// <summary>maximal value of the time series if numerical, 0 if not numerical</summary>
         public double MaxValue => DoOperation(comparison => comparison._maxValue);
 
-        [Documentation("minimal value of the time series if numerical, 0 if not numerical")]
+        /// <summary>minimal value of the time series if numerical, 0 if not numerical</summary>
         public double MinValue => DoOperation(comparison => comparison._minValue);
 
-        [Documentation("The number of data points in the comparison")]
+        /// <summary>The number of data points in the comparison</summary>
         public long PointCount => DoOperation(comparison => comparison._result.Count);
 
         private MeasurementComparisonDictionary Result
@@ -90,10 +93,10 @@ namespace SupportFunctions
             }
         }
 
-        [Documentation("Time span in seconds between last and first data point")]
+        /// <summary>Time span in seconds between last and first data point</summary>
         public double TimeSpanSeconds => DoOperation(comparison => comparison._timeSpanSeconds);
 
-        [Documentation("The tolerance that was used in the comparison")]
+        /// <summary>The tolerance that was used in the comparison</summary>
         public string UsedTolerance => DoOperation(comparison => comparison._tolerance.ToString());
 
         private void CompareExpectedToActuals(IReadOnlyDictionary<DateTime, Measurement> actualDictionary)
@@ -173,8 +176,8 @@ namespace SupportFunctions
             return operation(this);
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "FitSharp interface spec"),
-         Documentation("Table interface, providing full details about the comparison.")]
+        /// <summary>Table interface, providing full details about the comparison</summary>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "FitSharp interface spec")]
         public Collection<object> DoTable(Collection<Collection<object>> tableIn)
         {
             var renderer = new TableRenderer<IMeasurementComparison>(GetTableValues);
@@ -185,13 +188,13 @@ namespace SupportFunctions
         private static double? GetValueWithDefault(double? parameterInput, bool useNull, double fallback) =>
             parameterInput ?? (useNull ? (double?) null : fallback);
 
-        [Documentation("html img element with an in-line base-64 html image containing a chart of the comparison")]
+        /// <summary>html img element with an in-line base-64 html image containing a chart of the comparison</summary>
         public string Graph() => Graph(new Dictionary<string, string>());
 
-        [Documentation("Graph with optional parameters: Width, Height, StartTimestamp, EndTimestamp, MinValue, MaxValue")]
+        /// <summary>Graph with optional parameters: Width, Height, StartTimestamp, EndTimestamp, MinValue, MaxValue</summary>
         public string Graph(Dictionary<string, string> rawParameters) => DoOperation(comparison => comparison.CreateGraph(rawParameters));
 
-        [Documentation("Shorthand for Graph with a certain width and height; other parameters default")]
+        /// <summary>Shorthand for Graph with a certain width and height; other parameters default</summary>
         public string GraphX(int width, int height)
         {
             var dict = new Dictionary<string, string>
@@ -222,10 +225,10 @@ namespace SupportFunctions
             return double.IsNaN(value2) ? value1 : Math.Min(value1, value2);
         }
 
-        [Documentation("Query interface, returning the comparison failures")]
+        /// <summary>Query interface, returning the comparison failures</summary>
         public Collection<object> Query() => DoOperation(comparison => comparison.CreateQueryResult());
 
-        [Documentation("Execute a comparison. Normally done implicitly")]
+        /// <summary>Execute a comparison. Normally done implicitly</summary>
         public void RunComparison()
         {
             // Load both time series if needed
@@ -260,7 +263,7 @@ namespace SupportFunctions
             _timeSpanSeconds = (baseSeries.Measurements.Last().Timestamp - _baseTimestamp.DateTime).TotalSeconds;
         }
 
-        // Make FitNesse objects show something meaningful but small so first columns don't get too large
+        ///<returns>a small but meaningful caption to not make FitNesse columns too large</returns>
         public override string ToString() => TimeSeriesComparisonCaption;
     }
 }

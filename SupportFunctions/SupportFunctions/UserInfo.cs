@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2019 Rik Essenius
+﻿// Copyright 2015-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -15,15 +15,15 @@ using System.Security.Principal;
 
 namespace SupportFunctions
 {
+    /// <summary>User information</summary>
     [SuppressMessage("Microsoft.Design", "CA1053:StaticHolderTypesShouldNotHaveConstructors", Justification = "Used by FitSharp"),
-     SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used by FitSharp"), 
-     Documentation("User Information")]
+     SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used by FitSharp")]
     public class UserInfo
     {
-        [Documentation("The current user’s display name")]
+        /// <summary>The current user’s display name</summary>
         public static string DisplayName => UserPrincipal.Current.DisplayName;
 
-        [Documentation("The current user’s user name")]
+        /// <summary>The current user’s user name</summary>
         public static string UserName => WindowsIdentity.GetCurrent().Name;
     }
 }

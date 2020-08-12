@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2019 Rik Essenius
+﻿// Copyright 2016-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -130,7 +130,10 @@ namespace SupportFunctions.Model
 
         private int FindTableStartFrom(int lineNo)
         {
-            while (lineNo < _line.Count && !IsTableLine(_line[lineNo])) lineNo++;
+            while (lineNo < _line.Count && !IsTableLine(_line[lineNo]))
+            {
+                lineNo++;
+            }
             return lineNo;
         }
 
@@ -213,7 +216,10 @@ namespace SupportFunctions.Model
 
         private void RemoveTableAt(int index)
         {
-            while (IsTableLine(_line[index])) _line.RemoveAt(index);
+            while (IsTableLine(_line[index]))
+            {
+                _line.RemoveAt(index);
+            }
         }
 
         protected virtual List<string> RestCall(string uri)

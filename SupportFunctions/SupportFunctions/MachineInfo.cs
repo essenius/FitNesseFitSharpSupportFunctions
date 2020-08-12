@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2019 Rik Essenius
+﻿// Copyright 2015-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -16,16 +16,16 @@ using System.Net;
 
 namespace SupportFunctions
 {
+    /// <summary>Machine information</summary>
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Used by FitSharp"),
      SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used by FitSharp"),
-     SuppressMessage("Microsoft.Design", "CA1053:StaticHolderTypesShouldNotHaveConstructors", Justification = "Used by FitSharp"),
-     Documentation("Machine information")]
+     SuppressMessage("Microsoft.Design", "CA1053:StaticHolderTypesShouldNotHaveConstructors", Justification = "Used by FitSharp")]
     public class MachineInfo
     {
-        [Documentation("Return the FQDN of the current machine, i.e. machine name with full domain")]
+        /// <returns>the FQDN of the current machine, i.e. machine name with full domain</returns>
         public static string FullyQualifiedDomainName() => FullyQualifiedDomainName(Environment.MachineName);
 
-        [Documentation("Return the FQDN of computerName, i.e. machine name with full domain")]
+        /// <returns>the FQDN of computerName, i.e. machine name with full domain</returns>
         public static string FullyQualifiedDomainName(string computerName)
         {
             Debug.Assert(computerName != null, "computerName != null");

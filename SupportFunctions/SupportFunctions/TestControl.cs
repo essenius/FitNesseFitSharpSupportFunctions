@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2019 Rik Essenius
+﻿// Copyright 2015-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -14,21 +14,21 @@ using static System.FormattableString;
 
 namespace SupportFunctions
 {
+    /// <summary>Control stopping tests/suites from within a test</summary>
     [SuppressMessage("Microsoft.Design", "CA1053:StaticHolderTypesShouldNotHaveConstructors", Justification = "Required for FitNesse"),
-     SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used by FitSharp"),
-     Documentation("Control stopping tests/suites from within a test")]
+     SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used by FitSharp")]
     public class TestControl
     {
-        [Documentation("Throw a StopSuiteException if argument is true")]
+        /// <summary>Throw a StopSuiteException if argument is true</summary>
         public static void StopSuiteIf(string condition) => ThrowStopIf(condition, true, true);
 
-        [Documentation("Throw a StopSuiteException if argument is false")]
+        /// <summary>Throw a StopSuiteException if argument is false</summary>
         public static void StopSuiteIfNot(string condition) => ThrowStopIf(condition, true, false);
 
-        [Documentation("Throw a StopTestException if argument is true")]
+        /// <summary>Throw a StopTestException if argument is true</summary>
         public static void StopTestIf(string condition) => ThrowStopIf(condition, false, true);
 
-        [Documentation("Throw a StopTestException if argument is false")]
+        /// <summary>Throw a StopTestException if argument is false</summary>
         public static void StopTestIfNot(string condition) => ThrowStopIf(condition, false, false);
 
         [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local", Justification = "intentional precondition check")]

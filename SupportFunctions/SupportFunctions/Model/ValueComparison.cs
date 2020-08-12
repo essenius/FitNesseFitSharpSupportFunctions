@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2019 Rik Essenius
+﻿// Copyright 2017-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -186,7 +186,7 @@ namespace SupportFunctions.Model
             // or with different cultures such as ∞ vs Infinity).
             // Since this can also occur due to rounding, we return WithinTolerance rather than None if we don't
             // find something like Infinity in the actual out value
-            if (ExpectedValueOut.Equals(actualValue.To<string>(),StringComparison.Ordinal))
+            if (ExpectedValueOut.Equals(actualValue.To<string>(), StringComparison.Ordinal))
             {
                 return ActualValueOut.Contains("Infinity") ? CompareOutcome.None : CompareOutcome.WithinTolerance;
             }

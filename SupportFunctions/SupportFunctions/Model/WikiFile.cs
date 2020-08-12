@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2019 Rik Essenius
+﻿// Copyright 2015-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -30,7 +30,7 @@ namespace SupportFunctions.Model
         private readonly string _wikiPagePath;
         private readonly string _wikiRoot;
 
-        [Documentation("Experimental. Do not use")]
+        /// <summary>Experimental. Do not use</summary>
         public WikiFile(string wikiRoot, string wikiPage)
         {
             _wikiRoot = wikiRoot;

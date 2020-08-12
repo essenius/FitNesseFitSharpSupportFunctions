@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2019 Rik Essenius
+﻿// Copyright 2016-2020 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -17,9 +17,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rik Essenius")]
 [assembly: AssemblyProduct("SupportFunctionsTest")]
-[assembly: AssemblyCopyright("Copyright © Rik Essenius 2015-2019")]
+[assembly: AssemblyCopyright("Copyright © Rik Essenius 2015-2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: Guid("3449c7d4-4817-446f-8a4f-b72fd818de29")]
-[assembly: AssemblyVersion("2.3.0")]
+[assembly: AssemblyVersion("2.3.1")]
