@@ -201,7 +201,6 @@ namespace SupportFunctions
 
         /// <summary>We need this definition for FitNesse, but we don't need the actual value</summary>
         /// <param name="input">ignored</param>
-        /// <returns></returns>
         [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "FitNesse requirement"),
          SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "FitNesse requirement")]
         public static CsvComparison Parse(string input) => null;
