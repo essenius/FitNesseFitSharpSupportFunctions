@@ -29,6 +29,7 @@ namespace SupportFunctions.Utilities
             {"DOUBLE", typeof(double)},
             {"INT", typeof(int)},
             {"LONG", typeof(long)},
+            {"OBJECT", typeof(object)},
             {"STRING", typeof(string)}
         };
 

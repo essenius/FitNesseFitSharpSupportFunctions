@@ -62,7 +62,7 @@ namespace SupportFunctionsTest
              "Could not find property, field or method 'Wrong' for type 'String'")]
         public void CommonFunctionsDoOnMissingMethodForStringTest() => CommonFunctions.DoOn("Wrong", "hello");
 
-        [TestMethod, TestCategory("Unit"), ExpectedExceptionWithMessage(typeof(MissingMethodException),
+        [TestMethod, TestCategory("Unit"), ExpectedExceptionWithMessage(typeof(MissingMemberException),
              "Could not find static property, field or method 'Math.Wrong'")]
         public void CommonFunctionsDoOnMissingStaticMethodTest() => CommonFunctions.DoOn("Math.Wrong", null);
 
@@ -73,22 +73,23 @@ namespace SupportFunctionsTest
         [TestMethod, TestCategory("Unit")]
         public void CommonFunctionsDoOnTest()
         {
-            const int maxInt = int.MaxValue;
-            var maxIntString = maxInt.To<string>();
-            var tooBigForInt = (1L + maxInt).To<string>();
             const string testString = @"abcdef";
             Assert.AreEqual("de", CommonFunctions.DoOnWithParams("Substring", testString, "3", "2"));
-            Assert.AreEqual("def", CommonFunctions.DoOnWithParam("Substring", testString, "3"));
+            Assert.AreEqual("def", CommonFunctions.DoOnWithParam("SubString", testString, "3"));
             Assert.AreEqual(6, CommonFunctions.DoOn("Length", testString));
-            Assert.AreEqual(10, CommonFunctions.DoOn("Length", maxIntString));
-            Assert.AreEqual("2147483647", CommonFunctions.DoOnWithParams("ToString", maxIntString));
+            const int maxInt = int.MaxValue;
+            var maxIntString = maxInt.To<string>();
+            Assert.AreEqual(10, CommonFunctions.DoOn("lEnGth", maxIntString));
+            Assert.AreEqual("2147483647", CommonFunctions.DoOnWithParams("tostring", maxIntString));
             Assert.AreEqual("47", CommonFunctions.DoOnWithParams("Substring", maxIntString, "8"));
             Assert.AreEqual("System.Int32", CommonFunctions.DoOnWithParams("GetType", maxIntString).ToString());
+            var tooBigForInt = CommonFunctions.EvaluateAs("1. + " + maxInt, "long").To<string>();
+            //var tooBigForInt = (1L + maxInt).To<string>();
             Assert.AreEqual("System.Int64", CommonFunctions.DoOnWithParams("GetType", tooBigForInt).ToString());
             Assert.AreEqual(false, CommonFunctions.DoOnWithParams("Contains", testString, "dg"));
             Assert.AreEqual(4.0, CommonFunctions.DoOnWithParams("Math.Sqrt", "16.0"));
             Assert.AreEqual((byte) 255, CommonFunctions.DoOn("byte.MaxValue", null));
-            Assert.AreEqual(Math.PI, CommonFunctions.DoOn("Math.PI", string.Empty));
+            Assert.AreEqual(Math.PI, CommonFunctions.DoOn("mAtH.pi", string.Empty));
             Assert.AreEqual(string.Empty, CommonFunctions.DoOn("Empty", null));
             Assert.AreEqual(-1M, CommonFunctions.Do("Decimal.MinusOne"));
         }
@@ -115,9 +116,23 @@ namespace SupportFunctionsTest
         }
 
         [TestMethod, TestCategory("Unit")]
+        public void CommonFunctionsEvaluateTest()
+        {
+            Assert.AreEqual(32769, CommonFunctions.Evaluate("32767+2"), "32769 + 2 = 32769");
+            Assert.AreEqual("23", CommonFunctions.Evaluate("'2' + '3'"), " '2' + '3' = '23'");
+            Assert.AreEqual(0.75, CommonFunctions.Evaluate("3 / 4"), "3 / 4 = 0.75");
+            Assert.AreEqual(9999999999999999999999999999M,
+                CommonFunctions.Evaluate("9999999999999999999999999998. + 1"),
+                "99999999999999999999999998. + 1 = 99999999999999999999999999");
+            Assert.IsTrue((bool)CommonFunctions.Evaluate("6 > 5"), "6 > 5");
+            Assert.AreEqual(2, CommonFunctions.Evaluate("8 % 3"), "8 % 3 = 2");
+            Assert.AreEqual(new DateTime(1995, 5, 9), CommonFunctions.Evaluate("#9-May-1995#"), "#9-May-1995#");
+        }
+
+        [TestMethod, TestCategory("Unit")]
         public void CommonFunctionsEvaluateAsTest()
         {
-            Assert.AreEqual(32769, CommonFunctions.EvaluateAs("32767+2", "int"), "32769 + 2 = 32769");
+            Assert.AreEqual(32769, CommonFunctions.EvaluateAs("32767+2", "int"), "32767 + 2 = 32769");
             Assert.AreEqual(5L, CommonFunctions.EvaluateAs("2 + 3", "long"), "2 + 3 = 5");
             Assert.AreEqual("23", CommonFunctions.EvaluateAs("'2' + '3'", "string"), " '2' + '3' = '23'");
             Assert.AreEqual(0.75, CommonFunctions.EvaluateAs("3 / 4", "double"), "3 / 4 = 0.75");
@@ -129,7 +144,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual(new DateTime(1995, 5, 9), CommonFunctions.EvaluateAs("#9-May-1995#", "System.DateTime"),
                 "#9-May-1995#");
             Assert.AreEqual(Date.Parse("22-Oct-1999").ToString(),
-                CommonFunctions.EvaluateAs("#22-Oct-1999#", "Date").ToString(), "#22-Oct-1995#");
+                CommonFunctions.EvaluateAs("#22-Oct-1999#", "Date").ToString(), "#22-Oct-1999#");
+
         }
 
         [TestMethod, TestCategory("Unit"), ExpectedExceptionWithMessage(typeof(ArgumentException),
@@ -139,6 +155,7 @@ namespace SupportFunctionsTest
         [TestMethod, TestCategory("Unit")]
         public void CommonFunctionsEvaluateAsWithParamTest()
         {
+            // can't use powers or other math functions, unfortunately. Just the basic stuff
             var parameters = new[]
             {
                 "x=5",
@@ -150,25 +167,38 @@ namespace SupportFunctionsTest
             Assert.AreEqual(10, CommonFunctions.EvaluateAsWithParams("z", "int", parameters));
             Assert.AreEqual(125, CommonFunctions.EvaluateAsWithParams("xx*x", "int", parameters));
             Assert.AreEqual(625.0, CommonFunctions.EvaluateAsWithParams("xx*xx", "double", parameters));
-            // can't use powers or other math functions, unfortunately. Just the basic stuff
         }
 
         [TestMethod, TestCategory("Unit")]
-        public void CommonFunctionsEvaluateTest()
+        public void CommonFunctionsEvaluateWithParamTest()
         {
-            Assert.AreEqual(5d, CommonFunctions.Calculate("2 + 3"), "2 + 3 = 5");
+            var parameters = new[]
+            {
+                "x=5",
+                "xx=x*x"
+            };
+            Assert.AreEqual(15, CommonFunctions.EvaluateWithParams("x*3", parameters));
+            Assert.AreEqual(125, CommonFunctions.EvaluateWithParams("xx*x", parameters));
+            Assert.AreEqual(2.5, CommonFunctions.EvaluateWithParams("xx/10", parameters));
+        }
+
+        [TestMethod, TestCategory("Unit")]
+        public void CommonFunctionsCalculateTest()
+        {
+            Assert.AreEqual(5, CommonFunctions.Calculate("2 + 3"), "2 + 3 = 5");
+            Assert.AreEqual(2.5, CommonFunctions.Calculate("5 / 2"), "5 / 2 = 2.5");
             Assert.AreEqual(2d, CommonFunctions.Calculate("6 / 3"), "6 / 3 = 2");
-            Assert.AreEqual(2d, CommonFunctions.Calculate("8 % 3"), "8 % 3 = 2");
-            Assert.AreEqual(3d, CommonFunctions.Calculate("len('abc')"), "len('abc') = 3");
+            Assert.AreEqual(2, CommonFunctions.Calculate("8 % 3"), "8 % 3 = 2");
+            Assert.AreEqual(3, CommonFunctions.Calculate("len('abc')"), "len('abc') = 3");
         }
 
         [TestMethod, TestCategory("Unit")]
         public void CommonFunctionsIsTrueTest()
         {
             Assert.AreEqual(true, CommonFunctions.IsTrue("2 < 3"), "2 < 3");
-            Assert.AreEqual(true, CommonFunctions.IsTrue("(true and not false) or false"),
+            Assert.AreEqual(true, CommonFunctions.IsTrue("(true and not not true) or false"),
                 "(true and not(not(true)) or false");
-            Assert.IsFalse(CommonFunctions.IsTrue("len('ab') = 3"), "len('ab') = 3");
+            Assert.IsFalse(CommonFunctions.IsTrue("len('ab') = 3"), "len('ab') <> 3");
         }
 
         [TestMethod, TestCategory("Unit")]

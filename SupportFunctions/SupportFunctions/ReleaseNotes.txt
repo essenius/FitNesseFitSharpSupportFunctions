@@ -10,3 +10,5 @@
 2.3.0 Introduced RegexEscape and RegexUnescape. Removed some debugging info and eliminated unnecessary code. 
       Extracted RowColumnComparer into its own file. 
 2.3.1 Introduced XML documentation to replace [Documentation] attributes
+2.3.2 Fixed Image comparison error caused by an extra space before the end of image tags
+2.3.3 Made DoOn case insensitive for members, added object as a valid type for EvaluateAs

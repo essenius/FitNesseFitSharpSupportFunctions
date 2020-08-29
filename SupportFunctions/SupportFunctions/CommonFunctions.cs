@@ -48,8 +48,8 @@ namespace SupportFunctions
         /// <summary>Add a number of hours to a date. Value can contain fractions and be negative</summary>
         public static Date AddHoursTo(double hours, Date date) => date.AddHours(hours);
 
-        /// <summary>Calculate the result of a numerical expression. Shorthand for Evaluate As with type double.</summary>
-        public static object Calculate(string expression) => Evaluate(expression, typeof(double), null);
+        /// <summary>Calculate the result of a numerical expression. Shorthand for Evaluate As with type 'object'.</summary>
+        public static object Calculate(string expression) => EvaluateExpression(expression, typeof(object), null);
 
         /// <summary>Alias for Echo. Required by FitNesse to enable use of symbols in decision table results.</summary>
         public static object CloneSymbol(object symbol) => symbol;
@@ -90,18 +90,17 @@ namespace SupportFunctions
             var convertedParams = parameters.Select(p => ((string) p).CastToInferredType()).ToList();
 
             // assume it is a static call (e.g. Math) if there is a dot in the name
-            // Look for the last dot; the class could be fully specified (and also contain dots)
             if (function.Contains(".")) return StaticFunctionCall(function, convertedInput, convertedParams);
 
             // No static call, so try if it is a property or method on the object
             var types = convertedParams.Select(t => t.GetType()).ToArray();
-            if (TryGetPropertyFieldOrMethod(inputType, function, convertedInput, types, convertedParams.ToArray(), out var outValue))
+            if (TryGetMember(inputType, function, convertedInput, types, convertedParams.ToArray(), out var outValue))
             {
                 return outValue;
             }
 
             // final fallback: try string
-            if (TryGetPropertyFieldOrMethod(typeof(string), function, input, types, convertedParams.ToArray(), out outValue))
+            if (TryGetMember(typeof(string), function, input, types, convertedParams.ToArray(), out outValue))
             {
                 return outValue;
             }
@@ -111,18 +110,17 @@ namespace SupportFunctions
         /// <returns>the input parameter. Useful for initializing symbols</returns>
         public static object Echo(object input) => input;
 
-        private static object Evaluate(string expression, Type type, IEnumerable<string> parameters)
+        private static object EvaluateExpression(string expression, Type type, IEnumerable<string> parameters)
         {
             // making use of the fact that DataTables come with a handy eval function
             using (var dataTable = new DataTable {Locale = CultureInfo.InvariantCulture})
             {
-                // expect that all parameters have the same type as the expression
-                // otherwise the specification becomes too complex (params can also contain expressions)
                 var columnDictionary = parameters?.ToDictionary() ?? new Dictionary<string, string>();
                 columnDictionary.Add("Eval", expression);
                 foreach (var entry in columnDictionary)
                 {
-                    var paramColumn = new DataColumn(entry.Key, type, entry.Value);
+                    // we take the object type for all parameters, and the specified type for the evaluation result
+                    var paramColumn = new DataColumn(entry.Key, entry.Key == "Eval" ? type : typeof(object), entry.Value);
                     dataTable.Columns.Add(paramColumn);
                 }
                 // all columns are expressions so no need to add data. We just need a row to refer to.
@@ -138,11 +136,16 @@ namespace SupportFunctions
         ///     Supported functions: LEN(expression), ISNULL(expression, replacement), IIF(expression, trueValue, falseValue),
         ///     TRIM(expression), SUBSTRING(expression, start, length)
         /// </param>
+        /// <returns>the result as a suitable type</returns>
+        public static object Evaluate(string expression) => EvaluateExpression(expression, typeof(object), null);
+
+        /// <summary>Evaluate an expression</summary>
+        /// <param name="expression">the expression to evaluate (see <see cref="Evaluate"/>)</param>
         /// <param name="type">
-        ///     the type to return. Supported types are bool, date, decimal, double, int, long, string,
+        ///     the type to return. Supported types are bool, date, decimal, double, int, object, long, string,
         ///     and the full names of standard .Net types such as System.String, System.Int32, System.DateTime
         /// </param>
-        /// <returns>the result as a specified type</returns>
+        /// <returns>the result as the specified type</returns>
         public static object EvaluateAs(string expression, string type) => EvaluateAsWithParams(expression, type, null);
 
         /// <summary>Experimental - do not use</summary>
@@ -150,10 +153,15 @@ namespace SupportFunctions
         {
             Debug.Assert(rawType != null, "type != null");
             var type = rawType.ToType();
+            // Date is a special case. It can be used as a return value type, but EvaluateExpression only knows standard types. 
+            // So use DateTime in the evaluation, and map it to a Date afterwards.
             return type == typeof(Date)
-                ? Date.Parse(Evaluate(expression, typeof(DateTime), parameters).To<string>())
-                : Evaluate(expression, type, parameters);
+                ? Date.Parse(EvaluateExpression(expression, typeof(DateTime), parameters).To<string>())
+                : EvaluateExpression(expression, type, parameters);
         }
+
+        /// <summary>Experimental - do not use</summary>
+        public static object EvaluateWithParams(string expression, string[] parameters) => EvaluateExpression(expression, typeof(object), parameters);
 
         private static Type FindStaticClass(string className)
         {
@@ -162,14 +170,14 @@ namespace SupportFunctions
             return type;
         }
 
-        /// <summary>Evaluate a Boolean expression. Shorthand for Evaluate As with type bool</summary>
+        /// <summary>EvaluateExpression a Boolean expression. Shorthand for EvaluateExpression As with type bool</summary>
         /// <param name="expression">
         ///     The expression to evaluate. Supported operations are AND, OR and NOT.
         ///     Comparisons can be &gt;, &lt;, &gt;=, &lt;=, =, &lt;&gt;, IN, LIKE. For LIKE, wildcards (%, *) can be used at the beginning
         ///     and/or end of the pattern. For IN, specify the values between parentheses, e.g. ′a′ IN (′a′, ′b′, ′c′)
         /// </param>
         /// <returns>whether the expression evaluated to True</returns>
-        public static bool IsTrue(string expression) => (bool) EvaluateAs(expression, "bool");
+        public static bool IsTrue(string expression) => (bool) EvaluateExpression(expression, typeof(bool), null);
 
         /// <returns>the leftmost characters of a string</returns>
         public static string LeftmostOf(int length, string input)
@@ -209,19 +217,20 @@ namespace SupportFunctions
 
         private static object StaticFunctionCall(string function, object convertedInput, List<object> convertedParams)
         {
+            // Look for the last dot; the class could be fully specified (and also contain dots)
             var index = function.LastIndexOf(".", StringComparison.Ordinal);
             var className = function.Substring(0, index).Trim();
-            var methodName = function.Substring(index + 1).Trim();
             var type = FindStaticClass(className);
+            var rawMemberName = function.Substring(index + 1).Trim();
 
-            // insert the input  to the parameter arrays if not null - it is the first parameter for static calls
+            // insert the input to the parameter arrays if not null - it is the first parameter for static calls
             if (convertedInput != null) convertedParams.Insert(0, convertedInput);
             var types = convertedParams.Select(t => t.GetType()).ToArray();
-            if (TryGetPropertyFieldOrMethod(type, methodName, null, types, convertedParams.ToArray(), out var outValue))
+            if (TryGetMember(type, rawMemberName, null, types, convertedParams.ToArray(), out var outValue))
             {
                 return outValue;
             }
-            throw new MissingMethodException(Invariant($"Could not find static property, field or method '{function}'"));
+            throw new MissingMemberException(Invariant($"Could not find static property, field or method '{function}'"));
         }
 
         /// <returns>the difference in ticks between two input dates</returns>
@@ -264,24 +273,39 @@ namespace SupportFunctions
             return input.Trim();
         }
 
-        private static bool TryGetPropertyFieldOrMethod(Type type, string function, object input,
+        /// <summary>Find a member by the name, Look exact to start with, if that doesn't work look case insensitive.</summary>
+        /// <param name="type">the type to look in</param>
+        /// <param name="name">the member name to look for</param>
+        /// <returns>the case sensitive name of the member</returns>
+        private static string MemberName(Type type, string name)
+        {
+            var exactMember = type.GetMember(name);
+            if (exactMember.Length > 0) return exactMember[0].Name;
+            return (from member in type.GetMembers()
+                where member.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)
+                select member.Name).FirstOrDefault();
+        }
+
+        private static bool TryGetMember(Type type, string function, object input,
             Type[] types, object[] parameters, out object output)
         {
             output = null;
             if (type == null) return false;
-            var property = type.GetProperty(function);
+            var memberName = MemberName(type, function);
+            if (memberName == null) return false;
+            var property = type.GetProperty(memberName);
             if (property != null)
             {
                 output = property.GetValue(input, null);
                 return true;
             }
-            var field = type.GetField(function);
+            var field = type.GetField(memberName);
             if (field != null)
             {
                 output = field.GetValue(input);
                 return true;
             }
-            var method = type.GetMethod(function, types);
+            var method = type.GetMethod(memberName, types);
             if (method == null)
             {
                 // if we had decimal parameters, retry with double (those are more common)
