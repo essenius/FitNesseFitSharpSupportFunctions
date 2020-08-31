@@ -1,0 +1,28 @@
+!define blank {}
+
+!|script        |common functions                                           |
+|$input=        |echo     |abcdef                                           |
+|check          |get      |Substring(3,2)  |of|$input        |de            |
+|check          |get      |Substring ( 3 ) |of|$input        |def           |
+|check          |get      |Length          |of|$input        |6             |
+|$maxInt=       |get      |Int32.MaxValue                                   |
+|check          |get      |Length          |of|$maxInt       |10            |
+|check          |get      |Substring(8)    |of|$maxInt       |47            |
+|check          |get      |GetType         |of|$maxInt       |System.Int32  |
+|$tooBigForInt= |calculate|1. + $maxInt                                     |
+|check          |echo     |$tooBigForInt   |2147483648                      |
+|check          |get      |GetType         |of|$tooBigForInt |System.Int64  |
+|$maxLong=      |get      |long.MaxValue                                    |
+|$tooBigForLong=|calculate|1. + $maxLong                                    |
+|check          |get      |GetType         |of|$tooBigForLong|System.Decimal|
+|ensure         |get      |Contains(de)    |of|$input                       |
+|reject         |get      |Contains(dg)    |of|$input                       |
+|check          |get      |Math.Sqrt       |of|16.0          |4             |
+|check          |get      |Math.Sqrt(49)   |7                               |
+|$e=            |get      |Math.E                                           |
+|check          |get      |math.round(2)   |of|$e            |2.72          |
+|check          |get      |Math.ROUND($e,2)|2.72                            |
+|check          |get      |byte.MaxValue   |255                             |
+|check          |get      |Math.PI         |~=3.14159                       |
+|check          |get      |Empty           |                                |
+|check          |get      |bool.falsestring|False                           |

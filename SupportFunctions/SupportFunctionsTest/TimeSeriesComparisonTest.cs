@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -88,7 +89,7 @@ namespace SupportFunctionsTest
                 var expectedResult = expectedResults[timestamp];
                 var actualResult = new Dictionary<string, object>
                 {
-                    {"pass", (!row.Any(cell => cell.ToString().StartsWith(fail))).ToString()},
+                    {"pass", (!row.Any(cell => cell.ToString().StartsWith(fail, StringComparison.Ordinal))).ToString()},
                     {"timestampOut", row[0]},
                     {"value", row[1]},
                     {"delta", row[2]},
@@ -122,7 +123,7 @@ namespace SupportFunctionsTest
             // remove the pass/fail indicator by keeping everything after the first colon
             var timestamp = cell.Split(new[] {':'}, 2)[1];
             if (string.IsNullOrEmpty(timestamp)) return null;
-            if (timestamp.StartsWith("["))
+            if (timestamp.StartsWith("[", StringComparison.Ordinal))
             {
                 timestamp = timestamp.Substring(1, timestamp.IndexOf("]", StringComparison.Ordinal) - 1);
             }
@@ -134,7 +135,7 @@ namespace SupportFunctionsTest
         public void TimeSeriesComparisonDoTableExceptionTest()
         {
             var expected = new TimeSeries();
-            var timestamp = DateTime.Parse("2004-03-24");
+            var timestamp = DateTime.Parse("2004-03-24", CultureInfo.InvariantCulture);
             expected.AddMeasurement(new Measurement {Timestamp = timestamp});
             expected.AddMeasurement(new Measurement {Timestamp = timestamp});
             var actual = new TimeSeries();
@@ -189,7 +190,7 @@ namespace SupportFunctionsTest
         {
             var expected = new TimeSeries();
             var actual = new TimeSeries();
-            var timestamp = DateTime.Parse("2000-11-24");
+            var timestamp = DateTime.Parse("2000-11-24", CultureInfo.InvariantCulture);
             actual.AddMeasurement(new Measurement
             {
                 Timestamp = timestamp,
@@ -218,7 +219,7 @@ namespace SupportFunctionsTest
         public void TimeSeriesComparisonGraphNoNumericalDataTest()
         {
             var expected = new TimeSeries();
-            var timestamp = DateTime.Parse("2000-11-24");
+            var timestamp = DateTime.Parse("2000-11-24", CultureInfo.InvariantCulture);
             expected.AddMeasurement(new Measurement
             {
                 Timestamp = timestamp,
@@ -235,7 +236,7 @@ namespace SupportFunctionsTest
         public void TimeSeriesComparisonGraphNumericalAllBelowXAxisTest()
         {
             var expected = new TimeSeries();
-            var timestamp = DateTime.Parse("1969-08-28");
+            var timestamp = DateTime.Parse("1969-08-28", CultureInfo.InvariantCulture);
             expected.AddMeasurement(new Measurement
             {
                 Timestamp = timestamp,
@@ -267,7 +268,7 @@ namespace SupportFunctionsTest
         public void TimeSeriesComparisonGraphNumericalWithMissingValuesTest()
         {
             var expected = new TimeSeries();
-            var timestamp = DateTime.Parse("2000-11-24");
+            var timestamp = DateTime.Parse("2000-11-24", CultureInfo.InvariantCulture);
             expected.AddMeasurement(new Measurement
             {
                 Timestamp = timestamp,
@@ -356,7 +357,7 @@ namespace SupportFunctionsTest
         public void TimeSeriesComparisonGraphSimpleNumericalTest()
         {
             var expected = new TimeSeries();
-            var timestamp = DateTime.Parse("2000-11-24");
+            var timestamp = DateTime.Parse("2000-11-24", CultureInfo.InvariantCulture);
             expected.AddMeasurement(new Measurement
             {
                 Timestamp = timestamp,

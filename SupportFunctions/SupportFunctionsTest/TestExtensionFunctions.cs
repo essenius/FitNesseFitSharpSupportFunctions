@@ -16,21 +16,21 @@ namespace SupportFunctionsTest
 {
     public static class TestExtensionFunctions
     {
-        public static double? ToNullableDouble(this object input)
+        internal static double? ToNullableDouble(this object input)
         {
             double? output = null;
             if (double.TryParse(input.ToString(), out var result)) output = result;
             return output;
         }
 
-        public static int? ToNullableInt(this object input)
+        internal static int? ToNullableInt(this object input)
         {
             int? output = null;
             if (int.TryParse(input.ToString(), out var result)) output = result;
             return output;
         }
 
-        public static string ValueIfExists(this DataRow row, string columnName)
+        internal static string ValueIfExists(this DataRow row, string columnName)
         {
             return row.Table.Columns.Cast<DataColumn>().Any(column => column.ColumnName == columnName) ? row[columnName].ToString() : null;
         }

@@ -12,22 +12,18 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using SupportFunctions.Utilities;
-using static System.FormattableString;
 
 namespace SupportFunctions
 {
     /// <summary>Frequently needed functions for FitNesse tests. Useful as library</summary>
-    [SuppressMessage("Microsoft.Design", "CA1053:StaticHolderTypesShouldNotHaveConstructors", Justification = "Required for FitSharp"),
-     SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Required for FitSharp"),
-     SuppressMessage("ReSharper", "ParameterTypeCanBeEnumerable.Global", Justification = "Required for FitSharp")]
-    public class CommonFunctions
+    [SuppressMessage("ReSharper", "ParameterTypeCanBeEnumerable.Global", Justification = "Required for FitSharp")]
+    public sealed class CommonFunctions
     {
         /// <summary>Get or set the default date format. Formatting follows the standard .Net conventions</summary>
         public static string DateFormat
@@ -43,10 +39,18 @@ namespace SupportFunctions
         public static long Ticks => UniqueDateTime.NowTicks;
 
         /// <summary>Add a number of days to a date. Value can contain fractions and be negative</summary>
-        public static Date AddDaysTo(double days, Date date) => date.AddDays(days);
+        public static Date AddDaysTo(double days, Date date)
+        {
+            Requires.NotNull(date, nameof(date));
+            return date.AddDays(days);
+        }
 
         /// <summary>Add a number of hours to a date. Value can contain fractions and be negative</summary>
-        public static Date AddHoursTo(double hours, Date date) => date.AddHours(hours);
+        public static Date AddHoursTo(double hours, Date date)
+        {
+            Requires.NotNull(date, nameof(date));
+            return date.AddHours(hours);
+        }
 
         /// <summary>Calculate the result of a numerical expression. Shorthand for Evaluate As with type 'object'.</summary>
         public static object Calculate(string expression) => EvaluateExpression(expression, typeof(object), null);
@@ -65,46 +69,8 @@ namespace SupportFunctions
         /// <returns>a date using a specific format (using standard .Net convention)</returns>
         public static string DateFormatted(Date date, string format)
         {
-            Debug.Assert(date != null, "date != null");
+            Requires.NotNull(date, nameof(date));
             return date.Formatted(format);
-        }
-
-        /// <summary>Experimental - do not use</summary>
-        public static object Do(string function) => DoOnWithParams(function, null);
-
-        /// <summary>Experimental - do not use</summary>
-        public static object DoOn(string function, string input) => DoOnWithParams(function, input);
-
-        /// <summary>Experimental - do not use</summary>
-        public static object DoOnWithParam(string function, string input, object parameter) => DoOnWithParams(function, input, parameter);
-
-        /// <summary>Experimental - do not use</summary>
-        public static object DoOnWithParams(string function, string input, params object[] parameters)
-        {
-            if (function == null) throw new ArgumentNullException(nameof(function));
-            // if we are asking for a property, the input could be null
-            var convertedInput = input?.CastToInferredType();
-            var inputType = convertedInput?.GetType();
-
-            //we use a list here to make it easier to insert the input value for static calls
-            var convertedParams = parameters.Select(p => ((string) p).CastToInferredType()).ToList();
-
-            // assume it is a static call (e.g. Math) if there is a dot in the name
-            if (function.Contains(".")) return StaticFunctionCall(function, convertedInput, convertedParams);
-
-            // No static call, so try if it is a property or method on the object
-            var types = convertedParams.Select(t => t.GetType()).ToArray();
-            if (TryGetMember(inputType, function, convertedInput, types, convertedParams.ToArray(), out var outValue))
-            {
-                return outValue;
-            }
-
-            // final fallback: try string
-            if (TryGetMember(typeof(string), function, input, types, convertedParams.ToArray(), out outValue))
-            {
-                return outValue;
-            }
-            throw new MissingMethodException(MissingPropertyFieldOrMethodMessage(function, inputType));
         }
 
         /// <returns>the input parameter. Useful for initializing symbols</returns>
@@ -136,11 +102,15 @@ namespace SupportFunctions
         ///     Supported functions: LEN(expression), ISNULL(expression, replacement), IIF(expression, trueValue, falseValue),
         ///     TRIM(expression), SUBSTRING(expression, start, length)
         /// </param>
+        /// <remarks>
+        ///     See <a href="https://docs.microsoft.com/en-us/dotnet/api/system.data.datacolumn.expression">DataColumn documentation</a>
+        ///     for more information
+        /// </remarks>
         /// <returns>the result as a suitable type</returns>
         public static object Evaluate(string expression) => EvaluateExpression(expression, typeof(object), null);
 
         /// <summary>Evaluate an expression</summary>
-        /// <param name="expression">the expression to evaluate (see <see cref="Evaluate"/>)</param>
+        /// <param name="expression">the expression to evaluate (see <see cref="Evaluate" />)</param>
         /// <param name="type">
         ///     the type to return. Supported types are bool, date, decimal, double, int, object, long, string,
         ///     and the full names of standard .Net types such as System.String, System.Int32, System.DateTime
@@ -149,26 +119,19 @@ namespace SupportFunctions
         public static object EvaluateAs(string expression, string type) => EvaluateAsWithParams(expression, type, null);
 
         /// <summary>Experimental - do not use</summary>
-        public static object EvaluateAsWithParams(string expression, string rawType, string[] parameters)
+        public static object EvaluateAsWithParams(string expression, string type, string[] parameters)
         {
-            Debug.Assert(rawType != null, "type != null");
-            var type = rawType.ToType();
+            Requires.NotNull(type, nameof(type));
+            var returnType = type.ToType();
             // Date is a special case. It can be used as a return value type, but EvaluateExpression only knows standard types. 
             // So use DateTime in the evaluation, and map it to a Date afterwards.
-            return type == typeof(Date)
+            return returnType == typeof(Date)
                 ? Date.Parse(EvaluateExpression(expression, typeof(DateTime), parameters).To<string>())
-                : EvaluateExpression(expression, type, parameters);
+                : EvaluateExpression(expression, returnType, parameters);
         }
 
         /// <summary>Experimental - do not use</summary>
         public static object EvaluateWithParams(string expression, string[] parameters) => EvaluateExpression(expression, typeof(object), parameters);
-
-        private static Type FindStaticClass(string className)
-        {
-            var type = Type.GetType(className) ?? Type.GetType("System." + className.ToTitleCase());
-            if (type == null) throw new TypeLoadException(Invariant($"Could not find static class '{className}'"));
-            return type;
-        }
 
         /// <summary>EvaluateExpression a Boolean expression. Shorthand for EvaluateExpression As with type bool</summary>
         /// <param name="expression">
@@ -182,13 +145,9 @@ namespace SupportFunctions
         /// <returns>the leftmost characters of a string</returns>
         public static string LeftmostOf(int length, string input)
         {
-            Debug.Assert(input != null, "input != null");
+            Requires.NotNull(input, nameof(input));
             return input.Length < length ? input : input.Substring(0, length);
         }
-
-        private static string MissingPropertyFieldOrMethodMessage(string function, Type inputType) =>
-            Invariant($"Could not find property, field or method '{function}' for type ") +
-            (inputType != null && inputType.Name != "String" ? Invariant($"'{inputType.Name}' or ") : "") + "'String'";
 
         /// <summary>Parse a string value into a Date object. </summary>
         /// <param name="date">
@@ -211,26 +170,8 @@ namespace SupportFunctions
         /// <returns>the rightmost characters of a string</returns>
         public static string RightmostOf(int length, string input)
         {
-            Debug.Assert(input != null, "input != null");
+            Requires.NotNull(input, nameof(input));
             return input.Length < length ? input : input.Substring(input.Length - length, length);
-        }
-
-        private static object StaticFunctionCall(string function, object convertedInput, List<object> convertedParams)
-        {
-            // Look for the last dot; the class could be fully specified (and also contain dots)
-            var index = function.LastIndexOf(".", StringComparison.Ordinal);
-            var className = function.Substring(0, index).Trim();
-            var type = FindStaticClass(className);
-            var rawMemberName = function.Substring(index + 1).Trim();
-
-            // insert the input to the parameter arrays if not null - it is the first parameter for static calls
-            if (convertedInput != null) convertedParams.Insert(0, convertedInput);
-            var types = convertedParams.Select(t => t.GetType()).ToArray();
-            if (TryGetMember(type, rawMemberName, null, types, convertedParams.ToArray(), out var outValue))
-            {
-                return outValue;
-            }
-            throw new MissingMemberException(Invariant($"Could not find static property, field or method '{function}'"));
         }
 
         /// <returns>the difference in ticks between two input dates</returns>
@@ -239,89 +180,46 @@ namespace SupportFunctions
         /// <param name="dateTo">end date</param>
         public static long TicksBetweenAnd(Date dateFrom, Date dateTo)
         {
-            Debug.Assert(dateFrom != null, "dateFrom != null");
-            Debug.Assert(dateTo != null, "dateTo != null");
+            Requires.NotNull(dateFrom, nameof(dateFrom));
+            Requires.NotNull(dateTo, nameof(dateTo));
             return dateTo.Ticks - dateFrom.Ticks;
         }
 
         /// <returns>the difference in ticks between the input date and the current time. Shorthand for Ticks Between And Now.</returns>
         public static long TicksSince(Date date)
         {
-            Debug.Assert(date != null, "date != null");
+            Requires.NotNull(date, nameof(date));
             var startTicks = date.Ticks;
             var elapsedTicks = Ticks - startTicks;
             return elapsedTicks;
         }
 
         /// <returns>the local date for a date in UTC.</returns>
-        public static Date ToLocal(Date date) => date.ToLocal();
+        public static Date ToLocal(Date date)
+        {
+            Requires.NotNull(date, nameof(date));
+            return date.ToLocal();
+        }
 
         /// <returns>ticks value of the input date.</returns>
         public static long ToTicks(Date date)
         {
-            Debug.Assert(date != null, "date != null");
+            Requires.NotNull(date, nameof(date));
             return date.Ticks;
         }
 
         /// <returns>the UTC date for a local date</returns>
-        public static Date ToUtc(Date date) => date.ToUtc();
+        public static Date ToUtc(Date date)
+        {
+            Requires.NotNull(date, nameof(date));
+            return date.ToUtc();
+        }
 
         /// <returns>string without leading or trailing whitespace.</returns>
         public static string Trim(string input)
         {
-            Debug.Assert(input != null, "input != null");
+            Requires.NotEmpty(input, nameof(input));
             return input.Trim();
-        }
-
-        /// <summary>Find a member by the name, Look exact to start with, if that doesn't work look case insensitive.</summary>
-        /// <param name="type">the type to look in</param>
-        /// <param name="name">the member name to look for</param>
-        /// <returns>the case sensitive name of the member</returns>
-        private static string MemberName(Type type, string name)
-        {
-            var exactMember = type.GetMember(name);
-            if (exactMember.Length > 0) return exactMember[0].Name;
-            return (from member in type.GetMembers()
-                where member.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)
-                select member.Name).FirstOrDefault();
-        }
-
-        private static bool TryGetMember(Type type, string function, object input,
-            Type[] types, object[] parameters, out object output)
-        {
-            output = null;
-            if (type == null) return false;
-            var memberName = MemberName(type, function);
-            if (memberName == null) return false;
-            var property = type.GetProperty(memberName);
-            if (property != null)
-            {
-                output = property.GetValue(input, null);
-                return true;
-            }
-            var field = type.GetField(memberName);
-            if (field != null)
-            {
-                output = field.GetValue(input);
-                return true;
-            }
-            var method = type.GetMethod(memberName, types);
-            if (method == null)
-            {
-                // if we had decimal parameters, retry with double (those are more common)
-                for (var i = 0; i < types.Length; i++)
-                {
-                    if (types[i] == typeof(decimal)) types[i] = typeof(double);
-                }
-                for (var i = 0; i < parameters.Length; i++)
-                {
-                    if (parameters[i] is decimal) parameters[i] = parameters[i].To<double>();
-                }
-                method = type.GetMethod(function, types);
-            }
-            if (method == null) return false;
-            output = method.Invoke(input, parameters);
-            return true;
         }
 
         /// <summary>Wait the specified number of seconds</summary>

@@ -170,13 +170,13 @@ namespace SupportFunctionsTest
                 file.Delete();
             }
             var a = wikiFile.UniquePathFor("test.rik", 0);
-            Assert.IsTrue(a.EndsWith("000101010000000000_test_1.rik"), "test 1");
+            Assert.IsTrue(a.EndsWith("000101010000000000_test_1.rik", StringComparison.Ordinal), "test 1");
             File.Create(a).Close();
             var b = wikiFile.UniquePathFor("test.rik", 0);
-            Assert.IsTrue(b.EndsWith("000101010000000000_test_2.rik"), "test 2");
-            Assert.IsTrue(wikiFile.UniquePathFor(string.Empty, 0).EndsWith("000101010000000000__1"), "test 3");
-            Assert.IsTrue(wikiFile.UniquePathFor(null, 0).EndsWith("000101010000000000__1"), "test 4");
-            Assert.IsTrue(wikiFile.UniquePathFor(".rik", 0).EndsWith("000101010000000000__1.rik"), "test 5");
+            Assert.IsTrue(b.EndsWith("000101010000000000_test_2.rik", StringComparison.Ordinal), "test 2");
+            Assert.IsTrue(wikiFile.UniquePathFor(string.Empty, 0).EndsWith("000101010000000000__1", StringComparison.Ordinal), "test 3");
+            Assert.IsTrue(wikiFile.UniquePathFor(null, 0).EndsWith("000101010000000000__1", StringComparison.Ordinal), "test 4");
+            Assert.IsTrue(wikiFile.UniquePathFor(".rik", 0).EndsWith("000101010000000000__1.rik", StringComparison.Ordinal), "test 5");
             File.Delete(a);
         }
 

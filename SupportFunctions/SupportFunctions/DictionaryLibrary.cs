@@ -10,9 +10,9 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using SupportFunctions.Model;
+using SupportFunctions.Utilities;
 
 namespace SupportFunctions
 {
@@ -59,12 +59,16 @@ namespace SupportFunctions
         /// <summary>Add a key/value pair to the specified dictionary. Fails if key exists</summary>
         public static void AddValueTo(string key, string value, Dictionary<string, string> dictionary)
         {
-            Debug.Assert(dictionary != null, "dictionary != null");
+            Requires.NotNull(dictionary, nameof(dictionary));
             dictionary.Add(key, value);
         }
 
         /// <summary>Delete all key/value pairs in the specified dictionary</summary>
-        public static void Clear(Dictionary<string, string> dictionary) => dictionary.Clear();
+        public static void Clear(Dictionary<string, string> dictionary)
+        {
+            Requires.NotNull(dictionary, nameof(dictionary));
+            dictionary.Clear();
+        }
 
         /// <summary>Delete all key/value pairs in a dictionary</summary>
         public void Clear() => Clear(Dictionary);
@@ -100,7 +104,7 @@ namespace SupportFunctions
         /// <summary>Get the value from a key/value pair in the specified dictionary</summary>
         public static string GetFrom(string key, Dictionary<string, string> dictionary)
         {
-            Debug.Assert(dictionary != null, "dictionary != null");
+            Requires.NotNull(dictionary, nameof(dictionary));
             return !dictionary.ContainsKey(key) ? null : dictionary[key];
         }
 
@@ -135,7 +139,11 @@ namespace SupportFunctions
         public void Remove(string key) => RemoveFrom(key, Dictionary);
 
         /// <summary>Remove a key/value pair from the specified dictionary</summary>
-        public static void RemoveFrom(string key, Dictionary<string, string> dictionary) => dictionary.Remove(key);
+        public static void RemoveFrom(string key, Dictionary<string, string> dictionary)
+        {
+            Requires.NotNull(dictionary, nameof(dictionary));
+            dictionary.Remove(key);
+        }
 
         /// <summary>Save a dictionary to the default file</summary>
         public void SaveFile() => new DictionaryFile(FileName).Save(Dictionary);
@@ -156,7 +164,7 @@ namespace SupportFunctions
         /// <summary>Set the value of a key/value pair in the specified dictionary</summary>
         public static void SetToIn(string key, string value, Dictionary<string, string> dictionary)
         {
-            Debug.Assert(dictionary != null, "dictionary != null");
+            Requires.NotNull(dictionary, nameof(dictionary));
             if (dictionary.ContainsKey(key))
             {
                 dictionary[key] = value;

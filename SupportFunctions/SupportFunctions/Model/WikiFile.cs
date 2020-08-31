@@ -11,12 +11,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
+using SupportFunctions.Utilities;
 using static System.FormattableString;
 
 namespace SupportFunctions.Model
@@ -94,7 +94,7 @@ namespace SupportFunctions.Model
 
         public string WikiLink(string path)
         {
-            Debug.Assert(path != null, "path != null");
+            Requires.NotNull(path, nameof(path));
             return !path.StartsWith(_wikiRoot, StringComparison.OrdinalIgnoreCase)
                 ? null
                 : "<img src='http://" + (_wikiPage + path.Substring(_wikiRoot.Length)).Replace("\\", "/") + "'/>";

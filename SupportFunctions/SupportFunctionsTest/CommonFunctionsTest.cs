@@ -46,31 +46,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual("August 28, 1969", date.ToString());
         }
 
-        [TestMethod, TestCategory("Unit"),
-         ExpectedExceptionWithMessage(typeof(TypeLoadException), "Could not find static class 'Wrong'")]
-        public void CommonFunctionsDoOnMissingClassTest() => CommonFunctions.DoOn("Wrong.Wrong", null);
 
-        [TestMethod, TestCategory("Unit"), ExpectedExceptionWithMessage(typeof(MissingMethodException),
-             "Could not find property, field or method 'Wrong' for type 'String'")]
-        public void CommonFunctionsDoOnMissingMethodAndInputTest() => CommonFunctions.DoOn("Wrong", null);
-
-        [TestMethod, TestCategory("Unit"), ExpectedExceptionWithMessage(typeof(MissingMethodException),
-             "Could not find property, field or method 'Wrong' for type 'Int32' or 'String'")]
-        public void CommonFunctionsDoOnMissingMethodForIntTest() => CommonFunctions.DoOn("Wrong", "1");
-
-        [TestMethod, TestCategory("Unit"), ExpectedExceptionWithMessage(typeof(MissingMethodException),
-             "Could not find property, field or method 'Wrong' for type 'String'")]
-        public void CommonFunctionsDoOnMissingMethodForStringTest() => CommonFunctions.DoOn("Wrong", "hello");
-
-        [TestMethod, TestCategory("Unit"), ExpectedExceptionWithMessage(typeof(MissingMemberException),
-             "Could not find static property, field or method 'Math.Wrong'")]
-        public void CommonFunctionsDoOnMissingStaticMethodTest() => CommonFunctions.DoOn("Math.Wrong", null);
-
-        [TestMethod, TestCategory("Unit"), ExpectedExceptionWithMessage(typeof(ArgumentNullException),
-             "Value cannot be null.\r\nParameter name: function")]
-        public void CommonFunctionsDoOnNullMethodTest() => CommonFunctions.DoOn(null, null);
-
-        [TestMethod, TestCategory("Unit")]
+        /*[TestMethod, TestCategory("Unit")]
         public void CommonFunctionsDoOnTest()
         {
             const string testString = @"abcdef";
@@ -92,7 +69,7 @@ namespace SupportFunctionsTest
             Assert.AreEqual(Math.PI, CommonFunctions.DoOn("mAtH.pi", string.Empty));
             Assert.AreEqual(string.Empty, CommonFunctions.DoOn("Empty", null));
             Assert.AreEqual(-1M, CommonFunctions.Do("Decimal.MinusOne"));
-        }
+        } */
 
         [TestMethod, TestCategory("Unit")]
         public void CommonFunctionsEchoDictTest()
@@ -124,7 +101,7 @@ namespace SupportFunctionsTest
             Assert.AreEqual(9999999999999999999999999999M,
                 CommonFunctions.Evaluate("9999999999999999999999999998. + 1"),
                 "99999999999999999999999998. + 1 = 99999999999999999999999999");
-            Assert.IsTrue((bool)CommonFunctions.Evaluate("6 > 5"), "6 > 5");
+            Assert.IsTrue((bool) CommonFunctions.Evaluate("6 > 5"), "6 > 5");
             Assert.AreEqual(2, CommonFunctions.Evaluate("8 % 3"), "8 % 3 = 2");
             Assert.AreEqual(new DateTime(1995, 5, 9), CommonFunctions.Evaluate("#9-May-1995#"), "#9-May-1995#");
         }
@@ -145,7 +122,6 @@ namespace SupportFunctionsTest
                 "#9-May-1995#");
             Assert.AreEqual(Date.Parse("22-Oct-1999").ToString(),
                 CommonFunctions.EvaluateAs("#22-Oct-1999#", "Date").ToString(), "#22-Oct-1999#");
-
         }
 
         [TestMethod, TestCategory("Unit"), ExpectedExceptionWithMessage(typeof(ArgumentException),
@@ -190,6 +166,12 @@ namespace SupportFunctionsTest
             Assert.AreEqual(2d, CommonFunctions.Calculate("6 / 3"), "6 / 3 = 2");
             Assert.AreEqual(2, CommonFunctions.Calculate("8 % 3"), "8 % 3 = 2");
             Assert.AreEqual(3, CommonFunctions.Calculate("len('abc')"), "len('abc') = 3");
+        }
+
+        [TestMethod, TestCategory("Unit"), ExpectedException(typeof(ArgumentException))]
+        public void CommonFunctionsGetOfExceptionTest()
+        {
+            ReflectionFunctions.Get(string.Empty);
         }
 
         [TestMethod, TestCategory("Unit")]

@@ -9,8 +9,9 @@
 //   is distributed on an "AS IS" BASIS WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and limitations under the License.
 
-using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Win32;
+using SupportFunctions.Utilities;
 
 namespace SupportFunctions.Model
 {
@@ -31,10 +32,11 @@ namespace SupportFunctions.Model
 
         private static string TimeFormatLocation => "sTimeFormat";
 
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException", Justification = "Handled by Requires.NotNull")]
         private object InternationalValue(string key)
         {
             var internationalKey = _baseKey.OpenSubKey(InternationalLocation);
-            Debug.Assert(internationalKey != null, "internationalKey != null");
+            Requires.NotNull(internationalKey, nameof(internationalKey));
             return internationalKey.GetValue(key);
         }
 

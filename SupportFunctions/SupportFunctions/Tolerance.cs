@@ -10,8 +10,8 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics;
 using SupportFunctions.Model;
+using SupportFunctions.Utilities;
 using static System.FormattableString;
 
 namespace SupportFunctions
@@ -72,13 +72,14 @@ namespace SupportFunctions
         /// </param>
         public static Tolerance Parse(string input)
         {
+            Requires.NotNull(input, nameof(input));
             var returnValue = new Tolerance();
             foreach (var toleranceSpec in input.Split(';'))
             {
                 var toleranceValue = ToleranceValue.Parse(toleranceSpec);
                 returnValue.AddToleranceValue(toleranceValue);
             }
-            Debug.Assert(returnValue._isDirty, "returnValue._isDirty");
+            Requires.Condition(returnValue._isDirty, $"{nameof(returnValue)}.{nameof(returnValue._isDirty)}");
             return returnValue;
         }
 

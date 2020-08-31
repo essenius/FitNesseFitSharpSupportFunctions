@@ -10,7 +10,6 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using SupportFunctions.Model;
@@ -66,7 +65,7 @@ namespace SupportFunctions
         /// <summary>Parse a string into a date object. FitNesse calls this when using as a parameter</summary>
         public static Date Parse(string input)
         {
-            Debug.Assert(input != null, "input != null");
+            Requires.NotNull(input, nameof(input));
             switch (input.ToUpperInvariant())
             {
                 case "TODAY":
@@ -86,8 +85,8 @@ namespace SupportFunctions
         /// <summary>Parse a string into a date object using a specific date format.</summary>
         public static Date ParseFormatted(string input, string format)
         {
-            Debug.Assert(input != null, "input != null");
-            Debug.Assert(format != null, "format != null");
+            Requires.NotNull(input, nameof(input));
+            Requires.NotNull(format, nameof(format));
             var dateTime = DateTime.ParseExact(input, format, CultureInfo.InvariantCulture, DateTimeStyles.None);
             return new Date(dateTime);
         }

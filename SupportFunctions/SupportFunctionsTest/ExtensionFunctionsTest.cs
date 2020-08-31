@@ -27,7 +27,7 @@ namespace SupportFunctionsTest
         [TestMethod, TestCategory("Unit")]
         public void ExtensionFunctionsCastToInferredTypeTest()
         {
-            var longValue = (1L + int.MaxValue).ToString();
+            var longValue = (1L + int.MaxValue).ToString(CultureInfo.InvariantCulture);
             Assert.AreEqual(typeof(int), "1".CastToInferredType().GetType(), "Cast to int");
             Assert.AreEqual(typeof(long), longValue.CastToInferredType().GetType(), "Cast to long");
             Assert.AreEqual(typeof(decimal), "1.1".CastToInferredType().GetType(), "Cast to decimal");
@@ -103,6 +103,16 @@ namespace SupportFunctionsTest
             Assert.IsFalse(tomorrow.IsWithinTimeRange(today, noon), @"tomorrow not in today-noon (FTFF)");
             Assert.IsTrue(noon.IsWithinTimeRange(today, tomorrow), @"noon in today-tomorrow (FTFT)");
             Assert.IsFalse(noon.IsWithinTimeRange(tomorrow, null), "noon not in tomorrow-null (FF--)");
+        }
+
+        [TestMethod, TestCategory("Unit")]
+        public void ExtensionFunctionsTypeNameTest()
+        {
+            Assert.AreEqual("Math", "Math".TypeName(), "Math => Math");
+            Assert.AreEqual("System.Int32", "System.Int32".TypeName(), "int => System.Int32");
+            Assert.AreEqual("System.Int32", "int".TypeName(), "int => System.Int32");
+            Assert.AreEqual("System.String", "string".TypeName(), "string => System.String");
+            Assert.AreEqual("System.Byte", "byte".TypeName(), "string => System.String");
         }
 
         [TestMethod, TestCategory("Unit")]

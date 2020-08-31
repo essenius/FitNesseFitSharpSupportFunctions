@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using SupportFunctions.Utilities;
 
 namespace SupportFunctions.Model
 {
     internal class RowColumnComparer : IEqualityComparer<CellComparison>
     {
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException", Justification = "Handled by Requires.NotNull")]
         public bool Equals(CellComparison x, CellComparison y)
         {
-            Debug.Assert(x != null, nameof(x) + " != null");
-            Debug.Assert(y != null, nameof(y) + " != null");
+            Requires.NotNull(x, nameof(x));
+            Requires.NotNull(y, nameof(y));
             return x.Row == y.Row && x.Column == y.Column;
         }
 

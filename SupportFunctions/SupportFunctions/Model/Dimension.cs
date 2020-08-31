@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using SupportFunctions.Utilities;
 
 namespace SupportFunctions.Model
@@ -32,8 +31,8 @@ namespace SupportFunctions.Model
                 if (Range.IsZero()) return 0;
                 var orderOfMagnitude = OrderOfMagnitude(Range);
                 var normalValue = Normalized(Range, orderOfMagnitude);
-                Debug.Assert(normalValue > 0.1, "normalValue > 0.1");
-                Debug.Assert(normalValue <= 1, "normalValue <= 1");
+                Requires.Condition(normalValue > 0.1, $"{nameof(normalValue)} > 0.1");
+                Requires.Condition(normalValue <= 1, $"{nameof(normalValue)} <= 1");
                 var roundedNormalValue =
                     normalValue > 0.5
                         ? 1.0
@@ -77,8 +76,8 @@ namespace SupportFunctions.Model
                 minValue = minValue ?? metadata.MinValue;
                 maxValue = maxValue ?? metadata.MaxValue;
             }
-            Debug.Assert(minValue != null, "minValue != null");
-            Debug.Assert(maxValue != null, "maxValue != null");
+            Requires.NotNull(minValue, nameof(minValue));
+            Requires.NotNull(maxValue, nameof(maxValue));
             return new Dimension(minValue.Value, maxValue.Value);
         }
 
@@ -86,7 +85,7 @@ namespace SupportFunctions.Model
 
         private static int OrderOfMagnitude(double value)
         {
-            Debug.Assert(!value.IsZero(), "!value.IsZero()");
+            Requires.Condition(!value.IsZero(), $"{nameof(value)} is non-zero");
             return Math.Ceiling(Math.Log10(value)).To<int>();
         }
     }

@@ -11,6 +11,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SupportFunctions;
@@ -65,7 +66,7 @@ namespace SupportFunctionsTest
         {
             var timeSeries = new TimeSeries();
 
-            var measurementCount = Convert.ToInt32(TestContext.DataRow["count"]);
+            var measurementCount = Convert.ToInt32(TestContext.DataRow["count"], CultureInfo.InvariantCulture);
             for (var i = 0; i < measurementCount; i++)
             {
                 var measurement = new Measurement
@@ -77,7 +78,7 @@ namespace SupportFunctionsTest
                 timeSeries.AddMeasurement(measurement);
             }
             var metadata = new TimeSeriesMetadata<Measurement>(timeSeries.Measurements, p => p.Value);
-            Assert.AreEqual(Convert.ToDouble(TestContext.DataRow["expectedRange"].ToString()),
+            Assert.AreEqual(Convert.ToDouble(TestContext.DataRow["expectedRange"].ToString(), CultureInfo.InvariantCulture),
                 metadata.Range, $"Test {TestContext.DataRow["testCase"]}");
         }
 
@@ -88,7 +89,7 @@ namespace SupportFunctionsTest
         {
             var timeSeries = new TimeSeries();
 
-            var measurementCount = Convert.ToInt32(TestContext.DataRow["count"]);
+            var measurementCount = Convert.ToInt32(TestContext.DataRow["count"], CultureInfo.InvariantCulture);
             for (var i = 0; i < measurementCount; i++)
             {
                 var measurement = new Measurement

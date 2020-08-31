@@ -10,9 +10,12 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using Microsoft.CSharp;
 using static System.FormattableString;
 using static System.Globalization.CultureInfo;
 
@@ -20,18 +23,42 @@ namespace SupportFunctions.Utilities
 {
     internal static class ExtensionFunctions
     {
-        private static readonly Dictionary<string, Type> TypeDictionary = new Dictionary<string, Type>
+        private static Dictionary<string, Type> _builtInTypeDictionary;
+
+        private static Dictionary<string, Type> BuiltInTypeDictionary
         {
-            {"BOOL", typeof(bool)},
-            {"BOOLEAN", typeof(bool)},
-            {"DATE", typeof(Date)},
-            {"DECIMAL", typeof(decimal)},
-            {"DOUBLE", typeof(double)},
-            {"INT", typeof(int)},
-            {"LONG", typeof(long)},
-            {"OBJECT", typeof(object)},
-            {"STRING", typeof(string)}
-        };
+            get
+            {
+                // Fill the dictionary only once.
+                if (_builtInTypeDictionary != null) return _builtInTypeDictionary;
+
+                // Date is a special case (defined in this fixture)
+                _builtInTypeDictionary = new Dictionary<string, Type> {{"DATE", typeof(Date)}};
+
+                // Get reference to mscorlib using an arbitrary type in it
+                var mscorlib = Assembly.GetAssembly(typeof(int));
+
+                // Potential hits are types with the namespace System.
+                // Further filtering (e.g. only public, or eliminating enums) did not make it faster.
+                var systemTypes = mscorlib.DefinedTypes
+                    .Where(t => t.Namespace != null && t.Namespace.Equals("System", StringComparison.Ordinal));
+                using (var provider = new CSharpCodeProvider())
+                {
+                    foreach (var type in systemTypes)
+                    {
+                        var typeRef = new CodeTypeReference(type);
+                        var friendlyTypeName = provider.GetTypeOutput(typeRef);
+
+                        // Ignore qualified types.
+                        if (!friendlyTypeName.Contains('.'))
+                        {
+                            _builtInTypeDictionary.Add(friendlyTypeName.ToUpperInvariant(), type);
+                        }
+                    }
+                }
+                return _builtInTypeDictionary;
+            }
+        }
 
         public static void AddWithCheck<T>(this IDictionary<DateTime, T> dictionary, DateTime key, T value, string id)
         {
@@ -162,7 +189,7 @@ namespace SupportFunctions.Utilities
         public static Type ToType(this string type)
         {
             var typeKey = type.ToUpperInvariant();
-            if (TypeDictionary.ContainsKey(typeKey)) return TypeDictionary[typeKey];
+            if (BuiltInTypeDictionary.ContainsKey(typeKey)) return BuiltInTypeDictionary[typeKey];
             // none of the standard types, check if we can map it
             var evalType = Type.GetType(type);
             if (evalType != null) return evalType;
@@ -187,6 +214,12 @@ namespace SupportFunctions.Utilities
             {
                 return defaultValue;
             }
+        }
+
+        public static string TypeName(this string name)
+        {
+            var nameInUppercase = name.ToUpperInvariant();
+            return BuiltInTypeDictionary.ContainsKey(nameInUppercase) ? BuiltInTypeDictionary[nameInUppercase].ToString() : name;
         }
 
         public static T ValueOrDefault<T>(this Dictionary<string, string> dictionary, string key, T defaultValue) =>

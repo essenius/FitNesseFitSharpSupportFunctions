@@ -11,6 +11,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SupportFunctions;
 using SupportFunctions.Model;
@@ -83,7 +84,7 @@ namespace SupportFunctionsTest
 
                 actual = new Measurement
                 {
-                    Timestamp = DateTime.Parse(TestContext.DataRow["actualTimestamp"].ToString()),
+                    Timestamp = DateTime.Parse(TestContext.DataRow["actualTimestamp"].ToString(), CultureInfo.InvariantCulture),
                     Value = TestContext.DataRow["actualValue"].ToString(),
                     IsGood = TestContext.DataRow["actualIsGood"].To<bool>(),
                     IsChecked = !string.IsNullOrEmpty(actualIsChecked) && actualIsChecked.To<bool>()
@@ -103,7 +104,7 @@ namespace SupportFunctionsTest
             {
                 expected = new Measurement
                 {
-                    Timestamp = DateTime.Parse(TestContext.DataRow["expectedTimestamp"].ToString()),
+                    Timestamp = DateTime.Parse(TestContext.DataRow["expectedTimestamp"].ToString(), CultureInfo.InvariantCulture),
                     Value = TestContext.DataRow["expectedValue"].ToString(),
                     IsGood = TestContext.DataRow["expectedIsGood"].To<bool>(),
                     IsChecked = false

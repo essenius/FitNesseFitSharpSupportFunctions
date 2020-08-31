@@ -1,36 +1,34 @@
 clear out $expected first, to make sure any previous values are not propagated
 
-|scenario  |check evaluation _ _ _|expression,type,expected?|
-|$expected=|echo                  |                         |
-|$expected=|evaluate              |@expression  |as  |@type |
+|scenario  |check evaluation _ _|expression,expected?|
+|$expected=|echo                |                    |
+|$expected=|evaluate            |@expression         |
 
-|script|common functions|
-|$var= |echo   |abcdef  |
+|script|common functions                             |
+|$var= |echo    |abcdef                              |
+|$date=|evaluate|!-#9-May-1995#-!|as |Date           |
+|check |echo    |$date           |1995-05-09T00:00:00|
+|check |evaluate|Irrelevant      |as |!-WrongType-! ||
 
-|check evaluation                                                      |
-|expression                       |type           |expected?           |
-|'$var'+'g'                       |string         |abcdefg             |
-|substring('$var',1,2)            |string         |ab                  |
-|'$var'='abcdef'                  |bool           |true                |
-|len('$var')                      |double         |6                   |
-|1152921504606846975-1            |long           |1152921504606846974 |
-|substring(trim('   abc    '),2,2)|string         |bc                  |
-|8 % 3                            |int            |2                   |
-|8 % 3                            |System.Int32   |2                   |
-|#5-May-1995#                     |Date           |$date=              |
-|#5-5-1995#                       |System.DateTime|05-May-1995 00:00:00|
-|'a' IN ('a', 'b', 'c')           |bool           |true                |
-|'abcd' Like '*bc*'               |bool           |true                |
-|Irrelevant                       |!-WrongType-!  |                    |
+|check evaluation                                      |
+|expression                       |expected?           |
+|'$var'+'g'                       |abcdefg             |
+|substring('$var',1,2)            |ab                  |
+|'$var'='abcdef'                  |true                |
+|len('$var')                      |6                   |
+|1152921504606846975-1            |1152921504606846974 |
+|substring(trim('   abc    '),2,2)|bc                  |
+|8 % 3                            |2                   |
+|#5-5-1995#                       |05-May-1995 00:00:00|
+|'a' IN ('a', 'b', 'c')           |true                |
+|'abcd' Like '*bc*'               |true                |
 
-|check evaluation                                                       |
-|expression                       |type   |expected?                    |
-|9999999999999999999999999998. + 1|decimal|9999999999999999999999999999 |
-|9999999999999999999999999998 + 1 |decimal|10000000000000000000000000000|
-|9999999999999999999999999998. + 1|double |1E+28                        |
+|check evaluation                                              |
+|expression                       |expected?                   |
+|9999999999999999999999999998. + 1|9999999999999999999999999999|
+|9999999999999999999999999998 + 1 |1E+28                       |
 
-These last three are tricky ones. The parser takes numbers with a decimal point as decimals
+These last two are tricky ones. The parser takes numbers with a decimal point as decimals
 So the first evaluates in decimal, and threfore keeps its decimal precision.
 Numbers without decimal points are tried as ints, longs and if that doesn't work doubles.
-So the second example is evaluated as double, so it loses precision before its cast back to decimal
-The third is evaluated as decimal, and then cast to double (so loses its precision then).
+So the second example is evaluated as double, so it loses precision before its cast back to decimal.

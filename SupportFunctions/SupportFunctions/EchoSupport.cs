@@ -20,7 +20,7 @@ namespace SupportFunctions
 {
     [SuppressMessage("Microsoft.Design", "CA1053:StaticHolderTypesShouldNotHaveConstructors", Justification = "Required for FitNesse"),
      Obsolete("Use CommonFunctions")]
-    public class EchoSupport
+    public sealed class EchoSupport
     {
         [Obsolete("Use CommonFunctions.Echo")]
         public static object Echo(object input) => input;

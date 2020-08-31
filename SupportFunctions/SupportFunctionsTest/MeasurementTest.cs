@@ -9,6 +9,7 @@
 //   is distributed on an "AS IS" BASIS WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and limitations under the License.
 
+using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SupportFunctions.Model;
 using SupportFunctions.Utilities;
@@ -25,7 +26,7 @@ namespace SupportFunctionsTest
             Assert.AreEqual(typeof(double), measurement.Value.InferType());
             measurement = new Measurement {Value = "12"};
             Assert.AreEqual(typeof(int), measurement.Value.InferType());
-            measurement = new Measurement {Value = long.MaxValue.ToString()};
+            measurement = new Measurement {Value = long.MaxValue.ToString(CultureInfo.InvariantCulture)};
             Assert.AreEqual(typeof(long), measurement.Value.InferType());
             measurement = new Measurement {Value = "1a"};
             Assert.AreEqual(typeof(string), measurement.Value.InferType());

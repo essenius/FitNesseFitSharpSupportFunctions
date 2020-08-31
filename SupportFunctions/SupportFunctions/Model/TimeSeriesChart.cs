@@ -10,7 +10,6 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
@@ -47,7 +46,7 @@ namespace SupportFunctions.Model
 
         private static void AddPoint(Series series, double x, double? y)
         {
-            Debug.Assert(series.Points != null, "series.Points != null");
+            Requires.NotNull(series.Points, $"{nameof(series)}.{nameof(series.Points)}");
             if (y == null) return;
             using (var point = new DataPoint())
             {
@@ -59,7 +58,7 @@ namespace SupportFunctions.Model
 
         private string AsBase64String(ChartImageFormat chartImageFormat)
         {
-            Debug.Assert(_chart != null, "_chart != null");
+            Requires.NotNull(_chart, nameof(_chart));
             using (var ms = new MemoryStream())
             {
                 _chart.SaveImage(ms, chartImageFormat);
@@ -72,7 +71,7 @@ namespace SupportFunctions.Model
             InitChart(size);
             var timeUnit = limits.TimeUnit;
             limits.EnsureNonZeroRanges();
-            Debug.Assert(limits.StartTimestamp != null, "limits.StartTimestamp != null");
+            Requires.NotNull(limits.StartTimestamp, $"{nameof(limits)}.{nameof(limits.StartTimestamp)}");
             InitSeries(sourceData, limits.StartTimestamp, timeUnit);
             InitChartArea();
             SetAxisDimensions(_area.AxisX, XAxisTitleTemplate.FillIn(timeUnit.Caption), limits.X);

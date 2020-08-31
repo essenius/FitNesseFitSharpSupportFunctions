@@ -38,7 +38,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>FitNesseTestRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>SupportFunctionsTest.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -47,6 +47,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>SupportFunctionsTest.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -110,6 +111,8 @@
     <Compile Include="FixtureDocumentationTest.cs" />
     <Compile Include="StopExceptionTest.cs" />
     <Compile Include="CsvComparisonDataTest.cs" />
+    <Compile Include="RequiresTest.cs" />
+    <Compile Include="ReflectionFunctionsTest.cs" />
     <Compile Include="ValueComparisonMock.cs" />
     <Compile Include="ValueComparisonTest.cs" />
     <Compile Include="WikiFileTest.cs" />
@@ -124,6 +127,7 @@
   <ItemGroup>
     <None Include="FitNesseTestRules.ruleset" />
     <None Include="packages.config" />
+    <None Include="SupportFunctionsTest.ruleset" />
     <None Include="TestData.xsd">
       <SubType>Designer</SubType>
     </None>

@@ -10,17 +10,16 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using SupportFunctions.Utilities;
 
 namespace SupportFunctions
 {
     /// <summary>Machine information</summary>
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Used by FitSharp"),
-     SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used by FitSharp"),
-     SuppressMessage("Microsoft.Design", "CA1053:StaticHolderTypesShouldNotHaveConstructors", Justification = "Used by FitSharp")]
-    public class MachineInfo
+     SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used by FitSharp")]
+    public sealed class MachineInfo
     {
         /// <returns>the FQDN of the current machine, i.e. machine name with full domain</returns>
         public static string FullyQualifiedDomainName() => FullyQualifiedDomainName(Environment.MachineName);
@@ -28,7 +27,7 @@ namespace SupportFunctions
         /// <returns>the FQDN of computerName, i.e. machine name with full domain</returns>
         public static string FullyQualifiedDomainName(string computerName)
         {
-            Debug.Assert(computerName != null, "computerName != null");
+            Requires.NotNull(computerName, nameof(computerName));
             return Dns.GetHostEntry(computerName).HostName;
         }
     }

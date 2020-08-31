@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -148,8 +147,8 @@ namespace SupportFunctions.Model
 
         private void InsertTableAt(string tableName, Dictionary<string, string> dictionary, int index)
         {
-            Debug.Assert(index >= 0);
-            Debug.Assert(index <= _line.Count);
+            Requires.Condition(index >= 0, $"{nameof(index)} >= 0");
+            Requires.Condition(index <= _line.Count, $"{nameof(index)} <= line count");
 
             var table = CreateTable(tableName, dictionary).ToList();
 
@@ -230,9 +229,9 @@ namespace SupportFunctions.Model
             try
             {
                 var webResponse = (HttpWebResponse) webRequest.GetResponse();
-                Debug.Assert(webResponse.StatusCode == HttpStatusCode.OK);
+                Requires.Condition(webResponse.StatusCode == HttpStatusCode.OK, "Web response status is OK");
                 var stream = webResponse.GetResponseStream();
-                Debug.Assert(stream != null, "stream != null");
+                Requires.NotNull(stream, nameof(stream));
                 var result = ReadLines(stream).ToList();
                 webResponse.Close();
                 return result;

@@ -16,9 +16,8 @@ using System.Security.Principal;
 namespace SupportFunctions
 {
     /// <summary>User information</summary>
-    [SuppressMessage("Microsoft.Design", "CA1053:StaticHolderTypesShouldNotHaveConstructors", Justification = "Used by FitSharp"),
-     SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used by FitSharp")]
-    public class UserInfo
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used by FitSharp")]
+    public sealed class UserInfo
     {
         /// <summary>The current user’s display name</summary>
         public static string DisplayName => UserPrincipal.Current.DisplayName;

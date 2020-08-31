@@ -25,11 +25,11 @@ namespace SupportFunctions.Utilities
 
         #region Table Table Output Interface
 
-        public static string Fail(this object message) => "fail:" + message;
+        public static string Fail(this object message) => $"fail:{message}";
 
-        public static string Pass(this object message) => "pass:" + message;
+        public static string Pass(this object message) => $"pass:{message}";
 
-        public static string Report(this object message) => "report:" + message;
+        public static string Report(this object message) => $"report:{message}";
 
         #endregion
     }

@@ -15,9 +15,8 @@ using static System.FormattableString;
 namespace SupportFunctions
 {
     /// <summary>Control stopping tests/suites from within a test</summary>
-    [SuppressMessage("Microsoft.Design", "CA1053:StaticHolderTypesShouldNotHaveConstructors", Justification = "Required for FitNesse"),
-     SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used by FitSharp")]
-    public class TestControl
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used by FitSharp")]
+    public sealed class TestControl
     {
         /// <summary>Throw a StopSuiteException if argument is true</summary>
         public static void StopSuiteIf(string condition) => ThrowStopIf(condition, true, true);

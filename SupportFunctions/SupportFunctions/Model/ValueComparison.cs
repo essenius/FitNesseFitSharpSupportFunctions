@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using SupportFunctions.Utilities;
 using static System.FormattableString;
 using static System.Globalization.CultureInfo;
@@ -101,7 +100,7 @@ namespace SupportFunctions.Model
 
         private CompareOutcome DoubleComparison()
         {
-            Debug.Assert(Tolerance != null, "Tolerance != null");
+            Requires.NotNull(Tolerance, nameof(Tolerance));
             var precision = Tolerance.Precision;
             var delta = Math.Abs(ExpectedValueIn.To<double>() - ActualValueIn.To<double>());
             var roundedActual = ActualValueIn.To<double>().RoundedTo(precision);
@@ -126,7 +125,7 @@ namespace SupportFunctions.Model
 
         private CompareOutcome LongComparison()
         {
-            Debug.Assert(Tolerance != null, "Tolerance != null");
+            Requires.NotNull(Tolerance, nameof(Tolerance));
             var delta = Math.Abs(ExpectedValueIn.To<long>() - ActualValueIn.To<long>());
             var roundedTolerance = Tolerance.Value.To<long>();
             DeltaOut = delta.To<string>();

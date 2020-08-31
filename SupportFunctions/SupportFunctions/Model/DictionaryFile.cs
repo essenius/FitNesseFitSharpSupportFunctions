@@ -11,11 +11,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Web.Script.Serialization;
+using SupportFunctions.Utilities;
 
 namespace SupportFunctions.Model
 {
@@ -95,6 +95,7 @@ namespace SupportFunctions.Model
             }
         }
 
+        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute", Justification = "Handled by Requires.NotNull")]
         public bool WaitFor()
         {
             var fileExists = File.Exists(_fileName);
@@ -102,7 +103,7 @@ namespace SupportFunctions.Model
             {
                 // Wait for the file to appear
                 var path = Path.GetDirectoryName(Path.GetFullPath(_fileName));
-                Debug.Assert(path != null);
+                Requires.NotNull(path, nameof(path));
                 _fileToWaitFor = Path.GetFileName(_fileName);
                 using (var fileSystemWatcher = new FileSystemWatcher(path))
                 {

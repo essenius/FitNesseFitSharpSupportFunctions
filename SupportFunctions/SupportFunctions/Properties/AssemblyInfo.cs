@@ -25,5 +25,5 @@ using System.Runtime.InteropServices;
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(false)]
 [assembly: Guid("9dad152f-4c9e-4729-a71c-7b5573da2f6d")]
-[assembly: AssemblyVersion("2.3.3")]
+[assembly: AssemblyVersion("2.3.4")]
 [assembly: InternalsVisibleTo("SupportFunctionsTest")]
