@@ -1,6 +1,6 @@
 !define blank {}
 
-!|script        |common functions                                           |
+!|script        |reflection functions                                       |
 |$input=        |echo     |abcdef                                           |
 |check          |get      |Substring(3,2)  |of|$input        |de            |
 |check          |get      |Substring ( 3 ) |of|$input        |def           |
