@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2020 Rik Essenius
+﻿// Copyright 2015-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -9,13 +9,15 @@
 //   is distributed on an "AS IS" BASIS WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and limitations under the License.
 
+// TimeSeriesChart using Web.UI.DataVisualization (which is standard in .NET Framework)
+
+#if NET5_0 == false
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Web.UI.DataVisualization.Charting;
 using SupportFunctions.Utilities;
-using static System.FormattableString;
 
 namespace SupportFunctions.Model
 {
@@ -48,22 +50,18 @@ namespace SupportFunctions.Model
         {
             Requires.NotNull(series.Points, $"{nameof(series)}.{nameof(series.Points)}");
             if (y == null) return;
-            using (var point = new DataPoint())
-            {
-                point.XValue = x;
-                point.YValues = new[] {y.Value};
-                series.Points.Add(point);
-            }
+            using var point = new DataPoint();
+            point.XValue = x;
+            point.YValues = new[] { y.Value };
+            series.Points.Add(point);
         }
 
         private string AsBase64String(ChartImageFormat chartImageFormat)
         {
             Requires.NotNull(_chart, nameof(_chart));
-            using (var ms = new MemoryStream())
-            {
-                _chart.SaveImage(ms, chartImageFormat);
-                return Convert.ToBase64String(ms.ToArray());
-            }
+            using var ms = new MemoryStream();
+            _chart.SaveImage(ms, chartImageFormat);
+            return Convert.ToBase64String(ms.ToArray());
         }
 
         internal string ChartDataFor(MeasurementComparisonDictionary sourceData, AxisLimits limits, Size size)
@@ -85,9 +83,8 @@ namespace SupportFunctions.Model
 
         internal string ChartInHtmlFor(MeasurementComparisonDictionary sourceData, AxisLimits limits, Size size)
         {
-            //TODO: calculate Y values dynamically
             var chartInBase64 = ChartDataFor(sourceData, limits, size);
-            return Invariant($"<img src=\"data:image/png;base64,{chartInBase64}\"/>");
+            return WebFunctions.AsImg(chartInBase64);
         }
 
         private static T ChooseValue<T>(SeriesType seriesType, T expectedValue, T actualValue, T failValue)
@@ -200,3 +197,4 @@ namespace SupportFunctions.Model
         }
     }
 }
+#endif

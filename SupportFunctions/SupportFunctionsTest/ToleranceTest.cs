@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2020 Rik Essenius
+﻿// Copyright 2017-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -9,31 +9,27 @@
 //   is distributed on an "AS IS" BASIS WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SupportFunctions;
-using SupportFunctions.Utilities;
 
 namespace SupportFunctionsTest
 {
     [TestClass]
     public class ToleranceTest
     {
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "False positive")]
-        public TestContext TestContext { get; set; }
-
-        [TestMethod, TestCategory("Unit"), DeploymentItem("SupportFunctionsTest\\TestData.xml"),
-         DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", "|DataDirectory|\\TestData.xml",
-             "Tolerance", DataAccessMethod.Sequential)]
-        public void ToleranceParseTest()
+        [DataTestMethod, TestCategory("Unit")]
+        [DataRow("AbsRelNoDigits", 25.0, "0.0123456789;0.01%", 0.0123456789, null, "0.0123456789 (0.0 %)")]
+        [DataRow("Abs2Rel3_AbsWins", 25.0, "0.123:2;0.1234%:3", 0.12, 2, "0.12 (0.5 %)")]
+        [DataRow("Abs3Rel2_AbsWins", 25.0, "0.0123:3;0.01234%:2", 0.0123, 4, "0.0123 (0.0 %)")]
+        [DataRow("Abs2Rel3_RelWins", 100D, "0.0111:2;0.01234%:3", 0.0123, 4, "0.0123 (0.0 %)")]
+        [DataRow("Abs3Rel2_RelWins", 100D, "0.0111:3;0.01234%:2", 0.012, 3, "0.012 (0.0 %)")]
+        [DataRow("Abs3Rel2_NullRange", null, "0.0111:3;0.01234%:2", 0.0111, 4, "0.0111")]
+        public void ToleranceParseTest(string testCase, double? range, string toleranceString, 
+               double expectedValue, int? expectedPrecision, string expectedRendering) 
         {
-            var testName = "Test: " + TestContext.DataRow["testcase"];
-            var range = TestContext.DataRow["range"].ToNullableDouble();
-            var tolerance = Tolerance.Parse(TestContext.DataRow["tolerance"].ToString());
+            var testName = "Test: " + testCase;
+            var tolerance = Tolerance.Parse(toleranceString);
             tolerance.DataRange = range;
-            var expectedValue = TestContext.DataRow["expectedValue"].To<double>();
-            var expectedPrecision = TestContext.DataRow["expectedPrecision"].ToNullableInt();
-            var expectedRendering = TestContext.DataRow["expectedRendering"].ToString();
 
             Assert.AreEqual(expectedValue, tolerance.Value, testName);
             Assert.AreEqual(expectedPrecision, tolerance.Precision, testName);

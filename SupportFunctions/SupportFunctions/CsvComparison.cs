@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2020 Rik Essenius
+﻿// Copyright 2017-2021 Rik Essenius
 // 
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -21,6 +21,7 @@ using static System.FormattableString;
 namespace SupportFunctions
 {
     /// <summary>Fixture to compare two CSV tables. Exposes Table Table and Query Table interfaces</summary>
+    [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Local", Justification = "FitSharp would not see it")]
     public class CsvComparison
     {
         private const string CellCaption = "Cell";
@@ -201,8 +202,8 @@ namespace SupportFunctions
 
         /// <summary>We need this definition for FitNesse, but we don't need the actual value</summary>
         /// <param name="input">ignored</param>
-        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "FitNesse requirement"),
-         SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "FitNesse requirement")]
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "FitNesse requirement")]
+        [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "FitNesse requirement")]
         public static CsvComparison Parse(string input) => null;
 
         /// <returns>the caption of the CSV table</returns>

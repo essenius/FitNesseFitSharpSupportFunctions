@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2020 Rik Essenius
+﻿// Copyright 2017-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -55,7 +55,7 @@ namespace SupportFunctions.Model
         private object ExpectedValueIn { get; }
 
         private bool IsNumericalComparisonWithoutToleranceRange
-            => Tolerance != null && Tolerance.DataRange == null && CompareType.IsNumeric() && ExpectedValueIn.IsNumeric();
+            => Tolerance is { DataRange: null } && CompareType.IsNumeric() && ExpectedValueIn.IsNumeric();
 
         private bool IsToleranceUsed => Outcome == CompareOutcome.WithinTolerance || Outcome == CompareOutcome.OutsideToleranceIssue;
 
@@ -107,7 +107,7 @@ namespace SupportFunctions.Model
             ActualValueOut = roundedActual.To<string>();
 
             // We align the precision of the delta to that of the expected/actual values 
-            if (precision == null) precision = Math.Max(ExpectedValueIn.FractionalDigits(), ActualValueIn.FractionalDigits());
+            precision ??= Math.Max(ExpectedValueIn.FractionalDigits(), ActualValueIn.FractionalDigits());
             DeltaOut = delta.RoundedTo(precision).To<string>();
 
             return delta <= Tolerance.Value ? CompareOutcome.WithinTolerance : CompareOutcome.OutsideToleranceIssue;
@@ -118,7 +118,7 @@ namespace SupportFunctions.Model
             // if the compare type is not specified we have indivudual comparisons, and 
             // expected/actual values may have different types. So then get a compatible type.
 
-            if (CompareType == null) CompareType = ActualValueIn.InferType(ExpectedValueIn.InferType());
+            CompareType ??= ActualValueIn.InferType(ExpectedValueIn.InferType());
         }
 
         public static bool IsOk(CompareOutcome outcome) => outcome == CompareOutcome.None || outcome == CompareOutcome.WithinTolerance;
@@ -136,8 +136,13 @@ namespace SupportFunctions.Model
 
         private static CompareOutcome? OutcomeWithNullInput(object expected, object actual)
         {
-            if (expected == null && actual == null) return CompareOutcome.None;
-            if (expected == null) return CompareOutcome.Surplus;
+            switch (expected)
+            {
+                case null when actual == null:
+                    return CompareOutcome.None;
+                case null:
+                    return CompareOutcome.Surplus;
+            }
             if (actual == null) return CompareOutcome.Missing;
             return null;
         }

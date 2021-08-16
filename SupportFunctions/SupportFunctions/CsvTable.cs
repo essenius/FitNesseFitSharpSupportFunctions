@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2020 Rik Essenius
+﻿// Copyright 2016-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -16,6 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualBasic.FileIO;
+
 using static System.FormattableString;
 
 namespace SupportFunctions
@@ -52,8 +53,8 @@ namespace SupportFunctions
         internal string DataCell(int row, int column) => row >= RowCount || column >= ColumnCount ? null : Data[row][column];
 
         /// <summary>Show the content of the CSV file in Table format</summary>
-        [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "FitNesse interface spec"),
-         SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "FitNesse interface spec")]
+         [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "FitNesse interface spec")]
+         [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "FitNesse interface spec")]
         public Collection<Collection<string>> DoTable(Collection<Collection<string>> inputTable)
         {
             var returnObject = new Collection<Collection<string>>();
@@ -91,20 +92,20 @@ namespace SupportFunctions
 
         private void LoadFrom(string path, string delimiter, string comment, bool fieldsInQuotes)
         {
-            using (var csvParser = new TextFieldParser(path))
+            using var csvParser = new TextFieldParser(path)
             {
-                csvParser.CommentTokens = new[] {comment};
-                csvParser.SetDelimiters(delimiter);
-                csvParser.HasFieldsEnclosedInQuotes = fieldsInQuotes;
+                CommentTokens = new[] { comment }
+            };
+            csvParser.SetDelimiters(delimiter);
+            csvParser.HasFieldsEnclosedInQuotes = fieldsInQuotes;
 
-                _headers = csvParser.ReadFields();
+            _headers = csvParser.ReadFields();
 
-                Data.Clear();
-                while (!csvParser.EndOfData)
-                {
-                    var fields = csvParser.ReadFields();
-                    Data.Add(fields);
-                }
+            Data.Clear();
+            while (!csvParser.EndOfData)
+            {
+                var fields = csvParser.ReadFields();
+                Data.Add(fields);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2020 Rik Essenius
+﻿// Copyright 2017-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SupportFunctions.Utilities;
@@ -21,9 +20,6 @@ namespace SupportFunctionsTest
     [TestClass]
     public class ExtensionFunctionsTest
     {
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "False positive")]
-        public TestContext TestContext { get; set; }
-
         [TestMethod, TestCategory("Unit")]
         public void ExtensionFunctionsCastToInferredTypeTest()
         {
@@ -74,17 +70,38 @@ namespace SupportFunctionsTest
             Assert.AreEqual("AAA", 702.ToExcelColumnName());
         }
 
-        [TestMethod, TestCategory("Unit"), DeploymentItem("SupportFunctionsTest\\TestData.xml"), DataSource(
-             "Microsoft.VisualStudio.TestTools.DataSource.XML", "|DataDirectory|\\TestData.xml",
-             "ExtensionFunctionInferType", DataAccessMethod.Sequential)]
-        public void ExtensionFunctionsInferTypeTest()
+        [DataTestMethod, TestCategory("Unit")]
+        [DataRow("Double-Int", "12.5", "13", "System.Double")]
+        [DataRow("Double-Bool", "12.5", "true", "System.String")]
+        [DataRow("Double-Long", "1e15", "2147483648", "System.Double")]
+        [DataRow("Double-String`", "12.5", "Hi1", "System.String")]
+        [DataRow("Double-Double", "12.5", "13.2", "System.Double")]
+
+        [DataRow("Int-Long", "12", "2147483648", "System.Int64")]
+        [DataRow("Int-Bool", "12", "True", "System.String")]
+        [DataRow("Int-Double", "12", "12.1", "System.Double")]
+        [DataRow("Int-String", "12", "Hi1", "System.String")]
+        [DataRow("Int-Int", "12", "13", "System.Int32")]
+
+        [DataRow("Long-Int", "2147483648", "12", "System.Int64")]
+        [DataRow("Long-Long", "2147483648", "2147483648", "System.Int64")]
+        [DataRow("Long-Double", "2147483648", "12.5", "System.Double")]
+        [DataRow("Long-Bool", "2147483648", "False", "System.String")]
+        [DataRow("Long-String", "2147483648", "Hi1", "System.String")]
+
+        [DataRow("Bool-String", "False", "Hi1", "System.String")]
+        [DataRow("Bool-Bool", "False", "True", "System.Boolean")]
+        [DataRow("Bool-Double", "False", "12.5", "System.String")]
+
+        [DataRow("String-Double", "Hi1", "1e10", "System.String")]
+        [DataRow("Double-InfT-NaN", "Infinity", "NaN", "System.Double")]
+        [DataRow("Double-InfS-NaN", "∞", "NaN", "System.Double")]
+
+        public void ExtensionFunctionsInferTypeTest(string testCase, string value1, string value2, string expectedType)
         {
-            var value1 = TestContext.DataRow["value1"].ToString();
-            var value2 = TestContext.DataRow["value2"].ToString();
-            var expectedType = TestContext.DataRow["expectedType"].ToString();
             var value1Type = value1.InferType();
             var compatibleType = value2.InferType(value1Type).ToString();
-            Assert.AreEqual(expectedType, compatibleType, TestContext.DataRow["testcase"].ToString());
+            Assert.AreEqual(expectedType, compatibleType, testCase);
         }
 
         [TestMethod, TestCategory("Unit")]

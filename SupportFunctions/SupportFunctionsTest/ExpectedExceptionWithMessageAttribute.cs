@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2020 Rik Essenius
+﻿// Copyright 2015-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -27,7 +27,7 @@ namespace SupportFunctionsTest
 
         protected override void Verify(Exception e)
         {
-            if (e.GetType() != ExceptionType)
+            if (e.GetType() != ExceptionType && e.InnerException?.GetType() != ExceptionType)
             {
                 Assert.Fail(
                     $"ExpectedExceptionWithMessageAttribute failed. Expected exception type: {ExceptionType.FullName}. " +
@@ -35,11 +35,10 @@ namespace SupportFunctionsTest
                 );
             }
 
-            var actualMessage = e.Message.Trim();
 
             if (ExpectedMessage != null)
             {
-                Assert.AreEqual(ExpectedMessage, actualMessage);
+                Assert.IsTrue(ExpectedMessage.Equals(e.Message.Trim()) || ExpectedMessage.Equals(e.InnerException?.Message.Trim()));
             }
         }
     }

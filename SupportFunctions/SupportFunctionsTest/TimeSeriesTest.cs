@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2020 Rik Essenius
+﻿// Copyright 2017-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -10,8 +10,6 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SupportFunctions;
@@ -23,9 +21,6 @@ namespace SupportFunctionsTest
     [TestClass]
     public class TimeSeriesTest
     {
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "False positive")]
-        public TestContext TestContext { get; set; }
-
         private static TimeSeries CreateTimeSeriesViaDecisionTableInterface(Date timestamp, string value)
         {
             var timeSeries = new TimeSeries(null);
@@ -59,50 +54,70 @@ namespace SupportFunctionsTest
             Assert.AreEqual(@"isgood", timeSeriesPartlyCustom.IsGoodColumn, "timeSeriesCustom");
         }
 
-        [TestMethod, TestCategory("Unit"), DeploymentItem("SupportFunctionsTest\\TestData.xml"),
-         DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", "|DataDirectory|\\TestData.xml",
-             "TimeSeriesDataRange", DataAccessMethod.Sequential)]
-        public void TimeSeriesDataRangeTest()
+        [DataTestMethod, TestCategory("Unit")]
+        [DataRow("0-100", 10, "0", "100", 100)]
+        [DataRow("-50-100", 12, "-50", "100", 150)]
+        [DataRow("-1e10-1e10", 14, "-1e10", "1e10", 2e10)]
+        [DataRow("-0.2-1.6", 16, "-0.2", "1.6", 1.8)]
+        [DataRow("empty", 0, "", "", 0)]
+        [DataRow("bool", 2, "false", "true", 0)]
+        [DataRow("string", 2, "hi1", "hi2", 0)]
+        public void TimeSeriesDataRangeTest(string testCase, int measurementCount, string lowValue, string highValue, double expectedRange)
         {
             var timeSeries = new TimeSeries();
 
-            var measurementCount = Convert.ToInt32(TestContext.DataRow["count"], CultureInfo.InvariantCulture);
             for (var i = 0; i < measurementCount; i++)
             {
                 var measurement = new Measurement
                 {
-                    Value = TestContext.DataRow[i < measurementCount / 2 ? "lowValue" : "highValue"].ToString(),
+                    Value = i < measurementCount / 2 ? lowValue : highValue,
                     Timestamp = DateTime.Now,
                     IsGood = true
                 };
                 timeSeries.AddMeasurement(measurement);
             }
             var metadata = new TimeSeriesMetadata<Measurement>(timeSeries.Measurements, p => p.Value);
-            Assert.AreEqual(Convert.ToDouble(TestContext.DataRow["expectedRange"].ToString(), CultureInfo.InvariantCulture),
-                metadata.Range, $"Test {TestContext.DataRow["testCase"]}");
+            Assert.AreEqual(expectedRange, metadata.Range, $"Test {testCase}");
         }
 
-        [TestMethod, TestCategory("Unit"), DeploymentItem("SupportFunctionsTest\\TestData.xml"),
-         DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", "|DataDirectory|\\TestData.xml",
-             "TimeSeriesDataType", DataAccessMethod.Sequential)]
-        public void TimeSeriesDataTypeTest()
+        [DataTestMethod, TestCategory("Unit")]
+        [DataRow("Double-Int-50", 50, "12.5", "13", "System.Double")]
+        [DataRow("Double-Bool-10", 10, "12.5", "true", "System.String")]
+        [DataRow("Double-Long-4", 4, "1e10", "2147483648", "System.Double")]
+        [DataRow("Double-String-3", 3, "12.5", "Hi1", "System.String")]
+        [DataRow("Double-Double-7", 7, "12.5", "13.2", "System.Double")]
+        [DataRow("Int-Long-25", 25, "12", "2147483648", "System.Int64")]
+        [DataRow("Int-Double-12", 12, "12", "12.1", "System.Double")]
+        [DataRow("Int-Bool-2", 2, "12", "True", "System.String")]
+        [DataRow("Int-String-5", 5, "12", "Hi1", "System.String")]
+        [DataRow("Int-Int-6", 6, "12", "13", "System.Int32")]
+        [DataRow("Long-Int-8", 8, "2147483648", "12", "System.Int64")]
+        [DataRow("Long-Long-9000", 9000, "2147483648", "2147483648", "System.Int64")]
+        [DataRow("Long-Double-11", 11, "2147483648", "12.5", "System.Double")]
+        [DataRow("Long-Bool-13", 13, "2147483648", "False", "System.String")]
+        [DataRow("Long-String-14", 14, "2147483648", "Hi1", "System.String")]
+        [DataRow("Bool-String-15", 15, "False", "Hi1", "System.String")]
+        [DataRow("Bool-Bool-16", 16, "False", "True", "System.Boolean")]
+        [DataRow("Bool-Double-17", 17, "False", "12.5", "System.String")]
+        [DataRow("String-Double-18", 18, "Hi1", "1e10", "System.String")]
+        [DataRow("Double-Inf-NaN-2", 2, "Infinity", "NaN", "System.Double")]
+        [DataRow("Double-InfSym-NaN-2", 19, "∞", "-∞", "System.Double")]
+        public void TimeSeriesDataTypeTest(string testCase, int measurementCount, string value1, string value2, string expectedType )
         {
             var timeSeries = new TimeSeries();
 
-            var measurementCount = Convert.ToInt32(TestContext.DataRow["count"], CultureInfo.InvariantCulture);
             for (var i = 0; i < measurementCount; i++)
             {
                 var measurement = new Measurement
                 {
-                    Value = TestContext.DataRow[i < measurementCount / 2 ? "value1" : "value2"].ToString(),
+                    Value = i < measurementCount / 2 ? value1 : value2,
                     Timestamp = DateTime.Now,
                     IsGood = true
                 };
                 timeSeries.AddMeasurement(measurement);
             }
             var metadata = new TimeSeriesMetadata<Measurement>(timeSeries.Measurements, p => p.Value);
-            Assert.AreEqual(TestContext.DataRow["expectedType"].ToString(), metadata.DataType.ToString(),
-                $"Test {TestContext.DataRow["testCase"]}");
+            Assert.AreEqual(expectedType, metadata.DataType.ToString(), $"Test {testCase}");
         }
 
         [TestMethod, TestCategory("Unit")]

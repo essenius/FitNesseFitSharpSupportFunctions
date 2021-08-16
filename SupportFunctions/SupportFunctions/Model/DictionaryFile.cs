@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2020 Rik Essenius
+﻿// Copyright 2015-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -11,10 +11,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
-using System.Web.Script.Serialization;
 using SupportFunctions.Utilities;
 
 namespace SupportFunctions.Model
@@ -51,28 +49,28 @@ namespace SupportFunctions.Model
             }
         }
 
-        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "bad rule")]
         public Dictionary<string, string> Load()
         {
             var dictionary = new Dictionary<string, string>();
+
+            var input = File.ReadAllText(_fileName);
+
             try
             {
-                dictionary = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(File.ReadAllText(_fileName));
+                dictionary = DictionarySerializer.Deserialize(input);
                 return dictionary;
             }
-            catch (ArgumentException)
+            catch (Exception e) when (e.GetType() == DictionarySerializer.ParseExceptionType)
             {
                 // unable to parse as json, retry with binary
-                using (var fs = File.OpenRead(_fileName))
-                using (var reader = new BinaryReader(fs))
+                using var fs = File.OpenRead(_fileName);
+                using var reader = new BinaryReader(fs);
+                var count = reader.ReadInt32();
+                for (var i = 0; i < count; i++)
                 {
-                    var count = reader.ReadInt32();
-                    for (var i = 0; i < count; i++)
-                    {
-                        var key = reader.ReadString();
-                        var value = reader.ReadString();
-                        dictionary[key] = value;
-                    }
+                    var key = reader.ReadString();
+                    var value = reader.ReadString();
+                    dictionary[key] = value;
                 }
                 return dictionary;
             }
@@ -91,11 +89,10 @@ namespace SupportFunctions.Model
             }
             else
             {
-                File.WriteAllText(_fileName, new JavaScriptSerializer().Serialize(dictionary));
+                File.WriteAllText(_fileName, DictionarySerializer.Serialize(dictionary));
             }
         }
 
-        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute", Justification = "Handled by Requires.NotNull")]
         public bool WaitFor()
         {
             var fileExists = File.Exists(_fileName);
@@ -105,12 +102,10 @@ namespace SupportFunctions.Model
                 var path = Path.GetDirectoryName(Path.GetFullPath(_fileName));
                 Requires.NotNull(path, nameof(path));
                 _fileToWaitFor = Path.GetFileName(_fileName);
-                using (var fileSystemWatcher = new FileSystemWatcher(path))
-                {
-                    fileSystemWatcher.Created += OnCreated;
-                    fileSystemWatcher.EnableRaisingEvents = true;
-                    fileExists = WaitUntil(() => _fileExists);
-                }
+                using var fileSystemWatcher = new FileSystemWatcher(path);
+                fileSystemWatcher.Created += OnCreated;
+                fileSystemWatcher.EnableRaisingEvents = true;
+                fileExists = WaitUntil(() => _fileExists);
             }
             // if it is there, wait until it is not locked.
             return fileExists && WaitUntil(() => !IsFileLocked(_fileName));

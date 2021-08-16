@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2020 Rik Essenius
+﻿// Copyright 2015-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -12,6 +12,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Runtime.Versioning;
 using SupportFunctions.Model;
 using SupportFunctions.Utilities;
 
@@ -27,6 +28,7 @@ namespace SupportFunctions
     {
         /// <summary>Initialize new Date object</summary>
         /// <param name="ticks">date/time in ticks</param>
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "ReSharper entry point")]
         public Date(long ticks) => DateTime = new DateTime(ticks);
 
         /// <summary>Initialize date with a date type</summary>
@@ -42,16 +44,16 @@ namespace SupportFunctions
         public static string DefaultFormat { get; set; } = DateTimeFormatInfo.InvariantInfo.SortableDateTimePattern;
 
         /// <returns>the current short date format</returns>
-        public static string ShortDateFormat => new RegistryWrapper().ShortDateFormat;
+        public static string ShortDateFormat => RegistryWrapper.ShortDateFormat;
 
         /// <returns>the Ticks representation</returns>
         public long Ticks => DateTime.Ticks;
 
         /// <returns>the time format</returns>
-        public static string TimeFormat => new RegistryWrapper().TimeFormat;
+        public static string TimeFormat => RegistryWrapper.TimeFormat;
 
         /// <returns>the date in the user's default formatting</returns>
-        public string ToLocalFormat => DateTime.Formatted(new RegistryWrapper().DateTimeFormat);
+        public string ToLocalFormat => DateTime.Formatted(RegistryWrapper.DateTimeFormat);
 
         /// <summary>Add a number of days. Can be negative and/or contain fractions</summary>
         public Date AddDays(double days) => new Date(DateTime.AddDays(days));
@@ -66,20 +68,14 @@ namespace SupportFunctions
         public static Date Parse(string input)
         {
             Requires.NotNull(input, nameof(input));
-            switch (input.ToUpperInvariant())
+            return input.ToUpperInvariant() switch
             {
-                case "TODAY":
-                    return new Date(DateTime.Today);
-                case "NOW":
-                    return new Date(UniqueDateTime.NowTicks);
-                case @"UTCTODAY":
-                    return new Date(DateTime.UtcNow.Date);
-                case @"UTCNOW":
-                    return new Date(UniqueDateTime.UtcNowTicks);
-                default:
-                    // if input is a long, assume it represents ticks. Otherwise, assume it is a date string
-                    return long.TryParse(input, out var ticks) ? new Date(ticks) : new Date(input);
-            }
+                "TODAY" => new Date(DateTime.Today),
+                "NOW" => new Date(UniqueDateTime.NowTicks),
+                @"UTCTODAY" => new Date(DateTime.UtcNow.Date),
+                @"UTCNOW" => new Date(UniqueDateTime.UtcNowTicks),
+                _ => long.TryParse(input, out var ticks) ? new Date(ticks) : new Date(input)
+            };
         }
 
         /// <summary>Parse a string into a date object using a specific date format.</summary>

@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2020 Rik Essenius
+﻿// Copyright 2017-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -11,12 +11,14 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using SupportFunctions.Model;
 
 namespace SupportFunctions
 {
     /// <summary>Comparing the difference between two comparisons.</summary>
+    [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Global", Justification = "FitSharp would not see it")]
     public class CsvComparisonDifference
     {
         private readonly CsvComparison _set1;
@@ -35,7 +37,7 @@ namespace SupportFunctions
         /// <summary>The number of items with a different comparison error</summary>
         public int ErrorCount => Result.Count();
 
-        private IEnumerable<CellComparison> Result => _result ?? (_result = _set1.DeltaWith(_set2));
+        private IEnumerable<CellComparison> Result => _result ??= _set1.DeltaWith(_set2);
 
         /// <summary>The result of the comparison difference in a Table Table format</summary>
         public Collection<object> DoTable(Collection<Collection<object>> tableIn)

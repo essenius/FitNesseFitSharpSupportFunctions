@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2020 Rik Essenius
+﻿// Copyright 2016-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -10,7 +10,6 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,9 +32,8 @@ namespace SupportFunctionsTest
             }
         }
 
-        [SuppressMessage("Microsoft.Usage",
-             "CA2202:Do not dispose objects multiple times", Justification = "Bad rule"), TestMethod, TestCategory("Integration")]
-        public void DictionaryFileLoadBinaryFile()
+
+        public static void DictionaryFileLoadBinaryFile()
         {
             // test whether loading the (obsolete) binary format still works
             // arrange
@@ -47,15 +45,13 @@ namespace SupportFunctionsTest
                 {"2", "b"},
                 {"3", "c"}
             };
-            using (var fs = File.OpenWrite(fileName))
-            using (var writer = new BinaryWriter(fs))
+            using var fs = File.OpenWrite(fileName);
+            using var writer = new BinaryWriter(fs);
+            writer.Write(dictionary.Count);
+            foreach (var pair in dictionary)
             {
-                writer.Write(dictionary.Count);
-                foreach (var pair in dictionary)
-                {
-                    writer.Write(pair.Key);
-                    writer.Write(pair.Value);
-                }
+                writer.Write(pair.Key);
+                writer.Write(pair.Value);
             }
             // act
             var loadedDictionary = new DictionaryFile(fileName).Load();

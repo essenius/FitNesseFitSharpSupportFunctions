@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2020 Rik Essenius
+﻿// Copyright 2015-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -12,8 +12,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SupportFunctions.Model;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SupportFunctionsTest
 {
@@ -24,10 +26,36 @@ namespace SupportFunctionsTest
         private const string DeletePageRequest = Server + "DataStore.PageName?deletePage&confirmed=yes" + UriSeparator;
         private const string PageDataRequest = Server + "DataStore.PageName?pageData" + UriSeparator;
 
-        //private const string SaveDataPartialRequest = Server + "DataStore.PageName?saveData&editTime=1&pageContent=";
         private const string Server = "http://localhost:8080/";
 
         public const string UriSeparator = "\f";
+        private static MethodInfo _addPageMethod;
+        private static MethodInfo _checkColumnNamesMethod;
+        private static MethodInfo _createTableMethod;
+        private static MethodInfo _extractKeyValuePairMethod;
+        private static MethodInfo _insertTableAtMethod;
+        private static MethodInfo _isTableLineMethod;
+        private static MethodInfo _removeTableAtMethod;
+        private static MethodInfo _restCallMethod;
+        private static MethodInfo _savePageMethod;
+        private static MethodInfo _tableIsNamedmethod;
+
+        [ClassInitialize]
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Required for ClassInitialize")]
+        public static void ClassInitialize(TestContext testContext)
+        {
+            // all the private methods we're testing. Since they are generally used multiple times, we define them here to reduce reflection code.
+            _addPageMethod = typeof(FitNessePage).GetMethod("AddPage", BindingFlags.Instance | BindingFlags.NonPublic);
+            _checkColumnNamesMethod = typeof(FitNessePage).GetMethod("CheckColumnNames", BindingFlags.Static | BindingFlags.NonPublic);
+            _createTableMethod = typeof(FitNessePage).GetMethod("CreateTable", BindingFlags.Static | BindingFlags.NonPublic);
+            _extractKeyValuePairMethod = typeof(FitNessePage).GetMethod("ExtractKeyValuePair", BindingFlags.Static | BindingFlags.NonPublic);
+            _insertTableAtMethod = typeof(FitNessePage).GetMethod("InsertTableAt", BindingFlags.Instance | BindingFlags.NonPublic);
+            _isTableLineMethod = typeof(FitNessePage).GetMethod("IsTableLine", BindingFlags.Static | BindingFlags.NonPublic);
+            _removeTableAtMethod = typeof(FitNessePage).GetMethod("RemoveTableAt", BindingFlags.Instance | BindingFlags.NonPublic);
+            _restCallMethod = typeof(FitNessePage).GetMethod("RestCall", BindingFlags.Instance | BindingFlags.NonPublic);
+            _savePageMethod = typeof(FitNessePage).GetMethod("SavePage", BindingFlags.Instance | BindingFlags.NonPublic);
+            _tableIsNamedmethod = typeof(FitNessePage).GetMethod("TableIsNamed", BindingFlags.Static | BindingFlags.NonPublic);
+        }
 
         [TestMethod, TestCategory("Unit")]
         public void FitNessePageAddTest()
@@ -36,8 +64,7 @@ namespace SupportFunctionsTest
             // the hash is a notorious one - if you leave that unescaped, FitNesse will ignore the rest of the page.
             var lines = new[] {"#escape characters<grin>&", "!|Dictionary|TableName|", "|key1|value1|"};
             var fitnessePage = new FitNessePageMock(null);
-            var target = new PrivateObject(fitnessePage, new PrivateType(typeof(FitNessePage)));
-            target.Invoke("AddPage", "PageName", lines);
+            _addPageMethod.Invoke(fitnessePage, new object[] {"PageName", lines});
             const string expected = AddChildPartialRequest + "#escape characters<grin>&\n!|Dictionary|TableName|\n|key1|value1|\n\f";
             Assert.AreEqual(expected, fitnessePage.UsedUri);
         }
@@ -47,24 +74,21 @@ namespace SupportFunctionsTest
         ]
         public void FitNessePageCheckColumnNamesWithWrongFirstColumnNameTrowsFormatException()
         {
-            var target = new PrivateType(typeof(FitNessePage));
-            target.InvokeStatic("CheckColumnNames", "|Sleutel|Waarde|");
+            _checkColumnNamesMethod.Invoke(null, new object[] {"|Sleutel|Waarde|"});
         }
 
         [TestMethod, TestCategory("Unit"),
          ExpectedExceptionWithMessage(typeof(FormatException), "Second column must be called 'Value' instead of 'Waarde'")]
         public void FitNessePageCheckColumnNamesWithWrongSecondColumnNameTrowsFormatException()
         {
-            var target = new PrivateType(typeof(FitNessePage));
-            target.InvokeStatic("CheckColumnNames", "|key|Waarde|");
+            _checkColumnNamesMethod.Invoke(null, new object[] {"|key|Waarde|"});
         }
 
         [TestMethod, TestCategory("Unit")]
         public void FitNessePageCreateTableTest()
         {
             var dict = new Dictionary<string, string> {{"key1", "value1"}, {"key2", "value2"}};
-            var target = new PrivateType(typeof(FitNessePage));
-            var result = ((List<string>) target.InvokeStatic("CreateTable", "TestTable", dict)).ToArray();
+            var result = ((List<string>) _createTableMethod.Invoke(null, new object[] {"TestTable", dict})).ToArray();
             Assert.AreEqual(4, result.Length);
             Assert.AreEqual("!|Dictionary|Having|Name|TestTable|", result[0]);
             Assert.AreEqual("|Key|Value|", result[1]);
@@ -95,8 +119,7 @@ namespace SupportFunctionsTest
         public void FitNessePageDeleteTest()
         {
             var fitnessePage = new FitNessePageMock(null);
-            var target = new PrivateObject(fitnessePage, new PrivateType(typeof(FitNessePage)));
-            target.Invoke("DeletePage", "PageName");
+            fitnessePage.DeletePage("PageName");
             Assert.AreEqual(DeletePageRequest, fitnessePage.UsedUri);
         }
 
@@ -104,17 +127,15 @@ namespace SupportFunctionsTest
          ExpectedExceptionWithMessage(typeof(FormatException), "Row should have 2 cells: Key and Value. Found 1: ||")]
         public void FitNessePageExtractKeyValuePairFailsTest()
         {
-            var target = new PrivateType(typeof(FitNessePage));
-            var _ = (KeyValuePair<string, string>) target.InvokeStatic("ExtractKeyValuePair", "||");
+            var _ = (KeyValuePair<string, string>) _extractKeyValuePairMethod.Invoke(null, new object[] {"||"});
         }
 
         [TestMethod, TestCategory("Unit")]
         public void FitNessePageExtractKeyValuePairTest()
         {
-            var target = new PrivateType(typeof(FitNessePage));
-            var kvp = (KeyValuePair<string, string>) target.InvokeStatic("ExtractKeyValuePair", "|Sleutel|Waarde|");
-            Assert.AreEqual("Sleutel", kvp.Key);
-            Assert.AreEqual("Waarde", kvp.Value);
+            var keyValuePair = (KeyValuePair<string, string>) _extractKeyValuePairMethod.Invoke(null, new object[] {"|Sleutel|Waarde|"});
+            Assert.AreEqual("Sleutel", keyValuePair.Key);
+            Assert.AreEqual("Waarde", keyValuePair.Value);
         }
 
         [TestMethod, TestCategory("Unit")]
@@ -168,9 +189,8 @@ namespace SupportFunctionsTest
                 var dict = new Dictionary<string, string> {{"key5", "value5"}, {"key6", "value6"}};
                 var fitnessePage = new FitNessePageMock(testcase[1]?.ToString());
                 fitnessePage.LoadTableFromPage("TableName", "PageName");
-                var target = new PrivateObject(fitnessePage, new PrivateType(typeof(FitNessePage)));
-                target.Invoke("InsertTableAt", "NewTableName", dict, testcase[2]);
-                target.Invoke("SavePage", "PageName");
+                _insertTableAtMethod.Invoke(fitnessePage, new[] {"NewTableName", dict, testcase[2]});
+                _savePageMethod.Invoke(fitnessePage, new object[] {"PageName"});
                 var expected = PageDataRequest + DeletePageRequest + AddChildPartialRequest + testcase[3];
                 Assert.AreEqual(expected, fitnessePage.UsedUri, "Testcase " + testcase[0]);
             }
@@ -179,12 +199,11 @@ namespace SupportFunctionsTest
         [TestMethod, TestCategory("Unit")]
         public void FitNessePageIsTableLineTest()
         {
-            var target = new PrivateType(typeof(FitNessePage));
-            Assert.IsTrue((bool) target.InvokeStatic("IsTableLine", "|Sleutel|Waarde|"), "table line without whitespace");
-            Assert.IsTrue((bool) target.InvokeStatic("IsTableLine", " |Sleutel|Waarde| "), "table line with whitespace");
-            Assert.IsFalse((bool) target.InvokeStatic("IsTableLine", "  "), "just whitespace");
-            Assert.IsFalse((bool) target.InvokeStatic("IsTableLine", "comments"), "comments");
-            Assert.IsFalse((bool) target.InvokeStatic("IsTableLine", "  comments"), "comments with whitespace");
+            Assert.IsTrue((bool) _isTableLineMethod.Invoke(null, new object[] {"|Sleutel|Waarde|"}), "table line without whitespace");
+            Assert.IsTrue((bool) _isTableLineMethod.Invoke(null, new object[] {" |Sleutel|Waarde| "}), "table line with whitespace");
+            Assert.IsFalse((bool) _isTableLineMethod.Invoke(null, new object[] {"  "}), "just whitespace");
+            Assert.IsFalse((bool) _isTableLineMethod.Invoke(null, new object[] {"comments"}), "comments");
+            Assert.IsFalse((bool) _isTableLineMethod.Invoke(null, new object[] {"  comments"}), "comments with whitespace");
         }
 
         [TestMethod, TestCategory("Unit")]
@@ -236,23 +255,20 @@ namespace SupportFunctionsTest
             const string pageContent = "\nq\n|Dictionary|TableName|\n|key|value|\n|key1|value1|\nq\n";
             var fitnessePage = new FitNessePageMock(pageContent);
             fitnessePage.LoadTableFromPage("TableName", "PageName");
-            var target = new PrivateObject(fitnessePage, new PrivateType(typeof(FitNessePage)));
-            target.Invoke("RemoveTableAt", 2);
-            target.Invoke("SavePage", "PageName");
-            const string expected =
-                PageDataRequest + DeletePageRequest + AddChildPartialRequest + "\nq\nq\n" + UriSeparator;
+            _removeTableAtMethod.Invoke(fitnessePage, new object[] {2});
+            _savePageMethod.Invoke(fitnessePage, new object[] {"PageName"});
+            const string expected = PageDataRequest + DeletePageRequest + AddChildPartialRequest + "\nq\nq\n" + UriSeparator;
             Assert.AreEqual(expected, fitnessePage.UsedUri);
         }
 
         [TestMethod, TestCategory("Unit")]
         public void FitNessePageRemoveTableWithWhitespaceAtTest()
         {
-            const string pageContent = "\nq\n|Dictionary|TableName|\n|key|value|\n|key1|value1|\nq\n";
+            const string pageContent = "\nq\n|  Dictionary  |  TableName   |\n| key  |  value |\n| key1 | value1  |\nq\n";
             var fitnessePage = new FitNessePageMock(pageContent);
             fitnessePage.LoadTableFromPage("TableName", "PageName");
-            var target = new PrivateObject(fitnessePage, new PrivateType(typeof(FitNessePage)));
-            target.Invoke("RemoveTableAt", 2);
-            target.Invoke("SavePage", "PageName");
+            _removeTableAtMethod.Invoke(fitnessePage, new object[] {2});
+            _savePageMethod.Invoke(fitnessePage, new object[] {"PageName"});
             const string expected = PageDataRequest + DeletePageRequest + AddChildPartialRequest + "\nq\nq\n" + UriSeparator;
             Assert.AreEqual(expected, fitnessePage.UsedUri);
         }
@@ -262,8 +278,7 @@ namespace SupportFunctionsTest
         {
             //requires FitNesse active locally on port 8080
             var fitnessePage = new FitNessePage();
-            var target = new PrivateObject(fitnessePage);
-            var stream = target.Invoke("RestCall", Server + "NonExistingPage?pageData");
+            var stream = _restCallMethod.Invoke(fitnessePage, new object[] {Server + "NonExistingPage?pageData"});
             Assert.IsNull(stream);
         }
 
@@ -272,8 +287,7 @@ namespace SupportFunctionsTest
         {
             //requires FitNesse active locally on port 8080
             var fitnessePage = new FitNessePage();
-            var target = new PrivateObject(fitnessePage);
-            var stream = target.Invoke("RestCall", Server + "?pageData");
+            var stream = _restCallMethod.Invoke(fitnessePage, new object[] {Server + "?pageData"});
             Assert.IsNotNull(stream);
         }
 
@@ -283,8 +297,7 @@ namespace SupportFunctionsTest
             const string pageContent = "\nq\n|Dictionary|TableName|\n|Key|Value|\n|key1|value1|\nq\n";
             var fitnessePage = new FitNessePageMock(pageContent);
             fitnessePage.LoadTableFromPage("TableName", "PageName");
-            var target = new PrivateObject(fitnessePage, new PrivateType(typeof(FitNessePage)));
-            target.Invoke("SavePage", "PageName");
+            _savePageMethod.Invoke(fitnessePage, new object[] {"PageName"});
             const string expected = PageDataRequest + DeletePageRequest + AddChildPartialRequest +
                                     "\nq\n|Dictionary|TableName|\n|Key|Value|\n|key1|value1|\nq\n" + UriSeparator;
             Assert.AreEqual(expected, fitnessePage.UsedUri);
@@ -342,10 +355,10 @@ namespace SupportFunctionsTest
                 "|Dictionary| given |xx|yy|",
                 "|Dictionary|having|name|xx|"
             };
-            var target = new PrivateType(typeof(FitNessePage));
+
             foreach (var testcase in testcases)
             {
-                Assert.IsFalse((bool) target.InvokeStatic("TableIsNamed", testcase, "TestTable"), "Testcase: " + testcase);
+                Assert.IsFalse((bool) _tableIsNamedmethod.Invoke(null, new object[] {testcase, "TestTable"}), "Testcase: " + testcase);
             }
         }
 
@@ -358,10 +371,9 @@ namespace SupportFunctionsTest
                 "|Dictionary|having| name |TestTable|",
                 "|Dictionary| given |Name| TestTable |"
             };
-            var target = new PrivateType(typeof(FitNessePage));
             foreach (var testcase in testcases)
             {
-                Assert.IsTrue((bool) target.InvokeStatic("TableIsNamed", testcase, "TestTable"), "Testcase: " + testcase);
+                Assert.IsTrue((bool) _tableIsNamedmethod.Invoke(null, new object[] {testcase, "TestTable"}), "Testcase: " + testcase);
             }
         }
     }

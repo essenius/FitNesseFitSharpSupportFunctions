@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2020 Rik Essenius
+﻿// Copyright 2016-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -21,6 +21,7 @@ using SupportFunctions.Utilities;
 namespace SupportFunctions
 {
     /// <summary>Compares two time series and reports results tabularly or graphically</summary>
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "FitSharp entry point")]
     public class TimeSeriesComparison
     {
         private const string DeltaCaption = "Delta";
@@ -124,15 +125,13 @@ namespace SupportFunctions
             var dataSubset = recalculateNeeded ? _result.Subset(startTimestamp, endTimestamp) : _result;
             if (dataSubset.Count == 0) return NoDataCaption;
             var yDimension = Dimension.GetExtremeValues(dataSubset.Values, minValue, maxValue);
-            startTimestamp = startTimestamp ?? dataSubset.Keys.First();
-            endTimestamp = endTimestamp ?? dataSubset.Keys.Last();
+            startTimestamp ??= dataSubset.Keys.First();
+            endTimestamp ??= dataSubset.Keys.Last();
 
-            using (var chart = new TimeSeriesChart())
-            {
-                return chart.ChartInHtmlFor(dataSubset,
-                    new AxisLimits(startTimestamp.Value, endTimestamp.Value, yDimension),
-                    new Size(parameters.Width, parameters.Height));
-            }
+            var chart = new TimeSeriesChart();
+            return chart.ChartInHtmlFor(dataSubset,
+                new AxisLimits(startTimestamp.Value, endTimestamp.Value, yDimension),
+                new Size(parameters.Width, parameters.Height));
         }
 
         private Collection<object> CreateQueryResult()
@@ -177,7 +176,6 @@ namespace SupportFunctions
         }
 
         /// <summary>Table interface, providing full details about the comparison</summary>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "FitSharp interface spec")]
         public Collection<object> DoTable(Collection<Collection<object>> tableIn)
         {
             var renderer = new TableRenderer<IMeasurementComparison>(GetTableValues);

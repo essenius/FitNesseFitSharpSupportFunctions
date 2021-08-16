@@ -16,3 +16,4 @@
       Allowed system types like int, bool, long in Get functions; improved method usage to allow both params and 'of' input.
       TypeDictionary now gets the standard types from inspecting mscorlib instead of hardcoding.
       Introduced Requires to replace Debug.Assert
+3.0.0-beta: Migration to .NET 5.0  (dual build .NET 4.6.1 and .NET 5.0) and LiveCharts 2 beta (.NET 5.0 only)

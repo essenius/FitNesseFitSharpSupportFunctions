@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2020 Rik Essenius
+﻿// Copyright 2016-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -10,7 +10,6 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SupportFunctions.Model;
 using SupportFunctions.Utilities;
@@ -20,9 +19,6 @@ namespace SupportFunctionsTest
     [TestClass]
     public class DimensionTest
     {
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "False positive")]
-        public TestContext TestContext { get; set; }
-
         [TestMethod, TestCategory("Unit")]
         public void DimensionGetExtremeValuesTest()
         {
@@ -49,16 +45,28 @@ namespace SupportFunctionsTest
             Assert.AreEqual(3, dimension.Max);
         }
 
-        [TestMethod, TestCategory("Unit"), DeploymentItem("SupportFunctionsTest\\TestData.xml"),
-         DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", "|DataDirectory|\\TestData.xml",
-             "DimensionGridlineInterval", DataAccessMethod.Sequential)]
-        public void DimensionGridlineIntervalTest()
+
+        [DataTestMethod, TestCategory("Unit")]
+        [DataRow(0.02, 0.002)]
+        [DataRow(0.03, 0.005)]
+        [DataRow(0.004, 0.0005)]
+        [DataRow(0.07, 0.01)]
+        [DataRow(0.09, 0.01)]
+        [DataRow(0.1, 0.01)]
+        [DataRow(0.11, 0.02)]
+        [DataRow(5, 0.5)]
+        [DataRow(235, 25)]
+        [DataRow(357, 50)]
+        [DataRow(798, 100)]
+        [DataRow(1366, 200)]
+        [DataRow(123456789, 20000000)]
+        [DataRow(1.23456789e+30, 2e+29)]
+        [DataRow(2.23456789e-30, 2.5e-31)]
+        public void DimensionGridlineIntervalTest(double range, double expectedInterval)
         {
-            var range = TestContext.DataRow["range"].To<double>();
-            var expected = TestContext.DataRow["interval"].To<double>();
             var dimension = new Dimension(0, range, false);
             var actual = dimension.GridlineInterval;
-            Assert.IsTrue(expected.HasMinimalDifferenceWith(actual), $"Range: {range} expected: {expected} actual: {actual}");
+            Assert.IsTrue(expectedInterval.HasMinimalDifferenceWith(actual), $"Range: {range} expected: {expectedInterval} actual: {actual}");
         }
 
         [TestMethod, TestCategory("Unit")]

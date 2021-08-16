@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2020 Rik Essenius
+﻿// Copyright 2017-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -10,7 +10,6 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -21,11 +20,15 @@ using static System.FormattableString;
 
 namespace SupportFunctionsTest
 {
+
     [TestClass]
     public class TimeSeriesChartTest
     {
-        [SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "False positive")]
-        public TestContext TestContext { get; set; }
+#if NET5_0
+        private const string ChartFolder = "TestDataLive\\";
+#else
+        private const string ChartFolder = "TestDataWebUI\\";
+#endif
 
         private static MeasurementComparisonDictionary SecondOrderGraphWithValueIssues(DateTime startTimestamp)
         {
@@ -58,7 +61,7 @@ namespace SupportFunctionsTest
             1 - Math.Exp(-zeta * omega * time) / Math.Sqrt(1 - Math.Pow(zeta, 2)) *
             Math.Sin(Math.Sqrt(1 - Math.Pow(zeta, 2)) * omega * time + theta);
 
-        [TestMethod, TestCategory("Unit"), DeploymentItem("TestData\\Base64MinutesTimeRange.html")]
+        [TestMethod, TestCategory("Unit"), DeploymentItem(ChartFolder + "Base64MinutesTimeRange.html")]
         public void TimeSeriesChartMinutesTimeTest()
         {
             var table = new MeasurementComparisonDictionary();
@@ -71,34 +74,30 @@ namespace SupportFunctionsTest
             table.Add(startTimestamp.AddSeconds(19320), new MeasurementComparisonMock("3.00", "3.20", CompareOutcome.OutsideToleranceIssue));
 
             var endTimestamp = table.Last().Key;
-            using (var chart = new TimeSeriesChart())
-            {
-                var base64Result = chart.ChartInHtmlFor(table,
-                    new AxisLimits(startTimestamp, endTimestamp, new Dimension(minY, maxY)),
-                    new Size(800, 600));
-                var expectedResult = File.ReadAllText("Base64MinutesTimeRange.html");
-                Assert.AreEqual(expectedResult, base64Result);
-            }
+            var chart = new TimeSeriesChart();
+            var base64Result = chart.ChartInHtmlFor(table,
+                new AxisLimits(startTimestamp, endTimestamp, new Dimension(minY, maxY)),
+                new Size(800, 600));
+            var expectedResult = File.ReadAllText("Base64MinutesTimeRange.html");
+            Assert.AreEqual(expectedResult, base64Result);
         }
 
-        [TestMethod, TestCategory("Unit"), DeploymentItem("TestData\\Base64SecondOrderResponseLimitedY.html")]
+        [TestMethod, TestCategory("Unit"), DeploymentItem(ChartFolder + "Base64SecondOrderResponseLimitedY.html")]
         public void TimeSeriesChartSecondOrderResponseTest()
         {
             var startTimestamp = DateTime.Today;
             var table = SecondOrderGraphWithValueIssues(startTimestamp);
             var endTimestamp = table.Last().Key;
-            using (var timeSeriesChart = new TimeSeriesChart())
-            {
-                var result = timeSeriesChart.ChartDataFor(table,
-                    new AxisLimits(startTimestamp, endTimestamp, new Dimension(0.7, 1.7)),
-                    new Size(800, 600));
-                result = Invariant($"<img src=\"data:image/png;base64,{result}\"/>");
-                var expectedResult = File.ReadAllText("Base64SecondOrderResponseLimitedY.html");
-                Assert.AreEqual(expectedResult, result);
-            }
+            var timeSeriesChart = new TimeSeriesChart();
+            var result = timeSeriesChart.ChartDataFor(table,
+                new AxisLimits(startTimestamp, endTimestamp, new Dimension(0.7, 1.7)),
+                new Size(800, 600));
+            result = WebFunctions.AsImg(result);
+            var expectedResult = File.ReadAllText("Base64SecondOrderResponseLimitedY.html");
+            Assert.AreEqual(expectedResult, result);
         }
 
-        [TestMethod, TestCategory("Unit"), DeploymentItem("TestData\\Base64SmallRange.html")]
+        [TestMethod, TestCategory("Unit"), DeploymentItem(ChartFolder + "Base64SmallRange.html")]
         public void TimeSeriesChartVerySmallRangeTest()
         {
             var table = new MeasurementComparisonDictionary();
@@ -108,14 +107,12 @@ namespace SupportFunctionsTest
             const double maxY = 50.02;
             table.Add(startTimestamp, new MeasurementComparisonMock("49.95", "49.95", CompareOutcome.None));
             table.Add(startTimestamp.AddSeconds(1), new MeasurementComparisonMock("50.0", "50.0", CompareOutcome.None));
-            using (var chart = new TimeSeriesChart())
-            {
-                var base64Result = chart.ChartInHtmlFor(table,
-                    new AxisLimits(startTimestamp, startTimestamp.AddSeconds(1), new Dimension(minY, maxY)),
-                    new Size(800, 600));
-                var expectedResult = File.ReadAllText("Base64SmallRange.html");
-                Assert.AreEqual(expectedResult, base64Result);
-            }
+            var chart = new TimeSeriesChart();
+            var base64Result = chart.ChartInHtmlFor(table,
+                new AxisLimits(startTimestamp, startTimestamp.AddSeconds(1), new Dimension(minY, maxY)),
+                new Size(800, 600));
+            var expectedResult = File.ReadAllText("Base64SmallRange.html");
+            Assert.AreEqual(expectedResult, base64Result);
         }
     }
 }

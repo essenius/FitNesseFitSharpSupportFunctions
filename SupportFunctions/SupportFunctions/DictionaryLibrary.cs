@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2020 Rik Essenius
+﻿// Copyright 2015-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -17,7 +17,7 @@ using SupportFunctions.Utilities;
 namespace SupportFunctions
 {
     /// <summary>Functions for handling libraries</summary>
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Used by FitSharp")]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "FitSharp entry point")]
     public class DictionaryLibrary
     {
         private const string DefaultFileName = "DictionaryStore.json";

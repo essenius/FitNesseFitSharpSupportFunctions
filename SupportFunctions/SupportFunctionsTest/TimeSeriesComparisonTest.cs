@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2020 Rik Essenius
+﻿// Copyright 2017-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -12,8 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -27,45 +25,46 @@ namespace SupportFunctionsTest
     [TestClass]
     public class TimeSeriesComparisonTest
     {
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "False positive")]
-        public TestContext TestContext { get; set; }
+#if NET5_0
+        private const string ChartFolder = "TestDataLive\\";
+#else
+        private const string ChartFolder = "TestDataWebUI\\";
+#endif
+        private static object GetEntry(IReadOnlyList<object> entry, int index) => index >= entry.Count ? null : entry[index];
 
-        private static void AddIfExistInTestSpec(IDictionary<string, string> result, DataRow entry, string key)
+        private static void ArrangeDataForDoTable(IEnumerable<object> data, TimeSeries expectedSeries, TimeSeries actualSeries,
+            IDictionary<string, Dictionary<string, string>> expectedResults, bool? defaultIsGood)
         {
-            var value = ColumnWithDefault(entry, key, null)?.ToString();
-            // value returns empty string if not specified, so we need to check for that too.
-            if (!string.IsNullOrEmpty(value)) result.Add(key, value);
-        }
-
-        private void ArrangeDataForDoTable(IEnumerable<DataRow> data, TimeSeries expectedSeries, TimeSeries actualSeries,
-            IDictionary<string, Dictionary<string, string>> expectedResults)
-        {
-            var defaultValue = ColumnWithDefault(TestContext.DataRow, "value", null);
-            var defaultIsGood = ColumnWithDefault(TestContext.DataRow, "isGood", null);
-            foreach (var entry in data)
+            foreach (var dataRow in data)
             {
-                var exists = ColumnWithDefault(entry, "exists", "both").ToString();
+                var entry = dataRow as object[];
+                var timestamp = GetEntry(entry,0) as string;
+                var exists = GetEntry(entry, 1) as string;
+                var expectedValue = GetEntry(entry, 2) as string;
+                var actualValue = GetEntry(entry,3) as string;
+                var value = GetEntry(entry, 5) as string;
+                var delta = GetEntry(entry, 6) as string;
+                var deltaPercentage = GetEntry(entry, 7) as string;
+                var expectedlIsGood = GetEntry(entry, 9) as string;
+                var actualIsGood = GetEntry(entry, 10) as string;
 
                 // if exists == expected, we don't want an actual record
                 if (exists != "expected")
                 {
-                    actualSeries.AddMeasurement(
-                        CreateMeasurementFrom(entry, defaultValue, defaultIsGood, "actualValue", "actualIsGood"));
+                    actualSeries.AddMeasurement(new Measurement(timestamp, actualValue, actualIsGood ?? defaultIsGood.ToString()));
                 }
                 // if exists == actual, we don't want an expected record
                 if (exists != "actual")
                 {
-                    expectedSeries.AddMeasurement(
-                        CreateMeasurementFrom(entry, defaultValue, defaultIsGood, "expectedValue", "expectedIsGood"));
+                    expectedSeries.AddMeasurement(new Measurement(timestamp, expectedValue, expectedlIsGood ?? defaultIsGood.ToString()));
                 }
-                var result = new Dictionary<string, string>();
-                AddIfExistInTestSpec(result, entry, "timeStampOut");
-                AddIfExistInTestSpec(result, entry, "value");
-                AddIfExistInTestSpec(result, entry, "delta");
-                AddIfExistInTestSpec(result, entry, "deltaPercentage");
-                AddIfExistInTestSpec(result, entry, "isGood");
-
-                expectedResults.Add(entry["timestamp"].ToString(), result);
+                var result = new Dictionary<string, string>
+                {
+                    {"value", value}, {"delta", delta}, {"deltaPercentage", deltaPercentage}
+                };
+                if (GetEntry(entry, 11) is string isGood) result.Add("isGood", isGood);
+                if (GetEntry(entry, 8) is string timestampOut) result.Add("timestampOut", timestampOut);
+                expectedResults.Add(timestamp, result);
             }
         }
 
@@ -77,10 +76,10 @@ namespace SupportFunctionsTest
             Assert.AreEqual(expectedIssue, issue[1]);
         }
 
-        private static void CheckDataRows(Dictionary<string, Dictionary<string, string>> expectedResults, IEnumerable<object> result, string testCase)
+        private static void CheckDataRows(IReadOnlyDictionary<string, Dictionary<string, string>> expectedResults, IEnumerable<object> result, string testCase)
         {
-            // check the data rows only - we already did the header
             const string fail = "fail:";
+            // check the data rows only - we already did the header
             foreach (Collection<object> row in result.Skip(1))
             {
                 var timestamp = GetTimestamp(row[0].ToString());
@@ -102,26 +101,14 @@ namespace SupportFunctionsTest
                 {
                     Assert.AreEqual(entry.Value, actualResult[entry.Key], $"{entry.Key}@{testCase}[{timestamp}]");
                 }
+
             }
-        }
-
-        private static object ColumnWithDefault(DataRow row, string columnName, object defaultValue)
-        {
-            return row.Table.Columns.Cast<DataColumn>().Any(column => column.ColumnName == columnName) ? row[columnName] : defaultValue;
-        }
-
-        private static Measurement CreateMeasurementFrom(DataRow row, object defaultValue, object defaultIsGood, string valueField,
-            string isGoodField)
-        {
-            var value = ValueWithDefault(row[valueField], defaultValue);
-            var isGood = ValueWithDefault(row[isGoodField], defaultIsGood);
-            return new Measurement(row["timestamp"], value, isGood);
         }
 
         private static string GetTimestamp(string cell)
         {
             // remove the pass/fail indicator by keeping everything after the first colon
-            var timestamp = cell.Split(new[] {':'}, 2)[1];
+            var timestamp = cell.Split(new[] { ':' }, 2)[1];
             if (string.IsNullOrEmpty(timestamp)) return null;
             if (timestamp.StartsWith("[", StringComparison.Ordinal))
             {
@@ -136,30 +123,90 @@ namespace SupportFunctionsTest
         {
             var expected = new TimeSeries();
             var timestamp = DateTime.Parse("2004-03-24", CultureInfo.InvariantCulture);
-            expected.AddMeasurement(new Measurement {Timestamp = timestamp});
-            expected.AddMeasurement(new Measurement {Timestamp = timestamp});
+            expected.AddMeasurement(new Measurement { Timestamp = timestamp });
+            expected.AddMeasurement(new Measurement { Timestamp = timestamp });
             var actual = new TimeSeries();
             var timeSeriesComparison = new TimeSeriesComparison(expected, actual);
             timeSeriesComparison.DoTable(null);
         }
 
-        [TestMethod, TestCategory("Unit"), DeploymentItem("TestData.xml"),
-         DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", "|DataDirectory|\\TestData.xml", "TimeSeriesComparisonDoTable",
-             DataAccessMethod.Sequential)]
-        public void TimeSeriesComparisonDoTableTest()
+        [DataTestMethod, TestCategory("Unit")]
+        [DataRow("double_0.1%_0.001", "0.1%;0.001", "0.001 (1.9 %)", true, 4, 7,
+            new  object[]
+            {
+                new object[] {"1980-01-01T00:00:00.0000000", "both", "50", "50", true, "pass:50", "report:", "report:" },
+                new object[] {"1980-01-01T00:03:00.0000000", "both", "50.0000000414593", "50", "True","pass:50 ~= 50.0000000414593","pass:4.14593E-08", "pass:0.0 %"},
+                new object[] {"1980-01-01T00:06:00.0000000", "both", "49.9752835096486", "49.9739350539787", "False",  "fail:49.9739350539787 != 49.9752835096486", "fail:0.0013484556699", "fail:2.6 %"},
+                new object[] {"1980-01-01T00:09:00.0000000","both",  "49.9480367888638", "49.9469639682952", "False", "fail:49.9469639682952 != 49.9480367888638", "fail:0.0010728205686", "fail:2.1 %"},
+                new object[] {"1980-01-01T00:12:00.0000000", "both", "49.9540729336722", "49.9547465725331", "True", "pass:49.9547465725331 ~= 49.9540729336722", "pass:0.0006736388609", "pass:1.3 %"},
+                new object[] {"1980-01-01T00:15:00.0000000", "both", "49.9626680632779", "49.964159146503", "False", "fail:49.964159146503 != 49.9626680632779", "fail:0.0014910832251", "fail:2.9 %"},
+                new object[] {"1980-01-01T00:18:00.0000000", "both", "49.9626680632779", "False", "False", "fail:[False] expected [49.9626680632779]", "report:", "report:"}
+            }
+        )]
+        [DataRow("double_0.001_rounded", "0.1%:4;0.001:4", "0.001 (1.9 %)", true, 4, 7,
+            new object[]
+            {
+                new object[] {"1980-01-01T00:00:00.0000000", "both", "50", "50", true, "pass:50", "report:", "report:" },
+                new object[] {"1980-01-01T00:03:00.0000000", "both", "50.0000000414593", "50", "True","pass:50 ~= 50","report:", "report:"},
+                new object[] {"1980-01-01T00:06:00.0000000", "both", "49.9752835096486", "49.9739350539787", "False", "fail:49.973935 != 49.975284", "fail:0.001348", "fail:2.6 %"},
+                new object[] {"1980-01-01T00:09:00.0000000","both",  "49.9480367888638", "49.9469639682952", "False", "fail:49.946964 != 49.948037", "fail:0.001073", "fail:2.1 %"},
+                new object[] {"1980-01-01T00:12:00.0000000", "both", "49.9540729336722", "49.9547465725331", "True", "pass:49.954747 ~= 49.954073", "pass:0.000674", "pass:1.3 %"},
+                new object[] {"1980-01-01T00:15:00.0000000", "both", "49.9626680632779", "49.964159146503", "False", "fail:49.964159 != 49.962668", "fail:0.001491", "fail:2.9 %"},
+                new object[] {"1980-01-01T00:18:00.0000000", "both", "49.9626680632779", "False", "False", "fail:[False] expected [49.962668]", "report:", "report:"}
+            }
+        )]
+
+        [DataRow("int_0.1%_missing_surplus", "0.1%", "2 (0.1 %)", true, 3, 5,
+            new object[]
+            {
+                new object[] {"1990-01-01T00:00:00.0000000", "both", "0", "0", true, "pass:0", "report:", "report:"},
+                new object[] {"1990-01-01T00:03:00.0000000", "both",      "2000", "1999", "True",  "pass:1999 ~= 2000","pass:1", "pass:0.1 %"},
+                new object[] {"1990-01-01T00:06:00.0000000", "expected", "1000", null,    "False", "fail:[1000] missing",                "report:",     "report:", "fail:[1990-01-01T00:06:00.0000000] missing" },
+                new object[] {"1990-01-01T00:09:00.0000000","actual",  null, "500", "False", "fail:[500] surplus", "report:", "report:", "fail:[1990-01-01T00:09:00.0000000] surplus"},
+                new object[] {"1990-01-01T00:12:00.0000000", "both", "500", "503", "False", "fail:503 != 500", "fail:3", "fail:0.2 %"}
+            }
+        )]
+
+        [DataRow("string", null, "", true, 1, 2,
+            new object[]
+            {
+                new object[] {"2000-01-01T00:00:00.0000000", "both", "hi1", "hi1", true,"pass:hi1","report:","report:"},
+                new object[] {"2000-01-01T00:03:00.0000000", "both", "hi2", "hi3", false, "fail:[hi3] expected [hi2]","report:","report:"}
+            }
+        )]
+
+        [DataRow("bool", null, "", true, 5, 6,
+            new object[]
+            {
+                new object[] {"2010-01-01T00:00:00.0000000", "both", "True", "True", true,"pass:True","report:","report:"},
+                new object[] {"2010-01-01T00:03:00.0000000", "both", "True", "False", false, "fail:[False] expected [True]","report:","report:" },
+                new object[] {"2010-01-01T00:06:00.0000000", "both", "True", "hi3", false, "fail:[hi3] expected [True]","report:","report:" },
+                new object[] {"2010-01-01T00:09:00.0000000", "both","True", "True", false, "pass:True", "report:", "report:", null, "True", "False", "fail:[False] expected [True]"},
+                new object[] {"2010-01-01T00:12:00.0000000","expected",  "True", null, false, "fail:[True] missing", "report:", "report:", "fail:[2010-01-01T00:12:00.0000000] missing"},
+                new object[] {"2010-01-01T00:15:00.0000000","actual",  null, "True", false, "fail:[True] surplus", "report:", "report:", "fail:[2010-01-01T00:15:00.0000000] surplus", null, null, "fail:[True] surplus" }
+            }
+        )]
+        [DataRow("allgood", null, "", true, 0, 4,
+            new object[]
+            {
+                new object[] {"2020-01-01T00:00:00.0000000", "both", "10", "10", true, "pass:10", "report:", "report:" },
+                new object[] {"2020-01-01T00:03:00.0000000", "both", "12", "12", true, "pass:12", "report:", "report:" },
+                new object[] {"2020-01-01T00:06:00.0000000", "both", "13", "13", true, "pass:13", "report:", "report:" },
+                new object[] {"2020-01-01T00:09:00.0000000", "both", "14", "14", true, "pass:14", "report:", "report:" }
+            }
+        )]
+
+        public void TimeSeriesComparisonDoTableTest(string testCase, string toleranceString, string usedTolerance, bool isGood, long failures, long dataPoints,
+             object[] data)
         {
-            var testCase = TestContext.DataRow["testcase"].ToString();
             var actualSeries = new TimeSeries();
             var expectedSeries = new TimeSeries();
             var expectedResults = new Dictionary<string, Dictionary<string, string>>();
-            var data = TestContext.DataRow.GetChildRows("TimeSeriesComparisonDoTable_data");
-            ArrangeDataForDoTable(data, expectedSeries, actualSeries, expectedResults);
+            ArrangeDataForDoTable(data, expectedSeries, actualSeries, expectedResults, isGood);
 
-            var toleranceString = ColumnWithDefault(TestContext.DataRow, "tolerance", null)?.ToString();
             var timeSeriesComparison = string.IsNullOrEmpty(toleranceString)
                 ? new TimeSeriesComparison(expectedSeries, actualSeries)
                 : new TimeSeriesComparison(expectedSeries, actualSeries, Tolerance.Parse(toleranceString));
-            //var displayTolerance = ColumnWithDefault(TestContext.DataRow, "displayTolerance", string.Empty)?.ToString();
             var result = timeSeriesComparison.DoTable(null);
 
             Assert.IsTrue(result.Count > 0, $"Result count = 0 for {testCase}");
@@ -173,9 +220,9 @@ namespace SupportFunctionsTest
 
             CheckDataRows(expectedResults, result, testCase);
 
-            Assert.AreEqual(TestContext.DataRow["failures"].To<long>(), timeSeriesComparison.FailureCount, $"FailureCount {testCase}");
-            Assert.AreEqual(TestContext.DataRow["datapoints"].To<long>(), timeSeriesComparison.PointCount, $"PointCount {testCase}");
-            Assert.AreEqual(TestContext.DataRow["usedTolerance"].ToString(), timeSeriesComparison.UsedTolerance, $"UsedTolerance {testCase}");
+            Assert.AreEqual(failures , timeSeriesComparison.FailureCount, $"FailureCount {testCase}");
+            Assert.AreEqual(dataPoints, timeSeriesComparison.PointCount, $"PointCount {testCase}");
+            Assert.AreEqual(usedTolerance, timeSeriesComparison.UsedTolerance, $"UsedTolerance {testCase}");
         }
 
         [TestMethod, TestCategory("Unit")]
@@ -185,7 +232,7 @@ namespace SupportFunctionsTest
             Assert.AreEqual(0, comparison.FailureCount);
         }
 
-        [TestMethod, TestCategory("Integration"), DeploymentItem("TestData\\Base64ResultMissingExpected.html")]
+        [TestMethod, TestCategory("Integration"), DeploymentItem(ChartFolder + "Base64ResultMissingExpected.html")]
         public void TimeSeriesComparisonGraphEmptyExpectedNumericalTest()
         {
             var expected = new TimeSeries();
@@ -232,7 +279,7 @@ namespace SupportFunctionsTest
             Assert.IsTrue(timeseriesComparison.TimeSpanSeconds.IsZero());
         }
 
-        [TestMethod, TestCategory("Integration"), DeploymentItem("TestData\\Base64AllBelowXAxis.html")]
+        [TestMethod, TestCategory("Integration"), DeploymentItem(ChartFolder +"Base64AllBelowXAxis.html")]
         public void TimeSeriesComparisonGraphNumericalAllBelowXAxisTest()
         {
             var expected = new TimeSeries();
@@ -264,7 +311,7 @@ namespace SupportFunctionsTest
             Assert.AreEqual(expectedResult, result);
         }
 
-        [TestMethod, TestCategory("Integration"), DeploymentItem("TestData\\Base64ResultWithMissingValues.html")]
+        [TestMethod, TestCategory("Integration"), DeploymentItem(ChartFolder + "Base64ResultWithMissingValues.html")]
         public void TimeSeriesComparisonGraphNumericalWithMissingValuesTest()
         {
             var expected = new TimeSeries();
@@ -291,13 +338,13 @@ namespace SupportFunctionsTest
                 Value = "-1"
             });
             var timeSeriesComparison = new TimeSeriesComparison(expected, actual);
-            var result = timeSeriesComparison.GraphX(640, 480);
+            var result = timeSeriesComparison.GraphX(480, 320);
             var expectedResult = File.ReadAllText("Base64ResultWithMissingValues.html");
             Assert.AreEqual(expectedResult, result);
         }
 
-        [TestMethod, TestCategory("Unit"), DeploymentItem("TestData\\Base64SecondOrderResponseLimitedY.html"),
-         DeploymentItem("TestData\\Base64SecondOrderResponse.html")]
+        [TestMethod, TestCategory("Unit"), DeploymentItem(ChartFolder + "Base64SecondOrderResponseLimitedY.html"),
+         DeploymentItem(ChartFolder + "Base64SecondOrderResponse.html")]
         public void TimeSeriesComparisonGraphSecondOrderResponseTest()
         {
             const double zetaExpected = 0.205;
@@ -353,7 +400,7 @@ namespace SupportFunctionsTest
             Assert.AreEqual(expectedResult2, result2);
         }
 
-        [TestMethod, TestCategory("Integration"), DeploymentItem("TestData\\Base64SimpleResult.html")]
+        [TestMethod, TestCategory("Integration"), DeploymentItem(ChartFolder + "Base64SimpleResult.html")]
         public void TimeSeriesComparisonGraphSimpleNumericalTest()
         {
             var expected = new TimeSeries();
@@ -415,8 +462,5 @@ namespace SupportFunctionsTest
             Assert.AreEqual("0", subset.First().Value.Value.ActualValueOut);
             Assert.AreEqual("10", subset.Last().Value.Value.ActualValueOut);
         }
-
-        private static object ValueWithDefault(object value, object defaultValue) =>
-            string.IsNullOrEmpty(value.ToString()) ? defaultValue : value;
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2020 Rik Essenius
+﻿// Copyright 2016-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -183,18 +182,15 @@ namespace SupportFunctions.Model
             return IsAtEnd(index) ? emptyDictionary : ExtractTableAt(index);
         }
 
-        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         private static void Log(IEnumerable<string> data, string title)
         {
-            using (var file = new StreamWriter("FitNessePage.log", true))
+            using var file = new StreamWriter("FitNessePage.log", true);
+            file.WriteLine("---" + title + "---");
+            foreach (var line in data)
             {
-                file.WriteLine("---" + title + "---");
-                foreach (var line in data)
-                {
-                    file.WriteLine(line);
-                }
-                file.Close();
+                file.WriteLine(line);
             }
+            file.Close();
         }
 
         private bool NeedSpacerAtEnd(int index) => index < _line.Count && IsTableLine(_line[index]);
@@ -203,13 +199,11 @@ namespace SupportFunctions.Model
 
         private static IEnumerable<string> ReadLines(Stream stream)
         {
-            using (var reader = new StreamReader(stream))
+            using var reader = new StreamReader(stream);
+            string line;
+            while ((line = reader.ReadLine()) != null)
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    yield return line;
-                }
+                yield return line;
             }
         }
 

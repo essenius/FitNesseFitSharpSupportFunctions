@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2020 Rik Essenius
+﻿// Copyright 2015-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -22,7 +22,8 @@ using SupportFunctions.Utilities;
 namespace SupportFunctions
 {
     /// <summary>Frequently needed functions for FitNesse tests. Useful as library</summary>
-    [SuppressMessage("ReSharper", "ParameterTypeCanBeEnumerable.Global", Justification = "Required for FitSharp")]
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "FitSharp entry point")]
+    [SuppressMessage("ReSharper", "ParameterTypeCanBeEnumerable.Global", Justification = "FitSharp would not see it")]
     public sealed class CommonFunctions
     {
         /// <summary>Get or set the default date format. Formatting follows the standard .Net conventions</summary>
@@ -59,9 +60,7 @@ namespace SupportFunctions
         public static object CloneSymbol(object symbol) => symbol;
 
         [Obsolete("Use Concatenate instead")]
-#pragma warning disable 1591 // We don't need XML documentation for obsolete functions
         public static string Concat(string[] input) => Concatenate(input);
-#pragma warning restore 1591
 
         /// <summary>Concatenate a list of values into a single string value</summary>
         public static string Concatenate(string[] input) => input.Aggregate(string.Empty, (current, entry) => current + entry);
@@ -79,20 +78,19 @@ namespace SupportFunctions
         private static object EvaluateExpression(string expression, Type type, IEnumerable<string> parameters)
         {
             // making use of the fact that DataTables come with a handy eval function
-            using (var dataTable = new DataTable {Locale = CultureInfo.InvariantCulture})
+            using var dataTable = new DataTable {Locale = CultureInfo.InvariantCulture};
+            var columnDictionary = parameters?.ToDictionary() ?? new Dictionary<string, string>();
+            columnDictionary.Add("Eval", expression);
+            foreach (var entry in columnDictionary)
             {
-                var columnDictionary = parameters?.ToDictionary() ?? new Dictionary<string, string>();
-                columnDictionary.Add("Eval", expression);
-                foreach (var entry in columnDictionary)
-                {
-                    // we take the object type for all parameters, and the specified type for the evaluation result
-                    var paramColumn = new DataColumn(entry.Key, entry.Key == "Eval" ? type : typeof(object), entry.Value);
-                    dataTable.Columns.Add(paramColumn);
-                }
-                // all columns are expressions so no need to add data. We just need a row to refer to.
-                dataTable.Rows.Add(dataTable.NewRow());
-                return dataTable.Rows[0]["Eval"];
+                // we take the object type for all parameters, and the specified type for the evaluation result
+                var paramColumn = new DataColumn(entry.Key, entry.Key == "Eval" ? type : typeof(object), entry.Value);
+                dataTable.Columns.Add(paramColumn);
             }
+
+            // all columns are expressions so no need to add data. We just need a row to refer to.
+            dataTable.Rows.Add(dataTable.NewRow());
+            return dataTable.Rows[0]["Eval"];
         }
 
         /// <summary>Evaluate an expression</summary>

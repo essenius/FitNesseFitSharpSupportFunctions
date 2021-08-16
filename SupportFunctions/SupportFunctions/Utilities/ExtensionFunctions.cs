@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2020 Rik Essenius
+﻿// Copyright 2015-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -10,12 +10,9 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
-using Microsoft.CSharp;
 using static System.FormattableString;
 using static System.Globalization.CultureInfo;
 
@@ -23,42 +20,28 @@ namespace SupportFunctions.Utilities
 {
     internal static class ExtensionFunctions
     {
-        private static Dictionary<string, Type> _builtInTypeDictionary;
-
-        private static Dictionary<string, Type> BuiltInTypeDictionary
+        // Earlier we had a reflection mechanism using CodeDom which isn't available in .NET Core.
+        // Now hard coding it since it was not worth the effort to find a new mechanism - this is static anyway.
+        private static readonly Dictionary<string, Type> BuiltInTypeDictionary = new Dictionary<string, Type>
         {
-            get
-            {
-                // Fill the dictionary only once.
-                if (_builtInTypeDictionary != null) return _builtInTypeDictionary;
-
-                // Date is a special case (defined in this fixture)
-                _builtInTypeDictionary = new Dictionary<string, Type> {{"DATE", typeof(Date)}};
-
-                // Get reference to mscorlib using an arbitrary type in it
-                var mscorlib = Assembly.GetAssembly(typeof(int));
-
-                // Potential hits are types with the namespace System.
-                // Further filtering (e.g. only public, or eliminating enums) did not make it faster.
-                var systemTypes = mscorlib.DefinedTypes
-                    .Where(t => t.Namespace != null && t.Namespace.Equals("System", StringComparison.Ordinal));
-                using (var provider = new CSharpCodeProvider())
-                {
-                    foreach (var type in systemTypes)
-                    {
-                        var typeRef = new CodeTypeReference(type);
-                        var friendlyTypeName = provider.GetTypeOutput(typeRef);
-
-                        // Ignore qualified types.
-                        if (!friendlyTypeName.Contains('.'))
-                        {
-                            _builtInTypeDictionary.Add(friendlyTypeName.ToUpperInvariant(), type);
-                        }
-                    }
-                }
-                return _builtInTypeDictionary;
-            }
-        }
+            {"DATE", typeof(Date)},
+            {"OBJECT", typeof(object)},
+            {"STRING", typeof(string)},
+            {"BOOL", typeof(bool)},
+            {"BYTE", typeof(byte)},
+            {"CHAR", typeof(char)},
+            {"DECIMAL", typeof(decimal)},
+            {"DOUBLE", typeof(double)},
+            {"SHORT", typeof(short)},
+            {"INT", typeof(int)},
+            {"LONG", typeof(long)},
+            {"SBYTE", typeof(sbyte)},
+            {"FLOAT", typeof(float)},
+            {"USHORT", typeof(ushort)},
+            {"UINT", typeof(uint)},
+            {"ULONG", typeof(ulong)},
+            {"VOID", typeof(void)}
+        };
 
         public static void AddWithCheck<T>(this IDictionary<DateTime, T> dictionary, DateTime key, T value, string id)
         {
@@ -96,7 +79,7 @@ namespace SupportFunctions.Utilities
             if (int.TryParse(stringValue, NumberStyles.Integer, InvariantCulture, out _)) return typeof(int);
             if (long.TryParse(stringValue, NumberStyles.Integer, InvariantCulture, out _)) return typeof(long);
             if (double.TryParse(stringValue, NumberStyles.Any, InvariantCulture, out _)) return typeof(double);
-            if (double.TryParse(stringValue, NumberStyles.Any, CurrentCulture, out _)) return typeof(double);
+            if (double.TryParse(stringValue, NumberStyles.Any, CurrentUICulture, out _)) return typeof(double);
             return bool.TryParse(stringValue, out _) ? typeof(bool) : typeof(string);
         }
 
@@ -142,7 +125,7 @@ namespace SupportFunctions.Utilities
             {
                 try
                 {
-                    return Convert.ChangeType(value, type ?? targetType, CurrentCulture);
+                    return Convert.ChangeType(value, type ?? targetType, CurrentUICulture);
                 }
                 catch (Exception fe) when (fe is FormatException || fe is InvalidCastException)
                 {

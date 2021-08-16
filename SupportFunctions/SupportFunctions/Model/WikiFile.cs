@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2020 Rik Essenius
+﻿// Copyright 2015-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -38,7 +38,6 @@ namespace SupportFunctions.Model
             _wikiPagePath = Path.Combine(wikiRoot, _wikiPage);
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public static string MimeType(byte[] imageData)
         {
             var formatDictionary = new Dictionary<Guid, string>
@@ -58,10 +57,8 @@ namespace SupportFunctions.Model
                 Guid id;
                 using (var ms = new MemoryStream(imageData))
                 {
-                    using (var img = Image.FromStream(ms))
-                    {
-                        id = img.RawFormat.Guid;
-                    }
+                    using var img = Image.FromStream(ms);
+                    id = img.RawFormat.Guid;
                 }
                 if (formatDictionary.ContainsKey(id)) return formatDictionary[id];
             }
@@ -77,7 +74,7 @@ namespace SupportFunctions.Model
 
         public string UniquePathFor(string baseName, long ticks)
         {
-            if (baseName == null) baseName = string.Empty;
+            baseName ??= string.Empty;
             var name = Path.GetFileNameWithoutExtension(baseName);
             var extension = Path.GetExtension(baseName);
             var timestamp = new DateTime(ticks).ToString("yyyyMMddHHmmssffff", CultureInfo.InvariantCulture);
@@ -96,7 +93,7 @@ namespace SupportFunctions.Model
         {
             Requires.NotNull(path, nameof(path));
             return !path.StartsWith(_wikiRoot, StringComparison.OrdinalIgnoreCase)
-                ? null
+                ? null 
                 : "<img src='http://" + (_wikiPage + path.Substring(_wikiRoot.Length)).Replace("\\", "/") + "'/>";
         }
     }
