@@ -5,7 +5,7 @@
     <LangVersion>8.0</LangVersion>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <AnalysysMode>AllEnabledByDefault</AnalysysMode>
-    <Version>3.0.0-beta</Version>
+    <Version>3.0.0-beta-1</Version>
     <Authors>Rik Essenius</Authors>
     <Description>Support functions such as Echo, Times Series, Dictionary Library objects, date functions for FitNesse/FitSharp</Description>
     <Copyright>Copyright © Rik Essenius 2015-2021</Copyright>
@@ -20,13 +20,10 @@
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="System.DirectoryServices" Version="5.0.0" />
     <PackageReference Include="System.DirectoryServices.AccountManagement" Version="5.0.0" />
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+    <PackageReference Include="LiveChartsCore.SkiaSharpView" Version="2.0.0-beta.40" />
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute"> 
       <_Parameter1>SupportFunctionsTest</_Parameter1>
     </AssemblyAttribute>
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
-    <PackageReference Include="LiveChartsCore.SkiaSharpView" Version="2.0.0-beta.40" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' != 'net5.0' ">
@@ -34,6 +31,11 @@
     <Reference Include="System.Web"  />
     <Reference Include="System.Web.DataVisualization"  />
     <Reference Include="System.Web.Extensions"  />
+    <!-- Nuget doesn't pick up conditional references, but we don't want this reference with net461 -->
+    <PackageReference Include="LiveChartsCore.SkiaSharpView" Version="2.0.0-beta.40"  >
+      <ExcludeAssets>All</ExcludeAssets>
+    </PackageReference>
+
   </ItemGroup>
 
 </Project>

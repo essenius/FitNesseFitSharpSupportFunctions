@@ -58,9 +58,9 @@ namespace SupportFunctions.Model
 
         private static void AddPoint(ISeries series, double x, double? y)
         {
+            if (y == null || double.IsNaN(y.Value)) return;
             var values = series.Values as List<ObservablePoint>;
             Debug.Assert(values != null, nameof(values) + " != null");
-            if (y == null) return;
             var point = new ObservablePoint(x, y);
             values.Add(point);
         }

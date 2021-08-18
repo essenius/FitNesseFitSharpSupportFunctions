@@ -107,6 +107,8 @@ namespace SupportFunctionsTest
             const double maxY = 50.02;
             table.Add(startTimestamp, new MeasurementComparisonMock("49.95", "49.95", CompareOutcome.None));
             table.Add(startTimestamp.AddSeconds(1), new MeasurementComparisonMock("50.0", "50.0", CompareOutcome.None));
+            // Ading a double NaN to check whether that is ignored
+            table.Add(startTimestamp.AddSeconds(2), new MeasurementComparisonMock("NaN", "NaN", CompareOutcome.None));
             var chart = new TimeSeriesChart();
             var base64Result = chart.ChartInHtmlFor(table,
                 new AxisLimits(startTimestamp, startTimestamp.AddSeconds(1), new Dimension(minY, maxY)),

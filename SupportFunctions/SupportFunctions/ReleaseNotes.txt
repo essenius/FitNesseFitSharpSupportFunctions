@@ -17,3 +17,4 @@
       TypeDictionary now gets the standard types from inspecting mscorlib instead of hardcoding.
       Introduced Requires to replace Debug.Assert
 3.0.0-beta: Migration to .NET 5.0  (dual build .NET 4.6.1 and .NET 5.0) and LiveCharts 2 beta (.NET 5.0 only)
+3.0.0-beta-1: Bug fix: series with NaN entries were not displayed. Refactored conditional reference of Live Charts to make NuGet pick it up.
