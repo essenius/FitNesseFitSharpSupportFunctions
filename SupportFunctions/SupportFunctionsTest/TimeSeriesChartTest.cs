@@ -10,25 +10,32 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SupportFunctions.Model;
 using SupportFunctions.Utilities;
-using static System.FormattableString;
 
 namespace SupportFunctionsTest
 {
-
     [TestClass]
     public class TimeSeriesChartTest
     {
 #if NET5_0
-        private const string ChartFolder = "TestDataLive\\";
+        public const string ChartFolder = "TestDataLive\\";
 #else
-        private const string ChartFolder = "TestDataWebUI\\";
+        public const string ChartFolder = "TestDataWebUI\\";
 #endif
+        private const string ChartOutputFolder = "TestOutput-" + ChartFolder;
+
+        [ClassInitialize, SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "False positive")]
+        public static void ClassInitialize(TestContext testContext)
+        {
+            Directory.CreateDirectory(ChartOutputFolder);
+        }
 
         private static MeasurementComparisonDictionary SecondOrderGraphWithValueIssues(DateTime startTimestamp)
         {
@@ -61,7 +68,18 @@ namespace SupportFunctionsTest
             1 - Math.Exp(-zeta * omega * time) / Math.Sqrt(1 - Math.Pow(zeta, 2)) *
             Math.Sin(Math.Sqrt(1 - Math.Pow(zeta, 2)) * omega * time + theta);
 
-        [TestMethod, TestCategory("Unit"), DeploymentItem(ChartFolder + "Base64MinutesTimeRange.html")]
+        public static void AssertChartImage(string actual, string fileName, string testName)
+        {
+            var outputFile = Path.Combine(ChartOutputFolder, fileName);
+            File.WriteAllText(outputFile, actual);
+            var expected = File.ReadAllText(fileName);
+            Debug.Print($"OutputFile: {Path.GetFullPath(outputFile)}");
+            Assert.AreEqual(expected, actual, $"Test: {testName}, file: {fileName}");
+        }
+
+        private const string MinutesTimeRangeExpectedFile = "Base64MinutesTimeRange.html";
+
+        [TestMethod, TestCategory("Unit"), DeploymentItem(ChartFolder + MinutesTimeRangeExpectedFile)]
         public void TimeSeriesChartMinutesTimeTest()
         {
             var table = new MeasurementComparisonDictionary();
@@ -78,11 +96,12 @@ namespace SupportFunctionsTest
             var base64Result = chart.ChartInHtmlFor(table,
                 new AxisLimits(startTimestamp, endTimestamp, new Dimension(minY, maxY)),
                 new Size(800, 600));
-            var expectedResult = File.ReadAllText("Base64MinutesTimeRange.html");
-            Assert.AreEqual(expectedResult, base64Result);
+            AssertChartImage(base64Result, MinutesTimeRangeExpectedFile, nameof(TimeSeriesChartMinutesTimeTest));
         }
 
-        [TestMethod, TestCategory("Unit"), DeploymentItem(ChartFolder + "Base64SecondOrderResponseLimitedY.html")]
+        private const string SecondOrderResponseLimitedYFile = "Base64SecondOrderResponseLimitedY.html";
+
+        [TestMethod, TestCategory("Unit"), DeploymentItem(ChartFolder + SecondOrderResponseLimitedYFile)]
         public void TimeSeriesChartSecondOrderResponseTest()
         {
             var startTimestamp = DateTime.Today;
@@ -90,14 +109,15 @@ namespace SupportFunctionsTest
             var endTimestamp = table.Last().Key;
             var timeSeriesChart = new TimeSeriesChart();
             var result = timeSeriesChart.ChartDataFor(table,
-                new AxisLimits(startTimestamp, endTimestamp, new Dimension(0.7, 1.7)),
+                new AxisLimits(startTimestamp, endTimestamp, new Dimension(0.7, 1.6)),
                 new Size(800, 600));
             result = WebFunctions.AsImg(result);
-            var expectedResult = File.ReadAllText("Base64SecondOrderResponseLimitedY.html");
-            Assert.AreEqual(expectedResult, result);
+            AssertChartImage(result, SecondOrderResponseLimitedYFile, nameof(TimeSeriesChartSecondOrderResponseTest));
         }
 
-        [TestMethod, TestCategory("Unit"), DeploymentItem(ChartFolder + "Base64SmallRange.html")]
+        private const string SmallRangeFile = "Base64SmallRange.html";
+
+        [TestMethod, TestCategory("Unit"), DeploymentItem(ChartFolder + SmallRangeFile)]
         public void TimeSeriesChartVerySmallRangeTest()
         {
             var table = new MeasurementComparisonDictionary();
@@ -113,8 +133,7 @@ namespace SupportFunctionsTest
             var base64Result = chart.ChartInHtmlFor(table,
                 new AxisLimits(startTimestamp, startTimestamp.AddSeconds(1), new Dimension(minY, maxY)),
                 new Size(800, 600));
-            var expectedResult = File.ReadAllText("Base64SmallRange.html");
-            Assert.AreEqual(expectedResult, base64Result);
+            AssertChartImage(base64Result, SmallRangeFile, nameof(TimeSeriesChartVerySmallRangeTest));
         }
     }
 }

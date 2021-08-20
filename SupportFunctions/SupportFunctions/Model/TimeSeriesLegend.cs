@@ -70,11 +70,11 @@ namespace SupportFunctions.Model
                 IsAntialias = true,
                 IsStroke = series.Stroke != null
             };
-            if (series.Stroke is PaintTask lineStroke)
+            if (series.Stroke is Paint lineStroke)
             {
                 strokePaint.Color = lineStroke.Color;
                 strokePaint.StrokeWidth = lineStroke.StrokeThickness;
-                if (lineStroke.PathEffect == null) return strokePaint;
+                if (lineStroke.PathEffect == null) return strokePaint; 
                 lineStroke.PathEffect.CreateEffect(null);
                 strokePaint.PathEffect = lineStroke.PathEffect.SKPathEffect;
             }
@@ -111,7 +111,7 @@ namespace SupportFunctions.Model
 
                 // This is a bit of a shortcut, all geometries become circles. Not an issue right now
                 // since we only use a circle. Still need to figure out how to use geometries more effectively.
-                if (entry.GeometrySize > 0 && entry.GeometryFill is PaintTask geometryFill)
+                if (entry.GeometrySize > 0 && entry.GeometryFill is Paint geometryFill)
                 {
                     DrawCircle(new SKPoint(cursor.GeometryX, cursor.LineY), entry.GeometrySize, geometryFill.Color);
                 }

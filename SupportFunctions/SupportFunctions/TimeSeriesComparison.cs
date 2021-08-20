@@ -36,12 +36,12 @@ namespace SupportFunctions
         private static readonly Dictionary<string, Func<IMeasurementComparison, object>> GetTableValues =
             new Dictionary<string, Func<IMeasurementComparison, object>>
             {
-                {TimestampCaption, result => result.Timestamp.TableResult(result.Timestamp.ValueMessage)},
-                {ValueCaption, result => result.Value.TableResult(result.Value.ValueMessage)},
-                {DeltaCaption, result => result.Value.TableResult(result.Value.DeltaMessage)},
-                {DeltaPercentageCaption, result => result.Value.TableResult(result.Value.DeltaPercentageMessage)},
-                {IsGoodCaption, result => result.IsGood.TableResult(result.IsGood.ValueMessage)},
-                {IssueCaption, result => result.TableResult(result.OutcomeMessage)}
+                { TimestampCaption, result => result.Timestamp.TableResult(result.Timestamp.ValueMessage) },
+                { ValueCaption, result => result.Value.TableResult(result.Value.ValueMessage) },
+                { DeltaCaption, result => result.Value.TableResult(result.Value.DeltaMessage) },
+                { DeltaPercentageCaption, result => result.Value.TableResult(result.Value.DeltaPercentageMessage) },
+                { IsGoodCaption, result => result.IsGood.TableResult(result.IsGood.ValueMessage) },
+                { IssueCaption, result => result.TableResult(result.OutcomeMessage) }
             };
 
         private readonly TimeSeries _actual;
@@ -119,19 +119,20 @@ namespace SupportFunctions
             var parameters = new TimeSeriesGraphParameters(rawParameters);
             var startTimestamp = parameters.StartTimestamp;
             var endTimestamp = parameters.EndTimestamp;
+            // we need to recalculate the boundary values if limits were provided
             var recalculateNeeded = startTimestamp != null || endTimestamp != null;
-            var minValue = GetValueWithDefault(parameters.MinValue, recalculateNeeded, MinValue);
-            var maxValue = GetValueWithDefault(parameters.MaxValue, recalculateNeeded, MaxValue);
             var dataSubset = recalculateNeeded ? _result.Subset(startTimestamp, endTimestamp) : _result;
             if (dataSubset.Count == 0) return NoDataCaption;
-            var yDimension = Dimension.GetExtremeValues(dataSubset.Values, minValue, maxValue);
+            var yDimension = Dimension.GetValueRange(dataSubset.Values, parameters.MinValue, parameters.MaxValue);
             startTimestamp ??= dataSubset.Keys.First();
             endTimestamp ??= dataSubset.Keys.Last();
 
             var chart = new TimeSeriesChart();
-            return chart.ChartInHtmlFor(dataSubset,
+            return chart.ChartInHtmlFor(
+                dataSubset,
                 new AxisLimits(startTimestamp.Value, endTimestamp.Value, yDimension),
-                new Size(parameters.Width, parameters.Height));
+                new Size(parameters.Width, parameters.Height)
+            );
         }
 
         private Collection<object> CreateQueryResult()
@@ -143,12 +144,12 @@ namespace SupportFunctions
                 // string.Empty is to hide null values
                 var cells = new Collection<object>
                 {
-                    new Collection<string> {TimestampCaption, comparison.Timestamp.ActualValueOut},
-                    new Collection<string> {ValueCaption, string.Empty + comparison.Value.ValueMessage},
-                    new Collection<string> {DeltaCaption, string.Empty + comparison.Value.DeltaMessage},
-                    new Collection<string> {DeltaPercentageCaption, string.Empty + comparison.Value.DeltaPercentageMessage},
-                    new Collection<string> {IsGoodCaption, string.Empty + comparison.IsGood.ValueMessage},
-                    new Collection<string> {IssueCaption, comparison.OutcomeMessage}
+                    new Collection<string> { TimestampCaption, comparison.Timestamp.ActualValueOut },
+                    new Collection<string> { ValueCaption, string.Empty + comparison.Value.ValueMessage },
+                    new Collection<string> { DeltaCaption, string.Empty + comparison.Value.DeltaMessage },
+                    new Collection<string> { DeltaPercentageCaption, string.Empty + comparison.Value.DeltaPercentageMessage },
+                    new Collection<string> { IsGoodCaption, string.Empty + comparison.IsGood.ValueMessage },
+                    new Collection<string> { IssueCaption, comparison.OutcomeMessage }
                 };
                 rows.Add(cells);
             }
@@ -183,9 +184,6 @@ namespace SupportFunctions
             return resultTable;
         }
 
-        private static double? GetValueWithDefault(double? parameterInput, bool useNull, double fallback) =>
-            parameterInput ?? (useNull ? (double?) null : fallback);
-
         /// <summary>html img element with an in-line base-64 html image containing a chart of the comparison</summary>
         public string Graph() => Graph(new Dictionary<string, string>());
 
@@ -197,8 +195,8 @@ namespace SupportFunctions
         {
             var dict = new Dictionary<string, string>
             {
-                {"width", width.To<string>()},
-                {"height", height.To<string>()}
+                { "width", width.To<string>() },
+                { "height", height.To<string>() }
             };
             return Graph(dict);
         }

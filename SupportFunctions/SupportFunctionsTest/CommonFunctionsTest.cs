@@ -46,31 +46,6 @@ namespace SupportFunctionsTest
             Assert.AreEqual("August 28, 1969", date.ToString());
         }
 
-
-        /*[TestMethod, TestCategory("Unit")]
-        public void CommonFunctionsDoOnTest()
-        {
-            const string testString = @"abcdef";
-            Assert.AreEqual("de", CommonFunctions.DoOnWithParams("Substring", testString, "3", "2"));
-            Assert.AreEqual("def", CommonFunctions.DoOnWithParam("SubString", testString, "3"));
-            Assert.AreEqual(6, CommonFunctions.DoOn("Length", testString));
-            const int maxInt = int.MaxValue;
-            var maxIntString = maxInt.To<string>();
-            Assert.AreEqual(10, CommonFunctions.DoOn("lEnGth", maxIntString));
-            Assert.AreEqual("2147483647", CommonFunctions.DoOnWithParams("tostring", maxIntString));
-            Assert.AreEqual("47", CommonFunctions.DoOnWithParams("Substring", maxIntString, "8"));
-            Assert.AreEqual("System.Int32", CommonFunctions.DoOnWithParams("GetType", maxIntString).ToString());
-            var tooBigForInt = CommonFunctions.EvaluateAs("1. + " + maxInt, "long").To<string>();
-            //var tooBigForInt = (1L + maxInt).To<string>();
-            Assert.AreEqual("System.Int64", CommonFunctions.DoOnWithParams("GetType", tooBigForInt).ToString());
-            Assert.AreEqual(false, CommonFunctions.DoOnWithParams("Contains", testString, "dg"));
-            Assert.AreEqual(4.0, CommonFunctions.DoOnWithParams("Math.Sqrt", "16.0"));
-            Assert.AreEqual((byte) 255, CommonFunctions.DoOn("byte.MaxValue", null));
-            Assert.AreEqual(Math.PI, CommonFunctions.DoOn("mAtH.pi", string.Empty));
-            Assert.AreEqual(string.Empty, CommonFunctions.DoOn("Empty", null));
-            Assert.AreEqual(-1M, CommonFunctions.Do("Decimal.MinusOne"));
-        } */
-
         [TestMethod, TestCategory("Unit")]
         public void CommonFunctionsEchoDictTest()
         {

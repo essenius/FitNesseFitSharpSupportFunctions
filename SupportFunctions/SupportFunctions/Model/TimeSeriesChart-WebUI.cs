@@ -13,7 +13,7 @@
 
 #if NET5_0 == false
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Web.UI.DataVisualization.Charting;
@@ -28,9 +28,18 @@ namespace SupportFunctions.Model
         private const string ChartLegend = "Legend";
         private const string ExpectedCaption = "Expected";
         private const string FailCaption = "Fail";
+        private const int LineThickness = 3;
+        private const int MaxTextSize = 10;
+        private const int MinTextSize = 7;
+        private const int TextScalingFactor = 50;
         private const string XAxisTitleTemplate = "Time ({0})";
         private const string YAxisTitle = "Value";
+
+        private static readonly Color ActualColor = Color.MidnightBlue;
         private static readonly Color AxisColor = Color.DarkSlateGray;
+        private static readonly Color ChartColor = Color.WhiteSmoke;
+        private static readonly Color ExpectedColor = Color.MediumAquamarine;
+        private static readonly Color FailColor = Color.Crimson;
         private static readonly Color MajorGridColor = Color.DarkGray;
         private static readonly Color MinorGridColor = Color.Silver;
 
@@ -39,6 +48,7 @@ namespace SupportFunctions.Model
         private Chart _chart;
         private Series _expectedSeries;
         private Series _failSeries;
+        private int _textSize;
 
         public void Dispose()
         {
@@ -50,9 +60,11 @@ namespace SupportFunctions.Model
         {
             Requires.NotNull(series.Points, $"{nameof(series)}.{nameof(series.Points)}");
             if (y == null) return;
-            using var point = new DataPoint();
-            point.XValue = x;
-            point.YValues = new[] { y.Value };
+            using var point = new DataPoint
+            {
+                XValue = x,
+                YValues = new[] { y.Value }
+            };
             series.Points.Add(point);
         }
 
@@ -93,38 +105,41 @@ namespace SupportFunctions.Model
             return seriesType == SeriesType.Expected ? expectedValue : failValue;
         }
 
-        [SuppressMessage("ReSharper", "UseNullPropagation", Justification = "Conflicts with CA2213")]
         private void Dispose(bool disposing)
         {
             if (!disposing) return;
-            if (_chart != null) _chart.Dispose();
-            if (_actualSeries != null) _actualSeries.Dispose();
-            if (_expectedSeries != null) _expectedSeries.Dispose();
-            if (_failSeries != null) _failSeries.Dispose();
-            if (_area != null) _area.Dispose();
+            _chart?.Dispose();
+            _actualSeries?.Dispose();
+            _expectedSeries?.Dispose();
+            _failSeries?.Dispose();
+            _area?.Dispose();
         }
 
         ~TimeSeriesChart() => Dispose(false);
 
-        [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer", Justification = "conflicts with CA2000"),
-         SuppressMessage("Style", "IDE0017:Simplify object initialization", Justification = "conflicts with CA2000")]
         private void InitChart(Size size)
         {
-            _chart = new Chart();
-            _chart.AntiAliasing = AntiAliasingStyles.All;
-            _chart.TextAntiAliasingQuality = TextAntiAliasingQuality.High;
-            _chart.Width = size.Width;
-            _chart.Height = size.Height;
+            _chart = new Chart
+            {
+                AntiAliasing = AntiAliasingStyles.All,
+                TextAntiAliasingQuality = TextAntiAliasingQuality.High,
+                Width = size.Width,
+                Height = size.Height
+            };
+            _textSize = Math.Max(Math.Min(size.Width / TextScalingFactor, MaxTextSize), MinTextSize);
         }
 
-        [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer", Justification = "conflicts with CA2000"),
-         SuppressMessage("Style", "IDE0017:Simplify object initialization", Justification = "conflicts with CA2000")]
         private void InitChartArea()
         {
-            _area = new ChartArea(ChartAreaName);
-            _area.BackColor = Color.WhiteSmoke;
-            _area.BackSecondaryColor = Color.White;
-            _area.BackGradientStyle = GradientStyle.TopBottom;
+            _area = new ChartArea(ChartAreaName)
+            {
+                BackColor = ChartColor,
+                BackSecondaryColor = Color.White,
+                BackGradientStyle = GradientStyle.TopBottom,
+                BorderColor = MinorGridColor,
+                BorderWidth = 1,
+                BorderDashStyle = ChartDashStyle.Solid
+            };
         }
 
         private void InitSeries(MeasurementComparisonDictionary sourceData, DateTime baseTimestamp, TimeUnitForDisplay timeUnit)
@@ -152,40 +167,46 @@ namespace SupportFunctions.Model
                 hasFailure = true;
             }
 
-            SetSeriesStyle(_expectedSeries, SeriesType.Expected, hasFailure);
             SetSeriesStyle(_actualSeries, SeriesType.Actual, hasFailure);
+            SetSeriesStyle(_expectedSeries, SeriesType.Expected, hasFailure);
             SetSeriesStyle(_failSeries, SeriesType.Fail, hasFailure);
 
-            _chart.Series.Add(_expectedSeries);
             _chart.Series.Add(_actualSeries);
+            _chart.Series.Add(_expectedSeries);
             _chart.Series.Add(_failSeries);
         }
 
-        private static void SetAxisDimensions(Axis axis, string title, Dimension dimension)
+        private void SetAxisDimensions(Axis axis, string title, Dimension dimension)
         {
-            axis.Minimum = dimension.GridlineMin;
+            axis.Minimum = dimension.SnapToGrid ? dimension.GridlineMin : dimension.Min;
             axis.Maximum = dimension.SnapToGrid ? dimension.GridlineMax : dimension.Max;
             axis.Interval = dimension.GridlineInterval;
             axis.IsMarksNextToAxis = false;
             axis.Title = title;
+            axis.TitleFont = new Font(axis.TitleFont.FontFamily, _textSize, axis.TitleFont.Style);
+            Debug.Print($"Text size: {_textSize}");
+            axis.IsLabelAutoFit = false;
+            axis.LabelStyle.Font = axis.TitleFont;
             axis.LineColor = AxisColor;
-            axis.MajorTickMark.Enabled = true;
-            axis.MajorTickMark.LineColor = MajorGridColor;
+            axis.MajorTickMark.Enabled = false;
             axis.MinorTickMark.Enabled = true;
             axis.MinorTickMark.LineColor = MinorGridColor;
             axis.LabelStyle.IsEndLabelVisible = true;
             axis.MajorGrid.LineColor = MajorGridColor;
             axis.MajorGrid.LineWidth = 1;
             axis.LineWidth = 2;
+            axis.IntervalOffset = dimension.SnapToGrid ? 0 : dimension.GridlineMin - dimension.Min;
+            axis.MinorTickMark.IntervalOffset = axis.IntervalOffset;
         }
 
         private static void SetSeriesStyle(Series series, SeriesType seriesType, bool hasFailures)
         {
             series.ChartType = ChooseValue(seriesType, SeriesChartType.FastLine, SeriesChartType.FastLine, SeriesChartType.Line);
-            series.Color = ChooseValue(seriesType, Color.Chocolate, Color.SteelBlue, Color.Crimson);
-            series.BorderWidth = ChooseValue(seriesType, 3, 2, 0);
+            series.Color = ChooseValue(seriesType, ExpectedColor, ActualColor, FailColor);
+            series.BorderWidth = ChooseValue(seriesType, LineThickness, LineThickness + 1, 0);
             series.MarkerSize = ChooseValue(seriesType, 0, 0, 8);
             series.MarkerStyle = ChooseValue(seriesType, MarkerStyle.None, MarkerStyle.None, MarkerStyle.Circle);
+            series.BorderDashStyle = ChooseValue(seriesType, ChartDashStyle.Dot, ChartDashStyle.Solid, ChartDashStyle.NotSet);
             series.IsVisibleInLegend = ChooseValue(seriesType, true, true, hasFailures);
         }
 

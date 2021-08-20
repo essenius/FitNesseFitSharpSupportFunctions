@@ -66,8 +66,8 @@ namespace SupportFunctions.Utilities
             if (expression == null) return false;
 
             // somewhat tricky. The invariant culture understands Infinity and the current culture ∞.
-            if (double.TryParse(Convert.ToString(expression, InvariantCulture), NumberStyles.Any, NumberFormatInfo.InvariantInfo, out _)) return true;
-            return double.TryParse(Convert.ToString(expression, CurrentCulture), NumberStyles.Any, NumberFormatInfo.CurrentInfo, out _);
+            return double.TryParse(Convert.ToString(expression, InvariantCulture), NumberStyles.Any, NumberFormatInfo.InvariantInfo, out _) || 
+                   double.TryParse(Convert.ToString(expression, CurrentCulture), NumberStyles.Any, NumberFormatInfo.CurrentInfo, out _);
         }
 
         public static bool IsZero(this double value) => value.HasMinimalDifferenceWith(0D);

@@ -9,10 +9,7 @@
 //   is distributed on an "AS IS" BASIS WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and limitations under the License.
 
-using System;
 using System.Diagnostics;
-using System.Runtime.Versioning;
-using System.Security.Principal;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SupportFunctions;
 
@@ -24,7 +21,6 @@ namespace SupportFunctionsTest
         // This test causes a System.AppDomainUnloadedException in the test results
 
         [TestMethod, TestCategory("Integration")]
-
         public void UserInfoBaseTest()
         {
             Assert.IsFalse(string.IsNullOrEmpty(UserInfo.UserName));

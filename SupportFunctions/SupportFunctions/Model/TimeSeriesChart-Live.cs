@@ -44,9 +44,9 @@ namespace SupportFunctions.Model
         private const int TextScalingFactor = 40;
         private static readonly SKColor ActualColor = SKColors.MidnightBlue;
         private static readonly SKColor AxisColor = SKColors.DarkSlateGray;
-        private static readonly SKColor ChartColor = SKColors.GhostWhite;
+        private static readonly SKColor ChartColor = SKColors.WhiteSmoke;
         private static readonly SKColor FailColor = SKColors.Crimson;
-        private static readonly SKColor ExpectedColor = SKColors.MediumAquamarine; // wheat SpringGreen Gold LightCoral
+        private static readonly SKColor ExpectedColor = SKColors.MediumAquamarine;
         private static readonly SKColor MajorGridColor = SKColors.DarkGray;
 
         private ISeries _actualSeries;
@@ -97,14 +97,14 @@ namespace SupportFunctions.Model
         internal string ChartDataFor(MeasurementComparisonDictionary sourceData, AxisLimits limits, Size size)
         {
             InitChart(size);
-            var axisPaintTask = new SolidColorPaintTask(AxisColor) {StrokeThickness = LineThickness};
+            var axisPaint = new SolidColorPaint(AxisColor) {StrokeThickness = LineThickness};
             var timeUnit = limits.TimeUnit;
             limits.EnsureNonZeroRanges();
             Requires.NotNull(limits.StartTimestamp, $"{nameof(limits)}.{nameof(limits.StartTimestamp)}");
             InitSeries(sourceData, limits.StartTimestamp, timeUnit);
             _chart.Sections = new List<RectangularSection>()
-                .Append(new RectangularSection {Xi = 0, Xj = 0, Stroke = axisPaintTask})
-                .Append(new RectangularSection {Yi = 0, Yj = 0, Stroke = axisPaintTask});
+                .Append(new RectangularSection {Xi = 0, Xj = 0, Stroke = axisPaint})
+                .Append(new RectangularSection {Yi = 0, Yj = 0, Stroke = axisPaint});
             _chart.XAxes = CreateAxes(limits.X, XAxisTitleTemplate.FillIn(timeUnit.Caption));
 
             _chart.YAxes = CreateAxes(limits.Y, YAxisTitle);
@@ -115,7 +115,6 @@ namespace SupportFunctions.Model
         {
             var chartInBase64 = ChartDataFor(sourceData, limits, size);
             return WebFunctions.AsImg(chartInBase64);
-//            return Invariant($"<img alt=\"Time series chart\" src=\"data:image/png;base64,{chartInBase64}\"/>");
         }
 
         private IEnumerable<IAxis> CreateAxes(Dimension limits, string name)
@@ -124,11 +123,12 @@ namespace SupportFunctions.Model
             {
                 new Axis
                 {
-                    MinLimit = limits.GridlineMin,
+                    MinLimit = limits.SnapToGrid ? limits.GridlineMin : limits.Min, //limits.GridlineMin,
                     MaxLimit = limits.SnapToGrid ? limits.GridlineMax : limits.Max,
                     MinStep = limits.GridlineInterval,
+                    ForceStepToMin = true,
 
-                    SeparatorsPaint = new SolidColorPaintTask(MajorGridColor),
+                    SeparatorsPaint = new SolidColorPaint(MajorGridColor),
                     ShowSeparatorLines = true,
                     Name = name,
                     TextSize = _textSize,
@@ -154,7 +154,7 @@ namespace SupportFunctions.Model
                 Fill = null,
                 LineSmoothness = 0,
                 GeometrySize = 0,
-                Stroke = new SolidColorPaintTask(ExpectedColor) {StrokeThickness = LineThickness, PathEffect = new DashEffect(new[] {5f, 5f})},
+                Stroke = new SolidColorPaint(ExpectedColor) {StrokeThickness = LineThickness, PathEffect = new DashEffect(new[] {5f, 5f})},
                 Name = ExpectedCaption
             };
             _actualSeries = new LineSeries<ObservablePoint>
@@ -163,18 +163,18 @@ namespace SupportFunctions.Model
                 Fill = null,
                 LineSmoothness = 0,
                 GeometrySize = 0,
-                Stroke = new SolidColorPaintTask(ActualColor) {StrokeThickness = LineThickness + 1},
+                Stroke = new SolidColorPaint(ActualColor) {StrokeThickness = LineThickness + 1},
                 Name = ActualCaption
             };
-            var errorPaintTask = new SolidColorPaintTask(FailColor);
+            var errorPaint = new SolidColorPaint(FailColor);
             _failSeries = new LineSeries<ObservablePoint, CircleGeometry>
             {
                 GeometrySize = 9,
                 Values = new List<ObservablePoint>(),
                 Fill = null,
                 Stroke = null,
-                GeometryStroke = errorPaintTask,
-                GeometryFill = errorPaintTask,
+                GeometryStroke = errorPaint,
+                GeometryFill = errorPaint,
                 LineSmoothness = 0,
                 Name = FailCaption
             };
@@ -206,8 +206,8 @@ namespace SupportFunctions.Model
             _chart.Series = chartSeries;
             _chart.DrawMarginFrame = new DrawMarginFrame
             {
-                Fill = new SolidColorPaintTask(ChartColor),
-                Stroke = new SolidColorPaintTask(MajorGridColor)
+                Fill = new SolidColorPaint(ChartColor),
+                Stroke = new SolidColorPaint(MajorGridColor)
             };
         }
     }

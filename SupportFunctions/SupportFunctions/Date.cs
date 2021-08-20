@@ -12,7 +12,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Runtime.Versioning;
 using SupportFunctions.Model;
 using SupportFunctions.Utilities;
 

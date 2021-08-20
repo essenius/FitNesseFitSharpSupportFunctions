@@ -88,7 +88,7 @@ namespace SupportFunctions.Model
 
         public bool IsOk() => IsOk(Outcome);
 
-        public CompareOutcome Outcome { get; set; }
+        public CompareOutcome Outcome { get; }
 
         public string TableResult(string message)
         {
@@ -153,7 +153,7 @@ namespace SupportFunctions.Model
             var compareType = CompareType ?? target.To<string>().InferType();
             return (Tolerance != null && compareType.IsFloatingPoint() && target.IsNumeric()
                 ? target.To<double>().RoundedTo(Tolerance.Precision)
-                : target).To<string>(); // duh
+                : target).To<string>(); 
         }
 
         private CompareOutcome RunComparison()

@@ -18,7 +18,7 @@ namespace SupportFunctions.Model
         string DeltaOut { get; }
         string DeltaPercentageMessage { get; }
         string ExpectedValueOut { get; }
-        CompareOutcome Outcome { get; set; }
+        CompareOutcome Outcome { get; }
         string ValueMessage { get; }
         bool IsOk();
         string TableResult(string message);

@@ -18,8 +18,11 @@ namespace SupportFunctions.Utilities
     {
         private static string CallingMethod()
         {
-            var stacktrace = new StackTrace();
-            return stacktrace.GetFrame(2).GetMethod().Name;
+            var callingFrame = new StackTrace().GetFrame(2);
+            Debug.Assert(callingFrame != null, "callingFrame != null");
+            var method = callingFrame.GetMethod();
+            Debug.Assert(method != null, "method != null");
+            return method.Name;
         }
 
         public static void NotEmpty(string value, string name)

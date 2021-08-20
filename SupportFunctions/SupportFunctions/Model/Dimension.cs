@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using SupportFunctions.Utilities;
 
 namespace SupportFunctions.Model
@@ -66,19 +67,34 @@ namespace SupportFunctions.Model
             Max += deltaPlus;
         }
 
-        public static Dimension GetExtremeValues(ICollection<IMeasurementComparison> values, double? minValue,
-            double? maxValue)
+        public static Dimension GetValueRange(ICollection<IMeasurementComparison> values, double? minValue, double? maxValue)
         {
-            if (minValue == null || maxValue == null)
-            {
-                var metadata = new TimeSeriesMetadata<IMeasurementComparison>(values,
-                    p => p.Value.ExpectedValueOut, p => p.Value.ActualValueOut);
-                minValue ??= metadata.MinValue;
-                maxValue ??= metadata.MaxValue;
-            }
-            Requires.NotNull(minValue, nameof(minValue));
-            Requires.NotNull(maxValue, nameof(maxValue));
-            return new Dimension(minValue.Value, maxValue.Value);
+            // If both limits are specified, use them
+            if (minValue != null && maxValue != null) return new Dimension(minValue.Value, maxValue.Value);
+            // if we need to fill in at least one, get the required range from the values
+            var range = GetExtremeValues(values); 
+            // Fill in the value(s) that we need so we can calculate the range, and from that the margin
+            if (minValue != null) range.Min = minValue.Value;
+            if (maxValue != null) range.Max = maxValue.Value;
+            const double rangeMargin = 0.05;
+            var absoluteRangeMargin = range.Range * rangeMargin;
+            Debug.Print($"Range margin: {absoluteRangeMargin}");
+            // Apply the margin to the value(s) not specified
+            if (minValue == null) range.Min -= absoluteRangeMargin;
+            if (maxValue == null) range.Max += absoluteRangeMargin;
+            Debug.Print($"min: {range.Min}, max: {range.Max}");
+            return range;
+        }
+
+        private static Dimension GetExtremeValues(ICollection<IMeasurementComparison> values ) 
+        {
+            var metadata = new TimeSeriesMetadata<IMeasurementComparison>(
+                values, 
+                p => p.Value.ExpectedValueOut, 
+                p => p.Value.ActualValueOut
+           );
+
+            return new Dimension(metadata.MinValue, metadata.MaxValue, false);
         }
 
         private static double Normalized(double value, double orderOfMagnitude) => value * Math.Pow(10, -orderOfMagnitude);

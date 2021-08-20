@@ -1,5 +1,2 @@
-!|import         |
-|SupportFunctions|
-
 |Library         |
 |Common Functions|

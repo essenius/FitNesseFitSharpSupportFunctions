@@ -20,29 +20,34 @@ namespace SupportFunctionsTest
     public class DimensionTest
     {
         [TestMethod, TestCategory("Unit")]
-        public void DimensionGetExtremeValuesTest()
+        public void DimensionGetValueRangeTest()
         {
             var values = new List<IMeasurementComparison> {new MeasurementComparisonMock(1, 1, CompareOutcome.None)};
 
-            var dimension = Dimension.GetExtremeValues(values, null, null);
+            var dimension = Dimension.GetValueRange(values, null, null);
             Assert.AreEqual(1, dimension.Min);
             Assert.AreEqual(1, dimension.Max);
 
-            dimension = Dimension.GetExtremeValues(values, null, 2);
-            Assert.AreEqual(1, dimension.Min);
+            dimension = Dimension.GetValueRange(values, null, 2);
+            Assert.AreEqual(0.95, dimension.Min);
             Assert.AreEqual(2, dimension.Max);
 
-            dimension = Dimension.GetExtremeValues(values, -2, null);
+            dimension = Dimension.GetValueRange(values, -2, null);
             Assert.AreEqual(-2, dimension.Min);
-            Assert.AreEqual(1, dimension.Max);
+            Assert.AreEqual(1.15, dimension.Max);
 
-            dimension = Dimension.GetExtremeValues(values, -2, 0);
+            dimension = Dimension.GetValueRange(values, -2, 0);
             Assert.AreEqual(-2, dimension.Min);
             Assert.AreEqual(0, dimension.Max);
 
-            dimension = Dimension.GetExtremeValues(values, -2, 3);
+            dimension = Dimension.GetValueRange(values, -2, 3);
             Assert.AreEqual(-2, dimension.Min);
             Assert.AreEqual(3, dimension.Max);
+
+            values.Add(new MeasurementComparisonMock(2, 2, CompareOutcome.None));
+            dimension = Dimension.GetValueRange(values, null, null);
+            Assert.AreEqual(0.95, dimension.Min);
+            Assert.AreEqual(2.05, dimension.Max);
         }
 
 

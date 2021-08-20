@@ -5,7 +5,7 @@
     <LangVersion>8.0</LangVersion>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <AnalysysMode>AllEnabledByDefault</AnalysysMode>
-    <Version>3.0.0-beta</Version>
+    <Version>3.0.0-beta-2</Version>
     <Authors>Rik Essenius</Authors>
     <Description>Test project for SupportFunctions fixture</Description>
     <Copyright>Copyright © Rik Essenius 2015-2021</Copyright>
@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0"  />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.5" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.5" />
     <PackageReference Include="coverlet.collector" Version="3.1.0">
@@ -25,6 +25,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <ProjectReference Include="..\SupportFunctions\SupportFunctions.csproj" />
+
     <None Update="TestData\1stOrderExpected.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
