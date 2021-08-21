@@ -20,7 +20,7 @@ using SupportFunctions.Utilities;
 
 namespace SupportFunctions
 {
-    /// <summary>Compares two time series and reports results tabularly or graphically</summary>
+    /// <summary>Compares two time series and reports results in a table or graph</summary>
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "FitSharp entry point")]
     public class TimeSeriesComparison
     {
@@ -54,7 +54,7 @@ namespace SupportFunctions
         private double _minValue;
         private double _timeSpanSeconds;
 
-        /// <summary>Compares two time series and reports results tabularly or graphically</summary>
+        /// <summary>Compares two time series and reports results in a table or graph</summary>
         public TimeSeriesComparison(TimeSeries expected, TimeSeries actual, Tolerance tolerance)
         {
             _expected = expected ?? new TimeSeries();

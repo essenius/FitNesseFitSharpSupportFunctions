@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2020 Rik Essenius
+﻿// Copyright 2015-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -21,10 +21,10 @@ namespace SupportFunctions
      SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used by FitSharp")]
     public sealed class MachineInfo
     {
-        /// <returns>the FQDN of the current machine, i.e. machine name with full domain</returns>
+        /// <returns>the fully qualified domain name of the current machine, i.e. machine name with full domain</returns>
         public static string FullyQualifiedDomainName() => FullyQualifiedDomainName(Environment.MachineName);
 
-        /// <returns>the FQDN of computerName, i.e. machine name with full domain</returns>
+        /// <returns>the fully qualified domain name of computerName, i.e. machine name with full domain</returns>
         public static string FullyQualifiedDomainName(string computerName)
         {
             Requires.NotNull(computerName, nameof(computerName));

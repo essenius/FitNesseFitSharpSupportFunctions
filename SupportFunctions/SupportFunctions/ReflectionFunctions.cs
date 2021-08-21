@@ -19,7 +19,7 @@ using static System.FormattableString;
 
 namespace SupportFunctions
 {
-    /// <summary>Fixtures to access methods on parameters or statuc classes via reflection</summary>
+    /// <summary>Fixtures to access methods on parameters or static classes via reflection</summary>
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "FitSharp entry point")]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "FitSharp entry point")]
     public sealed class ReflectionFunctions
@@ -33,7 +33,7 @@ namespace SupportFunctions
         /// <returns>the value of a field, property or method of a static class</returns>
         public static object Get(string member) => GetOf(member, null);
 
-        /// <param name="member">the vaue, fieldd.property or method to call</param>
+        /// <param name="member">the value, field.property or method to call</param>
         /// <param name="input">the entity to call the method on</param>
         /// <returns>the value of a field, property or method of an entity</returns>
         public static object GetOf(string member, string input)
@@ -56,7 +56,7 @@ namespace SupportFunctions
         /// <summary>Like Get Of, but with parameters as a separate entity</summary>
         /// <param name="member">the method name</param>
         /// <param name="parameters">the parameters for the method (in FitNesse array format)</param>
-        /// <param name="input">the entith to call the method on</param>
+        /// <param name="input">the entity to call the method on</param>
         /// <returns>the result of the method call</returns>
         public static object GetWithParamsOf(string member, object[] parameters, string input)
         {

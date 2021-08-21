@@ -74,7 +74,8 @@ namespace SupportFunctions.Model
             {
                 strokePaint.Color = lineStroke.Color;
                 strokePaint.StrokeWidth = lineStroke.StrokeThickness;
-                if (lineStroke.PathEffect == null) return strokePaint; 
+                if (lineStroke.PathEffect == null) return strokePaint;
+                // using null is a shortcut, as the function doesn't use the drawing context.
                 lineStroke.PathEffect.CreateEffect(null);
                 strokePaint.PathEffect = lineStroke.PathEffect.SKPathEffect;
             }

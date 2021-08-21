@@ -7,6 +7,7 @@
 FitNesseRoot/FitNesse/
 FitNesseRoot/RecentChanges/
 FitNesseRoot/RecentChanges*
+FitNesseRoot/RerunLastFailures*
 FitNesseRoot/TemplateLibrary/
 FitNesseRoot/files/testResults/
 FitNesseRoot/PageFooter
@@ -345,4 +346,5 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 
-
+# XML documentation
+SupportFunctions.xml

@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2020 Rik Essenius
+﻿// Copyright 2016-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -79,7 +79,6 @@ namespace SupportFunctions
                 var toleranceValue = ToleranceValue.Parse(toleranceSpec);
                 returnValue.AddToleranceValue(toleranceValue);
             }
-            Requires.Condition(returnValue._isDirty, $"{nameof(returnValue)}.{nameof(returnValue._isDirty)}");
             return returnValue;
         }
 
