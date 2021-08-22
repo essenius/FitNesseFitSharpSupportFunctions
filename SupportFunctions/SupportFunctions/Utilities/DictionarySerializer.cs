@@ -11,11 +11,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
 
 namespace SupportFunctions.Utilities
 {
 #if NET5_0
+    using System.Text.Json;
+
     internal static class DictionarySerializer
     {
         public static Type ParseExceptionType => typeof(JsonException);
@@ -24,6 +25,8 @@ namespace SupportFunctions.Utilities
         public static string Serialize(Dictionary<string, string> dictionary) => JsonSerializer.Serialize(dictionary);
     }
 #else
+    using System.Web.Script.Serialization;
+
     internal static class DictionarySerializer
     {
         public static Type ParseExceptionType => typeof(ArgumentException);
