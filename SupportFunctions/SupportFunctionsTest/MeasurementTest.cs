@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2020 Rik Essenius
+﻿// Copyright 2016-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -9,7 +9,7 @@
 //   is distributed on an "AS IS" BASIS WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and limitations under the License.
 
-using System.Globalization;
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SupportFunctions.Model;
 using SupportFunctions.Utilities;
@@ -19,19 +19,16 @@ namespace SupportFunctionsTest
     [TestClass]
     public class MeasurementTest
     {
-        [TestMethod, TestCategory("Unit")]
-        public void MeasurementValueTypeTest()
+        [DataTestMethod, TestCategory("Unit")]
+        [DataRow("12.0", typeof(double) )]
+        [DataRow("12", typeof(int))]
+        [DataRow(long.MaxValue, typeof(long))]
+        [DataRow("1a", typeof(string))]
+        [DataRow("true", typeof(bool))]
+        public void MeasurementValueTypeTest(object input, Type expectedType)
         {
-            var measurement = new Measurement {Value = "12.0"};
-            Assert.AreEqual(typeof(double), measurement.Value.InferType());
-            measurement = new Measurement {Value = "12"};
-            Assert.AreEqual(typeof(int), measurement.Value.InferType());
-            measurement = new Measurement {Value = long.MaxValue.ToString(CultureInfo.InvariantCulture)};
-            Assert.AreEqual(typeof(long), measurement.Value.InferType());
-            measurement = new Measurement {Value = "1a"};
-            Assert.AreEqual(typeof(string), measurement.Value.InferType());
-            measurement = new Measurement {Value = "true"};
-            Assert.AreEqual(typeof(bool), measurement.Value.InferType());
+            var measurement = new Measurement {Value = input.ToString()};
+            Assert.AreEqual(expectedType, measurement.Value.InferType());
         }
     }
 }

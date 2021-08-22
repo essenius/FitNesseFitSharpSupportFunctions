@@ -20,9 +20,7 @@ namespace SupportFunctions
     /// <summary>
     ///     Date class assignable to a FitNesse symbol
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Date",
-         Justification = "Date is more natural for use in FitNesse"),
-     SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Entry point for FitSharp")]
+     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Entry point for FitSharp")]
     public class Date
     {
         /// <summary>Initialize new Date object</summary>

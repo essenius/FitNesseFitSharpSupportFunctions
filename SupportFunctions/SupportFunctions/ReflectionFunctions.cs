@@ -38,7 +38,7 @@ namespace SupportFunctions
         /// <returns>the value of a field, property or method of an entity</returns>
         public static object GetOf(string member, string input)
         {
-            Requires.NotEmpty(member, nameof(member));
+            Requires.NotNullOrEmpty(member, nameof(member));
             const string pattern = @"\((.*)\)$";
             var regex = new Regex(pattern, RegexOptions.None);
             var match = regex.Match(member);
@@ -60,7 +60,7 @@ namespace SupportFunctions
         /// <returns>the result of the method call</returns>
         public static object GetWithParamsOf(string member, object[] parameters, string input)
         {
-            Requires.NotEmpty(member, nameof(member));
+            Requires.NotNullOrEmpty(member, nameof(member));
             // if we are asking for a static class member, the input could be null
             var convertedInput = input?.CastToInferredType();
             var inputType = convertedInput?.GetType();

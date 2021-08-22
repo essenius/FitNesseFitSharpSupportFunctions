@@ -216,7 +216,7 @@ namespace SupportFunctions
         /// <returns>string without leading or trailing whitespace.</returns>
         public static string Trim(string input)
         {
-            Requires.NotEmpty(input, nameof(input));
+            Requires.NotNullOrEmpty(input, nameof(input));
             return input.Trim();
         }
 

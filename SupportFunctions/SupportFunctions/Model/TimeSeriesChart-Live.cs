@@ -100,7 +100,6 @@ namespace SupportFunctions.Model
             var axisPaint = new SolidColorPaint(AxisColor) {StrokeThickness = LineThickness};
             var timeUnit = limits.TimeUnit;
             limits.EnsureNonZeroRanges();
-            Requires.NotNull(limits.StartTimestamp, $"{nameof(limits)}.{nameof(limits.StartTimestamp)}");
             InitSeries(sourceData, limits.StartTimestamp, timeUnit);
             _chart.Sections = new List<RectangularSection>()
                 .Append(new RectangularSection {Xi = 0, Xj = 0, Stroke = axisPaint})

@@ -30,15 +30,17 @@ namespace SupportFunctionsTest
             if (e.GetType() != ExceptionType && e.InnerException?.GetType() != ExceptionType)
             {
                 Assert.Fail(
-                    $"ExpectedExceptionWithMessageAttribute failed. Expected exception type: {ExceptionType.FullName}. " +
-                    $"Actual exception type: {e.GetType().FullName}. Exception message: {e.Message}"
+                    $"ExpectedExceptionWithMessageAttribute failed. Expected exception type: <{ExceptionType.FullName}>. " +
+                    $"Actual exception type: <{e.GetType().FullName}>. Exception message: <{e.Message}>"
                 );
             }
 
 
             if (ExpectedMessage != null)
             {
-                Assert.IsTrue(ExpectedMessage.Equals(e.Message.Trim()) || ExpectedMessage.Equals(e.InnerException?.Message.Trim()));
+                Assert.IsTrue(ExpectedMessage.Equals(e.Message.Trim()) || ExpectedMessage.Equals(e.InnerException?.Message.Trim()),
+                    $"ExpectedExceptionWithMessageAttribute failed. Expected exception message: <{ExpectedMessage}>. " +
+                    $"Actual message: <{e.Message.Trim()}>. Actual inner message: <{e.InnerException?.Message.Trim()}>");
             }
         }
     }

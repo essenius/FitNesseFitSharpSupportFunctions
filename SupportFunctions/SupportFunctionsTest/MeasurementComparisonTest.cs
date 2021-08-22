@@ -68,11 +68,9 @@ namespace SupportFunctionsTest
         [DataRow("9-Bool Mismatch", "0", null,
             "2016-12-24T00:23:00.0000000", "True", true, "2016-12-24T00:23:00.0000000", "False", true, "ValueIssue",
             "2016-12-24T00:23:00.0000000", null, "True", "True", "False", "True")]
-
         [DataRow("10-Is Good Mismatch", "0", null,
             "2016-12-24T00:24:00.0000000",  "11", true, "2016-12-24T00:24:00.0000000", "11", false, "IsGoodIssue",
             "2016-12-24T00:24:00.0000000", null, "11", "True", "11", "False")]
-
         [DataRow("11-Missing Actual", "0", null,
             "2016-12-24T00:25:00.0000000", "11", true, null, null, null, "Missing",
             "[2016-12-24T00:25:00.0000000] missing", null, "11", "True", null, "")]

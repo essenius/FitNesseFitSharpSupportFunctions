@@ -25,11 +25,15 @@ namespace SupportFunctions.Utilities
             return method.Name;
         }
 
-        public static void NotEmpty(string value, string name)
+        public static void NotNullOrEmpty(string value, string name)
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(null, $"'{name}' cannot be null in '{CallingMethod()}'");
+            }
             if (string.IsNullOrEmpty(value))
             {
-                throw new ArgumentException($"'{name}' cannot be null or empty in '{CallingMethod()}'");
+                throw new ArgumentException($"'{name}' cannot be empty in '{CallingMethod()}'");
             }
         }
 
@@ -37,7 +41,7 @@ namespace SupportFunctions.Utilities
         {
             if (value == null)
             {
-                throw new ArgumentException($"'{name}' cannot be null in '{CallingMethod()}'");
+                throw new ArgumentNullException(null, $"'{name}' cannot be null in '{CallingMethod()}'");
             }
         }
 

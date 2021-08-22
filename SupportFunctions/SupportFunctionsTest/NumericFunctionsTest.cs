@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2020 Rik Essenius
+﻿// Copyright 2017-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -18,25 +18,30 @@ namespace SupportFunctionsTest
     [TestClass]
     public class NumericFunctionsTest
     {
-        [TestMethod, TestCategory("Unit")]
-        public void NumericFunctionsFractionalDigitsTest()
-        {
-            Assert.AreEqual(4, 0.1234.FractionalDigits());
-            Assert.AreEqual(0, "test".FractionalDigits());
-            Assert.AreEqual(0, 1000.FractionalDigits());
-            Assert.AreEqual(0, 1.234E+5.FractionalDigits());
-            Assert.AreEqual(7, 1.234E-4.FractionalDigits());
-            Assert.AreEqual(10, 1.234E-7.FractionalDigits());
-            Assert.AreEqual(73, 1.234E-70.FractionalDigits());
-            Assert.AreEqual(0, 1.234567E+70.FractionalDigits());
-        }
+        [DataTestMethod, TestCategory("Unit")]
+        [DataRow(0.1234, 4)]
+        [DataRow("test", 0)]
+        [DataRow(1000, 0)]
+        [DataRow(1.234E+5, 0)]
+        [DataRow(1.234E-4, 7)]
+        [DataRow(1.234E-7, 10)]
+        [DataRow(1.234E-70, 73)]
+        [DataRow(1.234567E+70, 0)]
+        public void NumericFunctionsFractionalDigitsTest(object value, int digits) => 
+            Assert.AreEqual(digits, value.FractionalDigits() );
+
+        [DataTestMethod, TestCategory("Unit")]
+        [DataRow(0.1 + 0.2, 0.3, true, "0.1 + 0.2 = 0.3")]
+        [DataRow(-0D, +0D, true, "-0 = +0")]
+        [DataRow(1.0, -1.0, false, "1.0 != -1.0")]
+        [DataRow(0.3333333333, 0.33333333333, false, "0.3333333333 != 0.33333333333 (one decimal more)")]
+        public void NumericFunctionsHasMinimalDifferenceWithSimpleTest(double a, double b, bool expected, string description) => 
+            Assert.AreEqual(expected, a.HasMinimalDifferenceWith(b), description);
 
         [TestMethod, TestCategory("Unit")]
+
         public void NumericFunctionsHasMinimalDifferenceWithTest()
         {
-            Assert.IsTrue((0.1 + 0.2).HasMinimalDifferenceWith(0.3), "0.1 + 0.2 = 0.3");
-            Assert.IsTrue((-0D).HasMinimalDifferenceWith(+0D), "-0 = +0");
-            Assert.IsFalse(1.0.HasMinimalDifferenceWith(-1.0));
             const double value1 = .1 * 10;
             var value2 = 0D;
             for (var ctr = 0; ctr < 10; ctr++)
@@ -44,23 +49,23 @@ namespace SupportFunctionsTest
                 value2 += .1;
             }
             Assert.IsTrue(value1.HasMinimalDifferenceWith(value2));
+
             Assert.IsTrue(9.87654321E100.HasMinimalDifferenceWith(9.87654321E100 * Math.Pow(10, 5) * Math.Pow(10, -5)));
-            Assert.IsFalse(0.3333333333.HasMinimalDifferenceWith(0.33333333333));
         }
 
-        [TestMethod, TestCategory("Unit")]
-        public void NumericFunctionsIsNumericTest()
+        [DataTestMethod, TestCategory("Unit")]
+        [DataRow(1, true)]
+        [DataRow("a", false)]
+        [DataRow(2147483648L, true)]
+        [DataRow("2147483649", true)]
+        [DataRow("0xdeadc0de", true)]
+        [DataRow("-3.27e+50", true)]
+        [DataRow(".1", true)]
+        [DataRow(".-1", false)]
+        [DataRow(null, false)]
+        public void NumericFunctionsIsNumericTest(object value, bool isNumeric)
         {
-            object target = 1;
-            Assert.IsTrue(target.IsNumeric());
-            target = "a";
-            Assert.IsFalse(target.IsNumeric());
-            target = 1L;
-            Assert.IsTrue(target.IsNumeric());
-            target = 0x0f;
-            Assert.IsTrue(target.IsNumeric());
-            target = null;
-            Assert.IsFalse(target.IsNumeric());
+            Assert.AreEqual(isNumeric, value.IsNumeric(), $"value '{value}'");
         }
     }
 }

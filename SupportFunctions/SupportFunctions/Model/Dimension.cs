@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using SupportFunctions.Utilities;
 
 namespace SupportFunctions.Model
@@ -78,11 +77,9 @@ namespace SupportFunctions.Model
             if (maxValue != null) range.Max = maxValue.Value;
             const double rangeMargin = 0.05;
             var absoluteRangeMargin = range.Range * rangeMargin;
-            Debug.Print($"Range margin: {absoluteRangeMargin}");
             // Apply the margin to the value(s) not specified
             if (minValue == null) range.Min -= absoluteRangeMargin;
             if (maxValue == null) range.Max += absoluteRangeMargin;
-            Debug.Print($"min: {range.Min}, max: {range.Max}");
             return range;
         }
 

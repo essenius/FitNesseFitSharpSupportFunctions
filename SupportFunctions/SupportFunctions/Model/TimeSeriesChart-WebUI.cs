@@ -81,7 +81,6 @@ namespace SupportFunctions.Model
             InitChart(size);
             var timeUnit = limits.TimeUnit;
             limits.EnsureNonZeroRanges();
-            Requires.NotNull(limits.StartTimestamp, $"{nameof(limits)}.{nameof(limits.StartTimestamp)}");
             InitSeries(sourceData, limits.StartTimestamp, timeUnit);
             InitChartArea();
             SetAxisDimensions(_area.AxisX, XAxisTitleTemplate.FillIn(timeUnit.Caption), limits.X);

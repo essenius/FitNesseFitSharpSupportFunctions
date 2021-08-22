@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2020 Rik Essenius
+﻿// Copyright 2017-2021 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -9,51 +9,40 @@
 //   is distributed on an "AS IS" BASIS WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and limitations under the License.
 
-using System;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SupportFunctions.Model;
+using SupportFunctions.Utilities;
 
 namespace SupportFunctionsTest
 {
     [TestClass]
     public class TimeUnitForDisplayTest
     {
-        [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local",
-            Justification = "intentional precondition check")]
-        private static void AssertEqual(double expected, double actual)
+        [DataTestMethod]
+        [TestCategory("Unit")]
+        [DataRow(0.006, "ms")]
+        [DataRow(100d, "s")]
+        [DataRow(900d, "min")]
+        [DataRow(50000d, "h")]
+        [DataRow(3D * 24D * 3600D, "d")]
+        public void TimeUnitForDisplayCaptionTest(double timespan, string expectedUnit)
         {
-            Assert.IsTrue(Math.Abs(expected - actual) <= 1e-10, $"{expected} != {actual}");
+            Assert.AreEqual(expectedUnit, new TimeUnitForDisplay(timespan).Caption, "Caption");
         }
 
-        [TestMethod, TestCategory("Unit")]
-        public void TimeUnitForDisplayCaptionTest()
+        [DataTestMethod]
+        [TestCategory("Unit")]
+        [DataRow(0.006, 0.04, 40d)]
+        [DataRow(100d, 123d, 123d)]
+        [DataRow(900d, 123d, 2.05)]
+        [DataRow(50000d, 9360d, 2.6)]
+        [DataRow(3d * 24d * 3600d, 475200d, 5.5)]
+        public void TimeUnitForDisplayConvertFromToSecondsTest(double timespan, double valueInSeconds, double valueInUnits)
         {
-            Assert.AreEqual("ms", new TimeUnitForDisplay(0.006).Caption);
-            Assert.AreEqual("s", new TimeUnitForDisplay(100D).Caption);
-            Assert.AreEqual("min", new TimeUnitForDisplay(900D).Caption);
-            Assert.AreEqual("h", new TimeUnitForDisplay(50000D).Caption);
-            Assert.AreEqual("d", new TimeUnitForDisplay(3D * 24D * 3600D).Caption);
-        }
-
-        [TestMethod, TestCategory("Unit")]
-        public void TimeUnitForDisplayConvertFromSecondsTest()
-        {
-            AssertEqual(40D, new TimeUnitForDisplay(0.006).ConvertFromSeconds(0.04));
-            AssertEqual(123D, new TimeUnitForDisplay(100D).ConvertFromSeconds(123));
-            AssertEqual(2.05, new TimeUnitForDisplay(900D).ConvertFromSeconds(123));
-            AssertEqual(2.6, new TimeUnitForDisplay(50000D).ConvertFromSeconds(9360));
-            AssertEqual(5.5, new TimeUnitForDisplay(3D * 24D * 3600D).ConvertFromSeconds(475200));
-        }
-
-        [TestMethod, TestCategory("Unit")]
-        public void TimeUnitForDisplayConvertToSecondsTest()
-        {
-            AssertEqual(0.04, new TimeUnitForDisplay(0.006).ConvertToSeconds(40));
-            AssertEqual(123D, new TimeUnitForDisplay(100D).ConvertToSeconds(123));
-            AssertEqual(123D, new TimeUnitForDisplay(900D).ConvertToSeconds(2.05));
-            AssertEqual(9360D, new TimeUnitForDisplay(50000D).ConvertToSeconds(2.6));
-            AssertEqual(475200D, new TimeUnitForDisplay(3D * 24D * 3600D).ConvertToSeconds(5.5));
+            Assert.IsTrue(valueInUnits.HasMinimalDifferenceWith(
+                new TimeUnitForDisplay(timespan).ConvertFromSeconds(valueInSeconds)), "From Seconds");
+            Assert.IsTrue(valueInSeconds.HasMinimalDifferenceWith(
+                new TimeUnitForDisplay(timespan).ConvertToSeconds(valueInUnits)), "To Seconds");
         }
     }
 }

@@ -32,26 +32,17 @@ namespace SupportFunctionsTest
             return timeSeries;
         }
 
-        [TestMethod, TestCategory("Unit")]
-        public void TimeSeriesConstructorTest()
+        [DataTestMethod, TestCategory("Unit")]
+        [DataRow("test1.csv", "test1.csv", "timestamp","value","isgood", "TimeSeriesDefault")]
+        [DataRow("test2.csv#tijd#waarde#goed", "test2.csv", "tijd", "waarde", "goed", "TimeSeriesCustom")]
+        [DataRow("test3.csv##waarde", "test3.csv", "timestamp", "waarde", "isgood", "TimeSeriesPartlyCustom")]
+        public void TimeSeriesConstructorTest(string spec, string path, string timestampHeader, string valueHeader, string isGoodHeader, string testCase)
         {
-            var timeSeriesDefault = new TimeSeries("test1.csv");
-            Assert.AreEqual("test1.csv", timeSeriesDefault.Path, "timeSeriesDefault");
-            Assert.AreEqual("timestamp", timeSeriesDefault.TimestampColumn, "timeSeriesDefault");
-            Assert.AreEqual("value", timeSeriesDefault.ValueColumn, "timeSeriesDefault");
-            Assert.AreEqual(@"isgood", timeSeriesDefault.IsGoodColumn, "timeSeriesDefault");
-
-            var timeSeriesCustom = new TimeSeries("test2.csv#tijd#waarde#goed");
-            Assert.AreEqual("test2.csv", timeSeriesCustom.Path, "timeSeriesCustom");
-            Assert.AreEqual(@"tijd", timeSeriesCustom.TimestampColumn, "timeSeriesCustom");
-            Assert.AreEqual(@"waarde", timeSeriesCustom.ValueColumn, "timeSeriesCustom");
-            Assert.AreEqual(@"goed", timeSeriesCustom.IsGoodColumn, "timeSeriesCustom");
-
-            var timeSeriesPartlyCustom = new TimeSeries("test2.csv##waarde");
-            Assert.AreEqual("test2.csv", timeSeriesPartlyCustom.Path, "timeSeriesCustom");
-            Assert.AreEqual("timestamp", timeSeriesPartlyCustom.TimestampColumn, "timeSeriesCustom");
-            Assert.AreEqual(@"waarde", timeSeriesPartlyCustom.ValueColumn, "timeSeriesCustom");
-            Assert.AreEqual(@"isgood", timeSeriesPartlyCustom.IsGoodColumn, "timeSeriesCustom");
+            var timeSeries = new TimeSeries(spec);
+            Assert.AreEqual(path, timeSeries.Path, testCase);
+            Assert.AreEqual(timestampHeader, timeSeries.TimestampColumn, testCase);
+            Assert.AreEqual(valueHeader, timeSeries.ValueColumn, testCase);
+            Assert.AreEqual(isGoodHeader, timeSeries.IsGoodColumn, testCase);
         }
 
         [DataTestMethod, TestCategory("Unit")]

@@ -19,37 +19,25 @@ namespace SupportFunctionsTest
     [TestClass]
     public class DimensionTest
     {
-        [TestMethod, TestCategory("Unit")]
-        public void DimensionGetValueRangeTest()
+        [DataTestMethod, TestCategory("Unit")]
+        [DataRow(null, null, 1, 1, -3.3, 3.3)]
+        [DataRow(null, 2d, 0.95, 2,-3.25, 2)]
+        [DataRow(-2d, null, -2, 1.15, -2, 3.25)]
+        [DataRow(-2d, 0d, -2, 0, -2, 0)]
+        [DataRow(-2d, 3d, -2, 3, -2, 3)]
+        public void DimensionGetValueRangeTest(double? minIn, double? maxIn, double minOut1, double maxOut1, double minOut2, double maxOut2)
         {
             var values = new List<IMeasurementComparison> {new MeasurementComparisonMock(1, 1, CompareOutcome.None)};
 
-            var dimension = Dimension.GetValueRange(values, null, null);
-            Assert.AreEqual(1, dimension.Min);
-            Assert.AreEqual(1, dimension.Max);
+            var dimension = Dimension.GetValueRange(values, minIn, maxIn);
+            Assert.AreEqual(minOut1, dimension.Min, "min(1)");
+            Assert.AreEqual(maxOut1, dimension.Max, "max(1)");
 
-            dimension = Dimension.GetValueRange(values, null, 2);
-            Assert.AreEqual(0.95, dimension.Min);
-            Assert.AreEqual(2, dimension.Max);
-
-            dimension = Dimension.GetValueRange(values, -2, null);
-            Assert.AreEqual(-2, dimension.Min);
-            Assert.AreEqual(1.15, dimension.Max);
-
-            dimension = Dimension.GetValueRange(values, -2, 0);
-            Assert.AreEqual(-2, dimension.Min);
-            Assert.AreEqual(0, dimension.Max);
-
-            dimension = Dimension.GetValueRange(values, -2, 3);
-            Assert.AreEqual(-2, dimension.Min);
-            Assert.AreEqual(3, dimension.Max);
-
-            values.Add(new MeasurementComparisonMock(2, 2, CompareOutcome.None));
-            dimension = Dimension.GetValueRange(values, null, null);
-            Assert.AreEqual(0.95, dimension.Min);
-            Assert.AreEqual(2.05, dimension.Max);
+            values.Add(new MeasurementComparisonMock(-3, 3, CompareOutcome.None));
+            dimension = Dimension.GetValueRange(values, minIn, maxIn);
+            Assert.AreEqual(minOut2, dimension.Min, "min(2)");
+            Assert.AreEqual(maxOut2, dimension.Max, "max(2)"); 
         }
-
 
         [DataTestMethod, TestCategory("Unit")]
         [DataRow(0.02, 0.002)]

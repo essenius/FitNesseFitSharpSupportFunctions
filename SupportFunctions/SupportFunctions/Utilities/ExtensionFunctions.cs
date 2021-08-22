@@ -60,11 +60,14 @@ namespace SupportFunctions.Utilities
         /// <returns>the value cast to the type it could be parsed into</returns>
         public static object CastToInferredType(this string input)
         {
-            if (int.TryParse(input, out var intValue)) return intValue;
-            if (long.TryParse(input, out var longValue)) return longValue;
-            if (decimal.TryParse(input, out var decimalValue)) return decimalValue;
-            if (double.TryParse(input, out var doubleValue)) return doubleValue;
-            if (bool.TryParse(input, out var boolValue)) return boolValue;
+            var target = input;
+            // we never infer hex numbers to be signed
+            if (NumericFunctions.TryParseHex(input, false, out var hexValue)) target = hexValue.ToString();
+            if (int.TryParse(target, out var intValue)) return intValue;
+            if (long.TryParse(target, out var longValue)) return longValue;
+            if (decimal.TryParse(target, out var decimalValue)) return decimalValue;
+            if (double.TryParse(target, out var doubleValue)) return doubleValue;
+            if (bool.TryParse(target, out var boolValue)) return boolValue;
             return input;
         }
 
@@ -76,6 +79,8 @@ namespace SupportFunctions.Utilities
         public static Type InferType(this object value)
         {
             var stringValue = value?.ToString();
+            // we never infer hex numbers to be signed
+            if (NumericFunctions.TryParseHex(stringValue, false, out var hexValue)) stringValue = hexValue.ToString();
             if (int.TryParse(stringValue, NumberStyles.Integer, InvariantCulture, out _)) return typeof(int);
             if (long.TryParse(stringValue, NumberStyles.Integer, InvariantCulture, out _)) return typeof(long);
             if (double.TryParse(stringValue, NumberStyles.Any, InvariantCulture, out _)) return typeof(double);
@@ -117,15 +122,26 @@ namespace SupportFunctions.Utilities
         {
             // if underlyingType is null, the original type wasn't nullable, so take the type itself
             var type = Nullable.GetUnderlyingType(targetType);
+            return ChangeType(value, type ?? targetType);
+        }
+
+        private static object ChangeType(object value, Type targetType)
+        {
+            var source = value;
+            // if we want a numeric result and we have a hex value, convert the hex to long first.
+            if (targetType.IsNumeric() && NumericFunctions.TryParseHex(value?.ToString(), targetType.IsSigned(), out var hexValue))
+            {
+                source = hexValue;
+            }
             try
             {
-                return Convert.ChangeType(value, type ?? targetType, InvariantCulture);
+                return Convert.ChangeType(source, targetType, InvariantCulture);
             }
             catch (Exception e) when (e is FormatException || e is InvalidCastException)
             {
                 try
                 {
-                    return Convert.ChangeType(value, type ?? targetType, CurrentUICulture);
+                    return Convert.ChangeType(source, targetType, CurrentUICulture);
                 }
                 catch (Exception fe) when (fe is FormatException || fe is InvalidCastException)
                 {
