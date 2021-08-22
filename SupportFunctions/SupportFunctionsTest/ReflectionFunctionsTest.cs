@@ -69,6 +69,8 @@ namespace SupportFunctionsTest
         [DataRow("Math.Sqrt", "49", "7", "Method with parameter from value")]
         [DataRow("Math.Round(2)", "3.1415", "3.14", "Method with a paramater and a value")]
         [DataRow("Math.Log10", "1000.0", "3", "Log10 (expecting double) of a decimal calculated right")]
+        [DataRow("Math.Sqrt", "0x10", "4", "Method with hex parameter")]
+
         public void ReflectionFunctionsGetOfTest(string method, object inputObject, object expected, string message) =>
             Assert.AreEqual(expected, ReflectionFunctions.GetOf(method, inputObject.ToString()).ToString(), message);
 
@@ -79,6 +81,8 @@ namespace SupportFunctionsTest
         [DataRow("String.IsNullOrEmpty()", "True", "Evaluate string mathod")]
         [DataRow("Math.Round( 3.14159265, 2 )", "3.14", "Use method with two parameters")]
         [DataRow("boolean.TrueString", "True", "see if we can use 'boolean' instead of 'bool")]
+        [DataRow("Math.Sqrt(0x19)", "5", "Method with hex parameter")]
+
         public void ReflectionFunctionsGetTest(string expression, object expected, string message) =>
             Assert.AreEqual(expected.ToString(), ReflectionFunctions.Get(expression).ToString(), message);
     }
