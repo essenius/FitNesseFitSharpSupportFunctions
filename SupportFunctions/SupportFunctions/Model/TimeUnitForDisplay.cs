@@ -17,20 +17,20 @@ namespace SupportFunctions.Model
     {
         private readonly Dictionary<TimeUnits, string> _captionDictionary = new Dictionary<TimeUnits, string>
         {
-            {TimeUnits.Milliseconds, "ms"},
-            {TimeUnits.Seconds, "s"},
-            {TimeUnits.Minutes, "min"},
-            {TimeUnits.Hours, "h"},
-            {TimeUnits.Days, "d"}
+            { TimeUnits.Milliseconds, "ms" },
+            { TimeUnits.Seconds, "s" },
+            { TimeUnits.Minutes, "min" },
+            { TimeUnits.Hours, "h" },
+            { TimeUnits.Days, "d" }
         };
 
         private readonly Dictionary<TimeUnits, double> _conversionFactors = new Dictionary<TimeUnits, double>
         {
-            {TimeUnits.Milliseconds, 0.001D},
-            {TimeUnits.Seconds, 1D},
-            {TimeUnits.Minutes, 60D},
-            {TimeUnits.Hours, 3600D},
-            {TimeUnits.Days, 24D * 3600D}
+            { TimeUnits.Milliseconds, 0.001D },
+            { TimeUnits.Seconds, 1D },
+            { TimeUnits.Minutes, 60D },
+            { TimeUnits.Hours, 3600D },
+            { TimeUnits.Days, 24D * 3600D }
         };
 
         private readonly TimeUnits _timeUnit;

@@ -24,6 +24,13 @@ namespace SupportFunctions
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "FitSharp entry point")]
     public sealed class ReflectionFunctions
     {
+        private static Type FindStaticClass(string className)
+        {
+            var type = Type.GetType(className.TypeName()) ?? Type.GetType("System." + className.ToTitleCase());
+            if (type == null) throw new TypeLoadException(Invariant($"Could not find static class '{className}'"));
+            return type;
+        }
+
         /// <summary>Get the value of a field, property or method</summary>
         /// <param name="member">
         ///     the field, property or method to get the value from. Parameters can be specified between parentheses ()
@@ -67,7 +74,7 @@ namespace SupportFunctions
             parameters ??= Array.Empty<object>();
 
             // we use a list here to make it easier to insert the input value for static calls
-            var convertedParams = parameters.Select(p => ((string) p).CastToInferredType()).ToList();
+            var convertedParams = parameters.Select(p => ((string)p).CastToInferredType()).ToList();
 
             // assume it is a static call (e.g. Math) if there is a dot in the name
             if (member.Contains(".")) return StaticFunctionCall(member, convertedInput, convertedParams);
@@ -85,6 +92,19 @@ namespace SupportFunctions
                 return outValue;
             }
             throw new MissingMethodException(MissingMemberMessage(member, inputType));
+        }
+
+        /// <summary>Find a member by the name, Look exact to start with, if that doesn't work look case insensitive.</summary>
+        /// <param name="type">the type to look in</param>
+        /// <param name="name">the member name to look for</param>
+        /// <returns>the case sensitive name of the member</returns>
+        private static string MemberName(Type type, string name)
+        {
+            var exactMember = type.GetMember(name);
+            if (exactMember.Length > 0) return exactMember[0].Name;
+            return (from member in type.GetMembers()
+                where member.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)
+                select member.Name).FirstOrDefault();
         }
 
         private static string MissingMemberMessage(string member, Type inputType) =>
@@ -108,13 +128,6 @@ namespace SupportFunctions
                 return outValue;
             }
             throw new MissingMemberException(Invariant($"Could not find static property, field or method '{function}'"));
-        }
-
-        private static Type FindStaticClass(string className)
-        {
-            var type = Type.GetType(className.TypeName()) ?? Type.GetType("System." + className.ToTitleCase());
-            if (type == null) throw new TypeLoadException(Invariant($"Could not find static class '{className}'"));
-            return type;
         }
 
         private static bool TryGetMember(Type type, string function, object input,
@@ -153,19 +166,6 @@ namespace SupportFunctions
             if (method == null) return false;
             output = method.Invoke(input, parameters);
             return true;
-        }
-
-        /// <summary>Find a member by the name, Look exact to start with, if that doesn't work look case insensitive.</summary>
-        /// <param name="type">the type to look in</param>
-        /// <param name="name">the member name to look for</param>
-        /// <returns>the case sensitive name of the member</returns>
-        private static string MemberName(Type type, string name)
-        {
-            var exactMember = type.GetMember(name);
-            if (exactMember.Length > 0) return exactMember[0].Name;
-            return (from member in type.GetMembers()
-                where member.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)
-                select member.Name).FirstOrDefault();
         }
     }
 }

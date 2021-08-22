@@ -20,7 +20,8 @@ namespace SupportFunctionsTest
     {
         // This test causes a System.AppDomainUnloadedException in the test results
 
-        [TestMethod, TestCategory("Integration")]
+        [TestMethod]
+        [TestCategory("Integration")]
         public void UserInfoBaseTest()
         {
             Assert.IsFalse(string.IsNullOrEmpty(UserInfo.UserName));

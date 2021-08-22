@@ -17,7 +17,8 @@ namespace SupportFunctionsTest
     [TestClass]
     public class FixtureDocumentationTest
     {
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void FixtureCaptionExists()
         {
             Assert.AreEqual("CsvComparison", new CsvComparison(null, null, null).ToString());

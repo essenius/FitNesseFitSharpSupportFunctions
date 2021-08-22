@@ -66,12 +66,23 @@ namespace SupportFunctions.Model
             Max += deltaPlus;
         }
 
+        private static Dimension GetExtremeValues(ICollection<IMeasurementComparison> values)
+        {
+            var metadata = new TimeSeriesMetadata<IMeasurementComparison>(
+                values,
+                p => p.Value.ExpectedValueOut,
+                p => p.Value.ActualValueOut
+            );
+
+            return new Dimension(metadata.MinValue, metadata.MaxValue, false);
+        }
+
         public static Dimension GetValueRange(ICollection<IMeasurementComparison> values, double? minValue, double? maxValue)
         {
             // If both limits are specified, use them
             if (minValue != null && maxValue != null) return new Dimension(minValue.Value, maxValue.Value);
             // if we need to fill in at least one, get the required range from the values
-            var range = GetExtremeValues(values); 
+            var range = GetExtremeValues(values);
             // Fill in the value(s) that we need so we can calculate the range, and from that the margin
             if (minValue != null) range.Min = minValue.Value;
             if (maxValue != null) range.Max = maxValue.Value;
@@ -81,17 +92,6 @@ namespace SupportFunctions.Model
             if (minValue == null) range.Min -= absoluteRangeMargin;
             if (maxValue == null) range.Max += absoluteRangeMargin;
             return range;
-        }
-
-        private static Dimension GetExtremeValues(ICollection<IMeasurementComparison> values ) 
-        {
-            var metadata = new TimeSeriesMetadata<IMeasurementComparison>(
-                values, 
-                p => p.Value.ExpectedValueOut, 
-                p => p.Value.ActualValueOut
-           );
-
-            return new Dimension(metadata.MinValue, metadata.MaxValue, false);
         }
 
         private static double Normalized(double value, double orderOfMagnitude) => value * Math.Pow(10, -orderOfMagnitude);

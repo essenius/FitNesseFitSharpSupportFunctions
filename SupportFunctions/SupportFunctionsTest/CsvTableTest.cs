@@ -20,7 +20,9 @@ namespace SupportFunctionsTest
     [TestClass]
     public class CsvTableTest
     {
-        [TestMethod, TestCategory("Integration"), DeploymentItem("TestData\\String01_TestData.csv")]
+        [TestMethod]
+        [TestCategory("Integration")]
+        [DeploymentItem("TestData\\String01_TestData.csv")]
         public void CsvTableLoadQueryTableTest()
         {
             var timeSeries = CsvTable.Parse("String01_TestData.csv");

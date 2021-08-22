@@ -24,8 +24,9 @@ namespace SupportFunctionsTest
         private static string ImageCode(string leaf) =>
             Invariant($"<img src='http://files/testResults/wiki/files/testResults/wiki{leaf}'/>");
 
-        [DataTestMethod, TestCategory("Unit")]
-        [DataRow("image/bmp", new byte[] 
+        [DataTestMethod]
+        [TestCategory("Unit")]
+        [DataRow("image/bmp", new byte[]
         {
             0x42, 0x4D, 0x1E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1A, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x00,
             0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x18, 0x00, 0x00, 0x00, 0xFF, 0x00
@@ -137,11 +138,11 @@ namespace SupportFunctionsTest
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0E, 0x00, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00
         })]
-        [DataRow("image/unknown", new byte[] {})]
-
+        [DataRow("image/unknown", new byte[] { })]
         public void WikiFileMimeTypeTest(string format, byte[] image) => Assert.AreEqual(format, WikiFile.MimeType(image));
 
-        [TestMethod, TestCategory("Integration")]
+        [TestMethod]
+        [TestCategory("Integration")]
         public void WikiFileUniquePathTest()
         {
             var root = Path.GetTempPath();
@@ -164,7 +165,8 @@ namespace SupportFunctionsTest
             File.Delete(a);
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void WikiFileUniquePathTest2()
         {
             const string format = @"yyyyMMddHHmmssffff";
@@ -178,7 +180,8 @@ namespace SupportFunctionsTest
             Assert.IsTrue(string.Compare(timestamp, endTime, StringComparison.Ordinal) <= 0, $"{timestamp} <= {endTime}");
         }
 
-        [TestMethod, TestCategory("Integration")]
+        [TestMethod]
+        [TestCategory("Integration")]
         public void WikiFileWikiLinkTest()
         {
             var wikiFile = new WikiFile("c:\\test", "wiki");

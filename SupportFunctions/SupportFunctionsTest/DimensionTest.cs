@@ -19,15 +19,16 @@ namespace SupportFunctionsTest
     [TestClass]
     public class DimensionTest
     {
-        [DataTestMethod, TestCategory("Unit")]
+        [DataTestMethod]
+        [TestCategory("Unit")]
         [DataRow(null, null, 1, 1, -3.3, 3.3)]
-        [DataRow(null, 2d, 0.95, 2,-3.25, 2)]
+        [DataRow(null, 2d, 0.95, 2, -3.25, 2)]
         [DataRow(-2d, null, -2, 1.15, -2, 3.25)]
         [DataRow(-2d, 0d, -2, 0, -2, 0)]
         [DataRow(-2d, 3d, -2, 3, -2, 3)]
         public void DimensionGetValueRangeTest(double? minIn, double? maxIn, double minOut1, double maxOut1, double minOut2, double maxOut2)
         {
-            var values = new List<IMeasurementComparison> {new MeasurementComparisonMock(1, 1, CompareOutcome.None)};
+            var values = new List<IMeasurementComparison> { new MeasurementComparisonMock(1, 1, CompareOutcome.None) };
 
             var dimension = Dimension.GetValueRange(values, minIn, maxIn);
             Assert.AreEqual(minOut1, dimension.Min, "min(1)");
@@ -36,10 +37,11 @@ namespace SupportFunctionsTest
             values.Add(new MeasurementComparisonMock(-3, 3, CompareOutcome.None));
             dimension = Dimension.GetValueRange(values, minIn, maxIn);
             Assert.AreEqual(minOut2, dimension.Min, "min(2)");
-            Assert.AreEqual(maxOut2, dimension.Max, "max(2)"); 
+            Assert.AreEqual(maxOut2, dimension.Max, "max(2)");
         }
 
-        [DataTestMethod, TestCategory("Unit")]
+        [DataTestMethod]
+        [TestCategory("Unit")]
         [DataRow(0.02, 0.002)]
         [DataRow(0.03, 0.005)]
         [DataRow(0.004, 0.0005)]
@@ -62,7 +64,8 @@ namespace SupportFunctionsTest
             Assert.IsTrue(expectedInterval.HasMinimalDifferenceWith(actual), $"Range: {range} expected: {expectedInterval} actual: {actual}");
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DimensionGridLineMaxMinTest()
         {
             var dimension = new Dimension(-2.6, -1.2, false);

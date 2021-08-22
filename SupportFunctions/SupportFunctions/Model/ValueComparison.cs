@@ -30,12 +30,12 @@ namespace SupportFunctions.Model
 
         private readonly Dictionary<CompareOutcome, string> _messageDictionary = new Dictionary<CompareOutcome, string>
         {
-            {CompareOutcome.Missing, MissingCaption},
-            {CompareOutcome.None, NoneCaption},
-            {CompareOutcome.OutsideToleranceIssue, OutsideToleranceCaption},
-            {CompareOutcome.Surplus, SurplusCaption},
-            {CompareOutcome.ValueIssue, ValueIssueCaption},
-            {CompareOutcome.WithinTolerance, WithinToleranceCaption}
+            { CompareOutcome.Missing, MissingCaption },
+            { CompareOutcome.None, NoneCaption },
+            { CompareOutcome.OutsideToleranceIssue, OutsideToleranceCaption },
+            { CompareOutcome.Surplus, SurplusCaption },
+            { CompareOutcome.ValueIssue, ValueIssueCaption },
+            { CompareOutcome.WithinTolerance, WithinToleranceCaption }
         };
 
         public ValueComparison(object expected, object actual, Tolerance tolerance = null, Type compareType = null)
@@ -153,7 +153,7 @@ namespace SupportFunctions.Model
             var compareType = CompareType ?? target.To<string>().InferType();
             return (Tolerance != null && compareType.IsFloatingPoint() && target.IsNumeric()
                 ? target.To<double>().RoundedTo(Tolerance.Precision)
-                : target).To<string>(); 
+                : target).To<string>();
         }
 
         private CompareOutcome RunComparison()

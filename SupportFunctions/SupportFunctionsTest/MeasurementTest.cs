@@ -19,15 +19,16 @@ namespace SupportFunctionsTest
     [TestClass]
     public class MeasurementTest
     {
-        [DataTestMethod, TestCategory("Unit")]
-        [DataRow("12.0", typeof(double) )]
+        [DataTestMethod]
+        [TestCategory("Unit")]
+        [DataRow("12.0", typeof(double))]
         [DataRow("12", typeof(int))]
         [DataRow(long.MaxValue, typeof(long))]
         [DataRow("1a", typeof(string))]
         [DataRow("true", typeof(bool))]
         public void MeasurementValueTypeTest(object input, Type expectedType)
         {
-            var measurement = new Measurement {Value = input.ToString()};
+            var measurement = new Measurement { Value = input.ToString() };
             Assert.AreEqual(expectedType, measurement.Value.InferType());
         }
     }

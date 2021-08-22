@@ -18,25 +18,29 @@ namespace SupportFunctionsTest
     [TestClass]
     public class RequiresTest
     {
-        [TestMethod, ExpectedExceptionWithMessage(typeof(ArgumentNullException), "'testName' cannot be null in 'RequiresNotNullTestFires'")]
-        public void RequiresNotNullTestFires() => Requires.NotNull(null, "testName");
+        [TestMethod]
+        [ExpectedExceptionWithMessage(typeof(ArgumentException), "'0 > 1' not met in 'RequiresConditionFails'")]
+        public void RequiresConditionFails() => Requires.Condition(0 > 1, "0 > 1");
 
         [TestMethod]
-        public void RequiresNotNullTestOk() => Requires.NotNullOrEmpty("ok", "testName");
-
-        [TestMethod, ExpectedExceptionWithMessage(typeof(ArgumentException), "'testName' cannot be empty in 'RequiresNotNullOrEmptyTestFiresOnEmpty'")]
-        public void RequiresNotNullOrEmptyTestFiresOnEmpty() => Requires.NotNullOrEmpty(string.Empty, "testName");
-
-        [TestMethod, ExpectedExceptionWithMessage(typeof(ArgumentNullException), "'testName' cannot be null in 'RequiresNotNullOrEmptyTestFiresOnNull'")]
-        public void RequiresNotNullOrEmptyTestFiresOnNull() => Requires.NotNullOrEmpty(null, "testName");
+        public void RequiresConditionOk() => Requires.Condition(true, "True");
 
         [TestMethod]
         public void RequiresNotEmptyestOk() => Requires.NotNullOrEmpty("ok", "testName");
 
         [TestMethod]
-        public void RequiresConditionOk() => Requires.Condition(true, "True");
+        [ExpectedExceptionWithMessage(typeof(ArgumentException), "'testName' cannot be empty in 'RequiresNotNullOrEmptyTestFiresOnEmpty'")]
+        public void RequiresNotNullOrEmptyTestFiresOnEmpty() => Requires.NotNullOrEmpty(string.Empty, "testName");
 
-        [TestMethod, ExpectedExceptionWithMessage(typeof(ArgumentException), "'0 > 1' not met in 'RequiresConditionFails'")]
-        public void RequiresConditionFails() => Requires.Condition(0 > 1, "0 > 1");
+        [TestMethod]
+        [ExpectedExceptionWithMessage(typeof(ArgumentNullException), "'testName' cannot be null in 'RequiresNotNullOrEmptyTestFiresOnNull'")]
+        public void RequiresNotNullOrEmptyTestFiresOnNull() => Requires.NotNullOrEmpty(null, "testName");
+
+        [TestMethod]
+        [ExpectedExceptionWithMessage(typeof(ArgumentNullException), "'testName' cannot be null in 'RequiresNotNullTestFires'")]
+        public void RequiresNotNullTestFires() => Requires.NotNull(null, "testName");
+
+        [TestMethod]
+        public void RequiresNotNullTestOk() => Requires.NotNullOrEmpty("ok", "testName");
     }
 }

@@ -19,7 +19,8 @@ namespace SupportFunctionsTest
     [TestClass]
     public class StopwatchTest
     {
-        [TestMethod, TestCategory("Integration")]
+        [TestMethod]
+        [TestCategory("Integration")]
         public void StopwatchTest1()
         {
             const double tolerance = 0.05;

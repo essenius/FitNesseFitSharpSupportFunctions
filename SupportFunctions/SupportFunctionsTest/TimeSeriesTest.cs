@@ -32,11 +32,13 @@ namespace SupportFunctionsTest
             return timeSeries;
         }
 
-        [DataTestMethod, TestCategory("Unit")]
-        [DataRow("test1.csv", "test1.csv", "timestamp","value","isgood", "TimeSeriesDefault")]
+        [DataTestMethod]
+        [TestCategory("Unit")]
+        [DataRow("test1.csv", "test1.csv", "timestamp", "value", "isgood", "TimeSeriesDefault")]
         [DataRow("test2.csv#tijd#waarde#goed", "test2.csv", "tijd", "waarde", "goed", "TimeSeriesCustom")]
         [DataRow("test3.csv##waarde", "test3.csv", "timestamp", "waarde", "isgood", "TimeSeriesPartlyCustom")]
-        public void TimeSeriesConstructorTest(string spec, string path, string timestampHeader, string valueHeader, string isGoodHeader, string testCase)
+        public void TimeSeriesConstructorTest(string spec, string path, string timestampHeader, string valueHeader, string isGoodHeader,
+            string testCase)
         {
             var timeSeries = new TimeSeries(spec);
             Assert.AreEqual(path, timeSeries.Path, testCase);
@@ -45,7 +47,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual(isGoodHeader, timeSeries.IsGoodColumn, testCase);
         }
 
-        [DataTestMethod, TestCategory("Unit")]
+        [DataTestMethod]
+        [TestCategory("Unit")]
         [DataRow("0-100", 10, "0", "100", 100)]
         [DataRow("-50-100", 12, "-50", "100", 150)]
         [DataRow("-1e10-1e10", 14, "-1e10", "1e10", 2e10)]
@@ -71,7 +74,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual(expectedRange, metadata.Range, $"Test {testCase}");
         }
 
-        [DataTestMethod, TestCategory("Unit")]
+        [DataTestMethod]
+        [TestCategory("Unit")]
         [DataRow("Double-Int-50", 50, "12.5", "13", "System.Double")]
         [DataRow("Double-Bool-10", 10, "12.5", "true", "System.String")]
         [DataRow("Double-Long-4", 4, "1e10", "2147483648", "System.Double")]
@@ -93,7 +97,7 @@ namespace SupportFunctionsTest
         [DataRow("String-Double-18", 18, "Hi1", "1e10", "System.String")]
         [DataRow("Double-Inf-NaN-2", 2, "Infinity", "NaN", "System.Double")]
         [DataRow("Double-InfSym-NaN-2", 19, "∞", "-∞", "System.Double")]
-        public void TimeSeriesDataTypeTest(string testCase, int measurementCount, string value1, string value2, string expectedType )
+        public void TimeSeriesDataTypeTest(string testCase, int measurementCount, string value1, string value2, string expectedType)
         {
             var timeSeries = new TimeSeries();
 
@@ -111,7 +115,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual(expectedType, metadata.DataType.ToString(), $"Test {testCase}");
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void TimeSeriesDecisionTableTest()
         {
             // emulate a FitNesse decision table with one record
@@ -126,9 +131,10 @@ namespace SupportFunctionsTest
             Assert.IsTrue(timeseries.Measurements[0].IsGood, "IsGood OK");
         }
 
-        [TestMethod, TestCategory("Integration"),
-         DeploymentItem("TestData\\Dbl02_0.1Tol_NoFixed_Application_Variables_OUTFLOW1.SP_ExpectedRaw.csv"),
-         DeploymentItem("TestData\\1stOrderExpected.csv")]
+        [TestMethod]
+        [TestCategory("Integration")]
+        [DeploymentItem("TestData\\Dbl02_0.1Tol_NoFixed_Application_Variables_OUTFLOW1.SP_ExpectedRaw.csv")]
+        [DeploymentItem("TestData\\1stOrderExpected.csv")]
         public void TimeSeriesLoadTest()
         {
             const string file = "Dbl02_0.1Tol_NoFixed_Application_Variables_OUTFLOW1.SP_ExpectedRaw.csv";
@@ -147,7 +153,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual(double.NaN, timeSeries2.Measurements[33].Value.To<double>(), "Last row value 2");
         }
 
-        [TestMethod, TestCategory("Integration")]
+        [TestMethod]
+        [TestCategory("Integration")]
         public void TimeSeriesSaveTest()
         {
             const string timestampString = "1965-02-23T16:10:00.5000000";
@@ -165,7 +172,8 @@ namespace SupportFunctionsTest
             File.Delete(tempFileName);
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void TimeSeriesToStringTest()
         {
             var timeSeries = new TimeSeries();

@@ -103,7 +103,6 @@ namespace SupportFunctions.Utilities
         {
             // if we can't perform the rounding, just take the original value
             if (fractionDigits == null || !value.IsNumeric() || fractionDigits.Value < 0 || fractionDigits.Value > 15) return value;
-            //return Math.Round(Convert.ToDouble(value, InvariantCulture), fractionDigits.Value);
             return Math.Round(value.To<double>(), fractionDigits.Value);
         }
 

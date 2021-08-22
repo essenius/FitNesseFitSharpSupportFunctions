@@ -21,9 +21,10 @@ namespace SupportFunctionsTest
     [TestClass]
     public class CsvComparisonTest
     {
-        [TestMethod, TestCategory("Integration"),
-         DeploymentItem("TestData\\StreamData1.csv"),
-         DeploymentItem("TestData\\StreamData2.csv")]
+        [TestMethod]
+        [TestCategory("Integration")]
+        [DeploymentItem("TestData\\StreamData1.csv")]
+        [DeploymentItem("TestData\\StreamData2.csv")]
         public void CsvComparisonErrorsStreamDataTest()
         {
             var baseCsv = CsvTable.Parse("StreamData1.csv");
@@ -44,14 +45,17 @@ namespace SupportFunctionsTest
             Assert.IsTrue(string.IsNullOrEmpty(QueryValue(errorRow, "Delta %").ToString()));
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CsvComparisonParseExists() => Assert.IsNull(CsvComparison.Parse(null));
 
-        [TestMethod, TestCategory("Unit"), ExpectedExceptionWithMessage(typeof(ArgumentException),
-             "Wrong: No such header. Recognised values: Cell, Row No, Row Name, Column No, Column Name, Value, Delta, Delta %, Issue.")]
+        [TestMethod]
+        [TestCategory("Unit")]
+        [ExpectedExceptionWithMessage(typeof(ArgumentException),
+            "Wrong: No such header. Recognised values: Cell, Row No, Row Name, Column No, Column Name, Value, Delta, Delta %, Issue.")]
         public void CsvComparisonWrongHeaderTest()
         {
-            var desiredHeaders = new Collection<Collection<object>> {new Collection<object> {"Wrong"}};
+            var desiredHeaders = new Collection<Collection<object>> { new Collection<object> { "Wrong" } };
             var csvComparison = new CsvComparison(null, null, null);
             var _ = csvComparison.DoTable(desiredHeaders);
         }

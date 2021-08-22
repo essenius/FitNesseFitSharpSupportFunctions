@@ -100,11 +100,11 @@ namespace SupportFunctions
         // keep under the hat for now.
         internal void SaveTo(string path)
         {
-            var csvTable = new CsvTable(new[] {"Timestamp", "Value", "IsGood"});
+            var csvTable = new CsvTable(new[] { "Timestamp", "Value", "IsGood" });
             foreach (var measurement in Measurements)
             {
                 csvTable.Data.Add(new[]
-                    {measurement.Timestamp.ToRoundTripFormat(), measurement.Value, measurement.IsGood.To<string>()});
+                    { measurement.Timestamp.ToRoundTripFormat(), measurement.Value, measurement.IsGood.To<string>() });
             }
             csvTable.SaveTo(path);
         }

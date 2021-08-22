@@ -16,7 +16,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualBasic.FileIO;
-
 using static System.FormattableString;
 
 namespace SupportFunctions
@@ -53,8 +52,8 @@ namespace SupportFunctions
         internal string DataCell(int row, int column) => row >= RowCount || column >= ColumnCount ? null : Data[row][column];
 
         /// <summary>Show the content of the CSV file in Table format</summary>
-         [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "FitNesse interface spec")]
-         [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "FitNesse interface spec")]
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "FitNesse interface spec")]
+        [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "FitNesse interface spec")]
         public Collection<Collection<string>> DoTable(Collection<Collection<string>> inputTable)
         {
             var returnObject = new Collection<Collection<string>>();
@@ -127,7 +126,7 @@ namespace SupportFunctions
                 var row = new Collection<object>();
                 foreach (var cell in line)
                 {
-                    row.Add(new Collection<object> {_headers[cellCounter], cell});
+                    row.Add(new Collection<object> { _headers[cellCounter], cell });
                     cellCounter++;
                 }
                 returnObject.Add(row);

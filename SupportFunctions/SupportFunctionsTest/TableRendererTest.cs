@@ -24,11 +24,12 @@ namespace SupportFunctionsTest
         private static readonly Dictionary<string, Func<Point, object>> GetTableValues =
             new Dictionary<string, Func<Point, object>>
             {
-                {"X", result => result.X},
-                {"Y", result => result.Y}
+                { "X", result => result.X },
+                { "Y", result => result.Y }
             };
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void TableRendererTest1()
         {
             var pointList = new List<Point>
@@ -39,7 +40,7 @@ namespace SupportFunctionsTest
 
             var tableIn = new Collection<Collection<object>>
             {
-                new Collection<object> {"y", "x"}
+                new Collection<object> { "y", "x" }
             };
 
             var renderer = new TableRenderer<Point>(GetTableValues);

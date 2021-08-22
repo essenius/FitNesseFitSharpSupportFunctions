@@ -33,14 +33,15 @@ namespace SupportFunctionsTest
 
         private static string DictionaryHeader(string tableName) => "!|Dictionary|Having|Name|" + tableName + "|\n|Key|Value|\n";
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DictionaryLibraryConstructorTest()
         {
             var simpleList = new Dictionary<string, string>
             {
-                {"1", "a"},
-                {"2", "b"},
-                {"3", "c"}
+                { "1", "a" },
+                { "2", "b" },
+                { "3", "c" }
             };
 
             var lib = new DictionaryLibrary(simpleList);
@@ -48,7 +49,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual("a", lib.Get("1"));
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DictionaryLibraryDeletePageTest()
         {
             var lib = new DictionaryLibrary
@@ -61,7 +63,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual(DeletePageRequest, (lib.MyFitNessePage as FitNessePageMock)?.UsedUri);
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DictionaryLibraryDeleteTableFromPageTest()
         {
             var lib = new DictionaryLibrary
@@ -72,21 +75,23 @@ namespace SupportFunctionsTest
             Assert.IsFalse(lib.DeleteTableFromPage("TableName", PageName));
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DictionaryLibraryGetFromTest()
         {
             var simpleList = new Dictionary<string, string>
             {
-                {"1", "a"},
-                {"2", "b"},
-                {"3", "c"}
+                { "1", "a" },
+                { "2", "b" },
+                { "3", "c" }
             };
             Assert.AreEqual("c", DictionaryLibrary.GetFrom("3", simpleList));
             Assert.IsNull(DictionaryLibrary.GetFrom("4", simpleList));
             Assert.AreEqual(simpleList, CommonFunctions.Echo(simpleList));
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DictionaryLibraryLoadEmptyPageTest()
         {
             var lib = new DictionaryLibrary
@@ -99,7 +104,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual(0, lib.Count);
         }
 
-        [TestMethod, TestCategory("Integration")]
+        [TestMethod]
+        [TestCategory("Integration")]
         public void DictionaryLibraryLoadSave()
         {
             const string defaultFileName = "DictionaryStore.json";
@@ -117,7 +123,7 @@ namespace SupportFunctionsTest
             Assert.AreEqual(defaultFileName, saver.FileName, "SaveFile sets file name");
             Assert.IsTrue(File.Exists(defaultFileName), "File exists after saving");
 
-            var loader = new DictionaryLibrary {FileName = string.Empty};
+            var loader = new DictionaryLibrary { FileName = string.Empty };
             Assert.AreEqual(0, loader.Count, "Loader is empty before loading");
             Assert.IsTrue(loader.LoadFile(defaultFileName), "Loading after saving succeeds");
             Assert.AreEqual(defaultFileName, loader.FileName, "LoadFile sets file name");
@@ -147,7 +153,8 @@ namespace SupportFunctionsTest
             Assert.Fail("No exception thrown after loading deleted file");
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DictionaryLibraryNewPageTest()
         {
             const string tableName = "TestTable";
@@ -163,7 +170,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual(expected, (lib.MyFitNessePage as FitNessePageMock)?.UsedUri);
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DictionaryLibrarySaveToPageTest()
         {
             const string tableName = "replace";
@@ -191,7 +199,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual(expected, (saver.MyFitNessePage as FitNessePageMock)?.UsedUri);
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DictionaryLibrarySetToInTest()
         {
             var lib = new DictionaryLibrary
@@ -205,7 +214,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual("value2", lib.Get("key1"));
         }
 
-        [TestMethod, TestCategory("Integration")]
+        [TestMethod]
+        [TestCategory("Integration")]
         public void DictionaryLibraryWaitForFileTest()
         {
             const string fileName = "test.txt";

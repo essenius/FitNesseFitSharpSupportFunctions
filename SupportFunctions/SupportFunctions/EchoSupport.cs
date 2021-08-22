@@ -18,8 +18,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SupportFunctions
 {
-    [SuppressMessage("Microsoft.Design", "CA1053:StaticHolderTypesShouldNotHaveConstructors", Justification = "Required for FitNesse"),
-     Obsolete("Use CommonFunctions")]
+    [SuppressMessage("Microsoft.Design", "CA1053:StaticHolderTypesShouldNotHaveConstructors", Justification = "Required for FitNesse")]
+    [Obsolete("Use CommonFunctions")]
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "FitSharp entry point")]
     public sealed class EchoSupport
     {

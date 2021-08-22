@@ -18,18 +18,20 @@ namespace SupportFunctionsTest
     [TestClass]
     public class EchoSupportTest
     {
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void EchoSupportEchoDictTest()
         {
             var dict = new Dictionary<string, string>
             {
-                {"a", "b"},
-                {"c", "d"}
+                { "a", "b" },
+                { "c", "d" }
             };
             Assert.AreEqual(dict, CommonFunctions.Echo(dict));
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void EchoSupportEchoStringTest()
         {
             Assert.AreEqual("abc", CommonFunctions.Echo("abc"));

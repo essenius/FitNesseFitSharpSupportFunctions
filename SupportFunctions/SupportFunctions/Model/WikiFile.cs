@@ -42,15 +42,15 @@ namespace SupportFunctions.Model
         {
             var formatDictionary = new Dictionary<Guid, string>
             {
-                {ImageFormat.Jpeg.Guid, "image/jpeg"},
-                {ImageFormat.Exif.Guid, "image/jpeg"},
-                {ImageFormat.Png.Guid, "image/png"},
-                {ImageFormat.Gif.Guid, "image/gif"},
-                {ImageFormat.Bmp.Guid, "image/bmp"},
-                {ImageFormat.MemoryBmp.Guid, "image/bmp"},
-                {ImageFormat.Icon.Guid, "image/ico"},
-                {ImageFormat.Tiff.Guid, "image/tiff"},
-                {ImageFormat.Emf.Guid, "image/x-emf"}
+                { ImageFormat.Jpeg.Guid, "image/jpeg" },
+                { ImageFormat.Exif.Guid, "image/jpeg" },
+                { ImageFormat.Png.Guid, "image/png" },
+                { ImageFormat.Gif.Guid, "image/gif" },
+                { ImageFormat.Bmp.Guid, "image/bmp" },
+                { ImageFormat.MemoryBmp.Guid, "image/bmp" },
+                { ImageFormat.Icon.Guid, "image/ico" },
+                { ImageFormat.Tiff.Guid, "image/tiff" },
+                { ImageFormat.Emf.Guid, "image/x-emf" }
             };
             try
             {
@@ -93,7 +93,7 @@ namespace SupportFunctions.Model
         {
             Requires.NotNull(path, nameof(path));
             return !path.StartsWith(_wikiRoot, StringComparison.OrdinalIgnoreCase)
-                ? null 
+                ? null
                 : "<img src='http://" + (_wikiPage + path.Substring(_wikiRoot.Length)).Replace("\\", "/") + "'/>";
         }
     }

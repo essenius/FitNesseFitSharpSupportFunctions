@@ -31,7 +31,8 @@ namespace SupportFunctionsTest
 #endif
         private const string ChartOutputFolder = "TestOutput-" + ChartFolder;
 
-        [ClassInitialize, SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "False positive")]
+        [ClassInitialize]
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "False positive")]
         public static void ClassInitialize(TestContext testContext)
         {
             Directory.CreateDirectory(ChartOutputFolder);
@@ -79,7 +80,9 @@ namespace SupportFunctionsTest
 
         private const string MinutesTimeRangeExpectedFile = "Base64MinutesTimeRange.html";
 
-        [TestMethod, TestCategory("Unit"), DeploymentItem(ChartFolder + MinutesTimeRangeExpectedFile)]
+        [TestMethod]
+        [TestCategory("Unit")]
+        [DeploymentItem(ChartFolder + MinutesTimeRangeExpectedFile)]
         public void TimeSeriesChartMinutesTimeTest()
         {
             var table = new MeasurementComparisonDictionary();
@@ -101,7 +104,9 @@ namespace SupportFunctionsTest
 
         private const string SecondOrderResponseLimitedYFile = "Base64SecondOrderResponseLimitedY.html";
 
-        [TestMethod, TestCategory("Unit"), DeploymentItem(ChartFolder + SecondOrderResponseLimitedYFile)]
+        [TestMethod]
+        [TestCategory("Unit")]
+        [DeploymentItem(ChartFolder + SecondOrderResponseLimitedYFile)]
         public void TimeSeriesChartSecondOrderResponseTest()
         {
             var startTimestamp = DateTime.Today;
@@ -117,7 +122,9 @@ namespace SupportFunctionsTest
 
         private const string SmallRangeFile = "Base64SmallRange.html";
 
-        [TestMethod, TestCategory("Unit"), DeploymentItem(ChartFolder + SmallRangeFile)]
+        [TestMethod]
+        [TestCategory("Unit")]
+        [DeploymentItem(ChartFolder + SmallRangeFile)]
         public void TimeSeriesChartVerySmallRangeTest()
         {
             var table = new MeasurementComparisonDictionary();

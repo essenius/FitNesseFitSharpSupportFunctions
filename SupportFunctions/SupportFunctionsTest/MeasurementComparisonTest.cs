@@ -37,9 +37,10 @@ namespace SupportFunctionsTest
             }
         }
 
-        [DataTestMethod, TestCategory("Unit")]
-        [DataRow("0-All Good String", "0", "System.String", 
-            "2016-12-24T00:14:00.0000000", "Hi1", true, "2016-12-24T00:14:00.0000000", "Hi1", true, "None", 
+        [DataTestMethod]
+        [TestCategory("Unit")]
+        [DataRow("0-All Good String", "0", "System.String",
+            "2016-12-24T00:14:00.0000000", "Hi1", true, "2016-12-24T00:14:00.0000000", "Hi1", true, "None",
             "2016-12-24T00:14:00.0000000", null, "Hi1", "True", "Hi1", "True")]
         [DataRow("1-All Good Int", "0", "System.Int32",
             "2016-12-24T00:15:00.0000000", "12345", true, "2016-12-24T00:15:00.0000000", "12345", true, "None",
@@ -69,7 +70,7 @@ namespace SupportFunctionsTest
             "2016-12-24T00:23:00.0000000", "True", true, "2016-12-24T00:23:00.0000000", "False", true, "ValueIssue",
             "2016-12-24T00:23:00.0000000", null, "True", "True", "False", "True")]
         [DataRow("10-Is Good Mismatch", "0", null,
-            "2016-12-24T00:24:00.0000000",  "11", true, "2016-12-24T00:24:00.0000000", "11", false, "IsGoodIssue",
+            "2016-12-24T00:24:00.0000000", "11", true, "2016-12-24T00:24:00.0000000", "11", false, "IsGoodIssue",
             "2016-12-24T00:24:00.0000000", null, "11", "True", "11", "False")]
         [DataRow("11-Missing Actual", "0", null,
             "2016-12-24T00:25:00.0000000", "11", true, null, null, null, "Missing",
@@ -77,9 +78,11 @@ namespace SupportFunctionsTest
         [DataRow("12-Missing Expected", "0", null,
             null, null, null, "2016-12-24T00:26:00.0000000", "11", true, "Surplus",
             "[2016-12-24T00:26:00.0000000] surplus", null, null, "", "11", "True")]
-        public void MeasurementComparisonTest1(string testCase, string toleranceString, string compareTypeString, 
-            string expectedTimeStamp, string expectedValue, bool? expectedIsGood, string actualTimeStamp, string actualValue, bool? actualIsGood, string issue, 
-            string resultTimestamp, string resultDelta, string resultExpectedValue, string resultExpectedIsGood, string resultActualValue, string resultActualIsGood)
+        public void MeasurementComparisonTest1(string testCase, string toleranceString, string compareTypeString,
+            string expectedTimeStamp, string expectedValue, bool? expectedIsGood, string actualTimeStamp, string actualValue, bool? actualIsGood,
+            string issue,
+            string resultTimestamp, string resultDelta, string resultExpectedValue, string resultExpectedIsGood, string resultActualValue,
+            string resultActualIsGood)
         {
             var testName = "Test " + testCase;
 
@@ -102,7 +105,7 @@ namespace SupportFunctionsTest
                     IsChecked = false
                 };
 
-        
+
             var tolerance = Tolerance.Parse(toleranceString);
             var compareType = string.IsNullOrEmpty(compareTypeString) ? expected?.Value.InferType() : Type.GetType(compareTypeString);
             if (compareType == null) $"compareType == null for {testName}".Log();

@@ -18,7 +18,8 @@ namespace SupportFunctionsTest
     [TestClass]
     public class NumericFunctionsTest
     {
-        [DataTestMethod, TestCategory("Unit")]
+        [DataTestMethod]
+        [TestCategory("Unit")]
         [DataRow(0.1234, 4)]
         [DataRow("test", 0)]
         [DataRow(1000, 0)]
@@ -27,19 +28,20 @@ namespace SupportFunctionsTest
         [DataRow(1.234E-7, 10)]
         [DataRow(1.234E-70, 73)]
         [DataRow(1.234567E+70, 0)]
-        public void NumericFunctionsFractionalDigitsTest(object value, int digits) => 
-            Assert.AreEqual(digits, value.FractionalDigits() );
+        public void NumericFunctionsFractionalDigitsTest(object value, int digits) =>
+            Assert.AreEqual(digits, value.FractionalDigits());
 
-        [DataTestMethod, TestCategory("Unit")]
+        [DataTestMethod]
+        [TestCategory("Unit")]
         [DataRow(0.1 + 0.2, 0.3, true, "0.1 + 0.2 = 0.3")]
         [DataRow(-0D, +0D, true, "-0 = +0")]
         [DataRow(1.0, -1.0, false, "1.0 != -1.0")]
         [DataRow(0.3333333333, 0.33333333333, false, "0.3333333333 != 0.33333333333 (one decimal more)")]
-        public void NumericFunctionsHasMinimalDifferenceWithSimpleTest(double a, double b, bool expected, string description) => 
+        public void NumericFunctionsHasMinimalDifferenceWithSimpleTest(double a, double b, bool expected, string description) =>
             Assert.AreEqual(expected, a.HasMinimalDifferenceWith(b), description);
 
-        [TestMethod, TestCategory("Unit")]
-
+        [TestMethod]
+        [TestCategory("Unit")]
         public void NumericFunctionsHasMinimalDifferenceWithTest()
         {
             const double value1 = .1 * 10;
@@ -53,7 +55,8 @@ namespace SupportFunctionsTest
             Assert.IsTrue(9.87654321E100.HasMinimalDifferenceWith(9.87654321E100 * Math.Pow(10, 5) * Math.Pow(10, -5)));
         }
 
-        [DataTestMethod, TestCategory("Unit")]
+        [DataTestMethod]
+        [TestCategory("Unit")]
         [DataRow(1, true)]
         [DataRow("a", false)]
         [DataRow(2147483648L, true)]

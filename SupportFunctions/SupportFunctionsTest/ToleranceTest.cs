@@ -17,15 +17,16 @@ namespace SupportFunctionsTest
     [TestClass]
     public class ToleranceTest
     {
-        [DataTestMethod, TestCategory("Unit")]
+        [DataTestMethod]
+        [TestCategory("Unit")]
         [DataRow("AbsRelNoDigits", 25.0, "0.0123456789;0.01%", 0.0123456789, null, "0.0123456789 (0.0 %)")]
         [DataRow("Abs2Rel3_AbsWins", 25.0, "0.123:2;0.1234%:3", 0.12, 2, "0.12 (0.5 %)")]
         [DataRow("Abs3Rel2_AbsWins", 25.0, "0.0123:3;0.01234%:2", 0.0123, 4, "0.0123 (0.0 %)")]
         [DataRow("Abs2Rel3_RelWins", 100D, "0.0111:2;0.01234%:3", 0.0123, 4, "0.0123 (0.0 %)")]
         [DataRow("Abs3Rel2_RelWins", 100D, "0.0111:3;0.01234%:2", 0.012, 3, "0.012 (0.0 %)")]
         [DataRow("Abs3Rel2_NullRange", null, "0.0111:3;0.01234%:2", 0.0111, 4, "0.0111")]
-        public void ToleranceParseTest(string testCase, double? range, string toleranceString, 
-               double expectedValue, int? expectedPrecision, string expectedRendering) 
+        public void ToleranceParseTest(string testCase, double? range, string toleranceString,
+            double expectedValue, int? expectedPrecision, string expectedRendering)
         {
             var testName = "Test: " + testCase;
             var tolerance = Tolerance.Parse(toleranceString);

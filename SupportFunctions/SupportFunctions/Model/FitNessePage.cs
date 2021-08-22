@@ -170,7 +170,7 @@ namespace SupportFunctions.Model
         private static bool IsTableLine(string line)
         {
             var trimmedLine = line.Trim();
-            char[] trimChars = {'!'};
+            char[] trimChars = { '!' };
             return !string.IsNullOrEmpty(trimmedLine) && trimmedLine.TrimStart(trimChars)[0] == Pipe;
         }
 
@@ -218,11 +218,11 @@ namespace SupportFunctions.Model
         protected virtual List<string> RestCall(string uri)
         {
             var encodedUri = new Uri(uri);
-            var webRequest = (HttpWebRequest) WebRequest.Create(encodedUri);
+            var webRequest = (HttpWebRequest)WebRequest.Create(encodedUri);
             webRequest.Method = "GET";
             try
             {
-                var webResponse = (HttpWebResponse) webRequest.GetResponse();
+                var webResponse = (HttpWebResponse)webRequest.GetResponse();
                 Requires.Condition(webResponse.StatusCode == HttpStatusCode.OK, "Web response status is OK");
                 var stream = webResponse.GetResponseStream();
                 Requires.NotNull(stream, nameof(stream));

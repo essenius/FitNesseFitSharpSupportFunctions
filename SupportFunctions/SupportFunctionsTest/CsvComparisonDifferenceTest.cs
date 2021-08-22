@@ -22,13 +22,13 @@ namespace SupportFunctionsTest
     {
         private static CsvTable CreateTestTable(string data1, string data2, string data3, string data4)
         {
-            var headers = new[] {"Key", "Stream1"};
+            var headers = new[] { "Key", "Stream1" };
             var data = new Collection<string[]>
             {
-                new[] {"Attr1", data1},
-                new[] {"Attr2", data2},
-                new[] {"Attr3", data3},
-                new[] {"Attr4", data4}
+                new[] { "Attr1", data1 },
+                new[] { "Attr2", data2 },
+                new[] { "Attr3", data3 },
+                new[] { "Attr4", data4 }
             };
             var resultTable = new CsvTable(headers);
             foreach (var entry in data)
@@ -38,7 +38,8 @@ namespace SupportFunctionsTest
             return resultTable;
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CsvComparisonDifferenceQueryTest()
         {
             var baseTable = CreateTestTable("100.0", "100.0", "100.0", "100.0");
@@ -54,8 +55,8 @@ namespace SupportFunctionsTest
 
             var expectedDifference = new List<List<string>>
             {
-                new List<string> {"B2", "2", "Attr1", "2 (B)", "Stream1", "102.1 != 100", "2.1"},
-                new List<string> {"B4", "4", "Attr3", "2 (B)", "Stream1", "97.5 != 100", "2.5"}
+                new List<string> { "B2", "2", "Attr1", "2 (B)", "Stream1", "102.1 != 100", "2.1" },
+                new List<string> { "B4", "4", "Attr3", "2 (B)", "Stream1", "97.5 != 100", "2.5" }
             };
 
             var i = 0;

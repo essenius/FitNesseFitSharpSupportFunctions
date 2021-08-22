@@ -41,7 +41,7 @@ namespace SupportFunctions.Model
                 ? _allHeaders
                 : new Collection<string>(tableIn[0].Select(s => s.ToString()).ToList());
             ValidateAndAlignHeaders();
-            var returnValue = new Collection<object> {TableHeader()};
+            var returnValue = new Collection<object> { TableHeader() };
 
             foreach (var entry in input)
             {

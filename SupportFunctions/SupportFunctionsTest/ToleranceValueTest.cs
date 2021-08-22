@@ -17,7 +17,8 @@ namespace SupportFunctionsTest
     [TestClass]
     public class ToleranceValueTest
     {
-        [DataTestMethod, TestCategory("Unit")]
+        [DataTestMethod]
+        [TestCategory("Unit")]
         [DataRow("doubleAbsolute", 250D, "0.1", 0.1)]
         [DataRow("doubleAbsolute2Digits", 250D, "0.123:2", 0.12)]
         [DataRow("doubleRelative", 123.4567890, "0.1%", 0.123456789)]

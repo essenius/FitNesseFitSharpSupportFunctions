@@ -19,7 +19,8 @@ namespace SupportFunctionsTest
     [TestClass]
     public class DateTest
     {
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DateAddDaysToTest()
         {
             Date.ResetDefaultFormat();
@@ -28,7 +29,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual("2015-02-23T16:10:00", date2.ToString());
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DateAddHoursToTest()
         {
             Date.ResetDefaultFormat();
@@ -37,21 +39,24 @@ namespace SupportFunctionsTest
             Assert.AreEqual("2016-02-23T18:40:00", date2.ToString());
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DateFormattedTest()
         {
             var date1 = Date.Parse("23-Feb-2016 16:10");
             Assert.AreEqual(date1.Formatted("yyyy-MM-dd"), "2016-02-23");
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DateLocalFormatTest()
         {
             var date = new Date("1-1-2017 1:02:03pm");
             Assert.AreEqual("01-Jan-2017 13:02:03", date.ToLocalFormat);
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DateParseNowTest()
         {
             var nowBefore = UniqueDateTime.NowTicks;
@@ -61,7 +66,8 @@ namespace SupportFunctionsTest
             Assert.IsTrue(nowAfter > now);
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DateParseStringTest()
         {
             var date1 = Date.Parse("23-Feb-2016 16:10").Ticks;
@@ -69,7 +75,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual(date1, date2);
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DateParseTicksTest()
         {
             var now1 = DateTime.Today.Ticks;
@@ -77,7 +84,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual(now1, now);
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DateParseTodayTest()
         {
             var now1 = DateTime.Today.Ticks;
@@ -85,7 +93,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual(now1, now);
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DateParseUtcNowTest()
         {
             // check whether the UtcNow ticks are unique and increasing
@@ -101,7 +110,8 @@ namespace SupportFunctionsTest
             Assert.IsTrue(Math.Abs(ticksDifference - ticksRealDifference) < 10000);
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DateParseUtcTodayTest()
         {
             var now1 = DateTime.UtcNow.Date.Ticks;
@@ -109,7 +119,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual(now1, now);
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DateParseWithFormatTest()
         {
             var ticksExpected = new DateTime(2018, 1, 11, 0, 0, 0).Ticks;
@@ -124,7 +135,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual(ticksExpected1, Date.ParseFormatted("11-Jan-18 13:14:15", "dd-MMM-yy HH:mm:ss").Ticks);
         }
 
-        [TestMethod, TestCategory("Integration")]
+        [TestMethod]
+        [TestCategory("Integration")]
         public void DateShortDateFormatTest()
         {
             var format = Date.ShortDateFormat;
@@ -133,8 +145,8 @@ namespace SupportFunctionsTest
             Assert.IsTrue(format.Contains("yy"), "years found");
         }
 
-        [TestMethod, TestCategory("Integration")]
-
+        [TestMethod]
+        [TestCategory("Integration")]
         public void DateTimeFormatTest()
         {
             var format = Date.TimeFormat;
@@ -143,7 +155,8 @@ namespace SupportFunctionsTest
             Assert.IsTrue(format.Contains("h") || format.Contains("H"), "hours found");
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void DateToStringTest()
         {
             Date.ResetDefaultFormat();

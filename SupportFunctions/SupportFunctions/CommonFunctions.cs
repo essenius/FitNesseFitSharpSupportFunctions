@@ -75,24 +75,6 @@ namespace SupportFunctions
         /// <returns>the input parameter. Useful for initializing symbols</returns>
         public static object Echo(object input) => input;
 
-        private static object EvaluateExpression(string expression, Type type, IEnumerable<string> parameters)
-        {
-            // making use of the fact that DataTables come with a handy eval function
-            using var dataTable = new DataTable {Locale = CultureInfo.InvariantCulture};
-            var columnDictionary = parameters?.ToDictionary() ?? new Dictionary<string, string>();
-            columnDictionary.Add("Eval", expression);
-            foreach (var entry in columnDictionary)
-            {
-                // we take the object type for all parameters, and the specified type for the evaluation result
-                var paramColumn = new DataColumn(entry.Key, entry.Key == "Eval" ? type : typeof(object), entry.Value);
-                dataTable.Columns.Add(paramColumn);
-            }
-
-            // all columns are expressions so no need to add data. We just need a row to refer to.
-            dataTable.Rows.Add(dataTable.NewRow());
-            return dataTable.Rows[0]["Eval"];
-        }
-
         /// <summary>Evaluate an expression</summary>
         /// <param name="expression">
         ///     the expression to evaluate. Supported operations: addition (+), subtraction (-), multiplication (*),
@@ -128,6 +110,24 @@ namespace SupportFunctions
                 : EvaluateExpression(expression, returnType, parameters);
         }
 
+        private static object EvaluateExpression(string expression, Type type, IEnumerable<string> parameters)
+        {
+            // making use of the fact that DataTables come with a handy eval function
+            using var dataTable = new DataTable { Locale = CultureInfo.InvariantCulture };
+            var columnDictionary = parameters?.ToDictionary() ?? new Dictionary<string, string>();
+            columnDictionary.Add("Eval", expression);
+            foreach (var entry in columnDictionary)
+            {
+                // we take the object type for all parameters, and the specified type for the evaluation result
+                var paramColumn = new DataColumn(entry.Key, entry.Key == "Eval" ? type : typeof(object), entry.Value);
+                dataTable.Columns.Add(paramColumn);
+            }
+
+            // all columns are expressions so no need to add data. We just need a row to refer to.
+            dataTable.Rows.Add(dataTable.NewRow());
+            return dataTable.Rows[0]["Eval"];
+        }
+
         /// <summary>Experimental - do not use</summary>
         public static object EvaluateWithParams(string expression, string[] parameters) => EvaluateExpression(expression, typeof(object), parameters);
 
@@ -138,7 +138,7 @@ namespace SupportFunctions
         ///     and/or end of the pattern. For IN, specify the values between parentheses, e.g. ′a′ IN (′a′, ′b′, ′c′)
         /// </param>
         /// <returns>whether the expression evaluated to True</returns>
-        public static bool IsTrue(string expression) => (bool) EvaluateExpression(expression, typeof(bool), null);
+        public static bool IsTrue(string expression) => (bool)EvaluateExpression(expression, typeof(bool), null);
 
         /// <returns>the leftmost characters of a string</returns>
         public static string LeftmostOf(int length, string input)

@@ -41,9 +41,9 @@ namespace SupportFunctionsTest
             Assert.IsFalse(new DictionaryFile(fileName).Delete(), "File exists before");
             var dictionary = new Dictionary<string, string>
             {
-                {"1", "a"},
-                {"2", "b"},
-                {"3", "c"}
+                { "1", "a" },
+                { "2", "b" },
+                { "3", "c" }
             };
             using var fs = File.OpenWrite(fileName);
             using var writer = new BinaryWriter(fs);
@@ -61,14 +61,15 @@ namespace SupportFunctionsTest
             Assert.IsFalse(File.Exists(fileName), "File does not exist at end");
         }
 
-        [TestMethod, TestCategory("Integration")]
+        [TestMethod]
+        [TestCategory("Integration")]
         public void DictionaryFileSaveLoadTest()
         {
             var dictionary = new Dictionary<string, string>
             {
-                {"1", "a"},
-                {"2", "b"},
-                {"3", "c"}
+                { "1", "a" },
+                { "2", "b" },
+                { "3", "c" }
             };
             const string defaultFileName = "DictionaryStore.json";
             new DictionaryFile(defaultFileName).Delete();
@@ -82,12 +83,13 @@ namespace SupportFunctionsTest
             Assert.IsFalse(File.Exists(defaultFileName), "File does not exist after saving empty dictionary");
         }
 
-        [TestMethod, TestCategory("Integration")]
+        [TestMethod]
+        [TestCategory("Integration")]
         public void DictionaryFileWaitForFileTest()
         {
             const string testFile = "test.txt";
             new DictionaryFile(testFile).Delete();
-            var waiter = new DictionaryFile(testFile) {TimeoutSeconds = 0.2};
+            var waiter = new DictionaryFile(testFile) { TimeoutSeconds = 0.2 };
             var task = new Task(() =>
             {
                 Thread.Sleep(100);
@@ -100,7 +102,8 @@ namespace SupportFunctionsTest
             File.Delete(testFile);
         }
 
-        [TestMethod, TestCategory("Integration")]
+        [TestMethod]
+        [TestCategory("Integration")]
         public void DictionaryFileWaitForLockedFileTest()
         {
             const string fileName = "test.txt";
@@ -109,7 +112,7 @@ namespace SupportFunctionsTest
                 File.Delete(fileName);
             }
             var file = File.Create(fileName);
-            var waiter = new DictionaryFile(fileName) {TimeoutSeconds = 0.2};
+            var waiter = new DictionaryFile(fileName) { TimeoutSeconds = 0.2 };
             Assert.IsFalse(waiter.WaitFor());
             file.Close();
             File.Delete(fileName);

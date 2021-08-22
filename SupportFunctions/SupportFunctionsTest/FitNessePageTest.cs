@@ -176,13 +176,13 @@ namespace SupportFunctionsTest
             "!|Dictionary|TableName|\n|Key|Value|\n|key5|value5|\n|key6|value6|\n" + UriSeparator)]
         public void FitNessePageInsertTableAtTests(string testCase, string inputPage, int lineIndex, string expectedResult)
         {
-                var dict = new Dictionary<string, string> { { "key5", "value5" }, { "key6", "value6" } };
-                var fitnessePage = new FitNessePageMock(inputPage);
-                fitnessePage.LoadTableFromPage("TableName", "PageName");
-                _insertTableAtMethod.Invoke(fitnessePage, new object[] { "NewTableName", dict, lineIndex });
-                _savePageMethod.Invoke(fitnessePage, new object[] { "PageName" });
-                var expected = PageDataRequest + DeletePageRequest + AddChildPartialRequest + expectedResult;
-                Assert.AreEqual(expected, fitnessePage.UsedUri, "Testcase " + testCase);
+            var dict = new Dictionary<string, string> { { "key5", "value5" }, { "key6", "value6" } };
+            var fitnessePage = new FitNessePageMock(inputPage);
+            fitnessePage.LoadTableFromPage("TableName", "PageName");
+            _insertTableAtMethod.Invoke(fitnessePage, new object[] { "NewTableName", dict, lineIndex });
+            _savePageMethod.Invoke(fitnessePage, new object[] { "PageName" });
+            var expected = PageDataRequest + DeletePageRequest + AddChildPartialRequest + expectedResult;
+            Assert.AreEqual(expected, fitnessePage.UsedUri, "Testcase " + testCase);
         }
 
         [DataTestMethod]

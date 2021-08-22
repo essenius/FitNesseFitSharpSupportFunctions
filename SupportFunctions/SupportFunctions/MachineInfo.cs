@@ -17,8 +17,8 @@ using SupportFunctions.Utilities;
 namespace SupportFunctions
 {
     /// <summary>Machine information</summary>
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Used by FitSharp"),
-     SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used by FitSharp")]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Used by FitSharp")]
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "Used by FitSharp")]
     public sealed class MachineInfo
     {
         /// <returns>the fully qualified domain name of the current machine, i.e. machine name with full domain</returns>

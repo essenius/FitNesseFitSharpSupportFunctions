@@ -24,23 +24,23 @@ namespace SupportFunctions.Utilities
         // Now hard coding it since it was not worth the effort to find a new mechanism - this is static anyway.
         private static readonly Dictionary<string, Type> BuiltInTypeDictionary = new Dictionary<string, Type>
         {
-            {"DATE", typeof(Date)},
-            {"OBJECT", typeof(object)},
-            {"STRING", typeof(string)},
-            {"BOOL", typeof(bool)},
-            {"BYTE", typeof(byte)},
-            {"CHAR", typeof(char)},
-            {"DECIMAL", typeof(decimal)},
-            {"DOUBLE", typeof(double)},
-            {"SHORT", typeof(short)},
-            {"INT", typeof(int)},
-            {"LONG", typeof(long)},
-            {"SBYTE", typeof(sbyte)},
-            {"FLOAT", typeof(float)},
-            {"USHORT", typeof(ushort)},
-            {"UINT", typeof(uint)},
-            {"ULONG", typeof(ulong)},
-            {"VOID", typeof(void)}
+            { "DATE", typeof(Date) },
+            { "OBJECT", typeof(object) },
+            { "STRING", typeof(string) },
+            { "BOOL", typeof(bool) },
+            { "BYTE", typeof(byte) },
+            { "CHAR", typeof(char) },
+            { "DECIMAL", typeof(decimal) },
+            { "DOUBLE", typeof(double) },
+            { "SHORT", typeof(short) },
+            { "INT", typeof(int) },
+            { "LONG", typeof(long) },
+            { "SBYTE", typeof(sbyte) },
+            { "FLOAT", typeof(float) },
+            { "USHORT", typeof(ushort) },
+            { "UINT", typeof(uint) },
+            { "ULONG", typeof(ulong) },
+            { "VOID", typeof(void) }
         };
 
         public static void AddWithCheck<T>(this IDictionary<DateTime, T> dictionary, DateTime key, T value, string id)
@@ -61,14 +61,39 @@ namespace SupportFunctions.Utilities
         public static object CastToInferredType(this string input)
         {
             var target = input;
-            // we never infer hex numbers to be signed
-            if (NumericFunctions.TryParseHex(input, false, out var hexValue)) target = hexValue.ToString();
+            // we infer hex numbers to be signed; size in bytes determines which return value to be used (byte, short, int, long)
+            if (NumericFunctions.TryParseHex(input, true, out var hexValue)) target = hexValue.ToString();
             if (int.TryParse(target, out var intValue)) return intValue;
             if (long.TryParse(target, out var longValue)) return longValue;
             if (decimal.TryParse(target, out var decimalValue)) return decimalValue;
             if (double.TryParse(target, out var doubleValue)) return doubleValue;
             if (bool.TryParse(target, out var boolValue)) return boolValue;
             return input;
+        }
+
+        private static object ChangeType(object value, Type targetType)
+        {
+            var source = value;
+            // if we want a numeric result and we have a hex value, convert the hex to long first.
+            if (targetType.IsNumeric() && NumericFunctions.TryParseHex(value?.ToString(), targetType.IsSigned(), out var hexValue))
+            {
+                source = hexValue;
+            }
+            try
+            {
+                return Convert.ChangeType(source, targetType, InvariantCulture);
+            }
+            catch (Exception e) when (e is FormatException || e is InvalidCastException)
+            {
+                try
+                {
+                    return Convert.ChangeType(source, targetType, CurrentUICulture);
+                }
+                catch (Exception fe) when (fe is FormatException || fe is InvalidCastException)
+                {
+                    throw new FormatException(Invariant($"Could not convert '{value}' to {targetType.Name}"), fe);
+                }
+            }
         }
 
         /// <summary>
@@ -79,8 +104,8 @@ namespace SupportFunctions.Utilities
         public static Type InferType(this object value)
         {
             var stringValue = value?.ToString();
-            // we never infer hex numbers to be signed
-            if (NumericFunctions.TryParseHex(stringValue, false, out var hexValue)) stringValue = hexValue.ToString();
+            // we infer hex numbers to be signed, see CastToInferredType
+            if (NumericFunctions.TryParseHex(stringValue, true, out var hexValue)) stringValue = hexValue.ToString();
             if (int.TryParse(stringValue, NumberStyles.Integer, InvariantCulture, out _)) return typeof(int);
             if (long.TryParse(stringValue, NumberStyles.Integer, InvariantCulture, out _)) return typeof(long);
             if (double.TryParse(stringValue, NumberStyles.Any, InvariantCulture, out _)) return typeof(double);
@@ -125,31 +150,6 @@ namespace SupportFunctions.Utilities
             return ChangeType(value, type ?? targetType);
         }
 
-        private static object ChangeType(object value, Type targetType)
-        {
-            var source = value;
-            // if we want a numeric result and we have a hex value, convert the hex to long first.
-            if (targetType.IsNumeric() && NumericFunctions.TryParseHex(value?.ToString(), targetType.IsSigned(), out var hexValue))
-            {
-                source = hexValue;
-            }
-            try
-            {
-                return Convert.ChangeType(source, targetType, InvariantCulture);
-            }
-            catch (Exception e) when (e is FormatException || e is InvalidCastException)
-            {
-                try
-                {
-                    return Convert.ChangeType(source, targetType, CurrentUICulture);
-                }
-                catch (Exception fe) when (fe is FormatException || fe is InvalidCastException)
-                {
-                    throw new FormatException(Invariant($"Could not convert '{value}' to {targetType.Name}"), fe);
-                }
-            }
-        }
-
         /// <summary>
         ///     Convert a value to the specified types
         /// </summary>
@@ -157,7 +157,7 @@ namespace SupportFunctions.Utilities
         /// <param name="value">The value to convert</param>
         /// <returns>the converted value</returns>
         /// <exception cref="FormatException">if the conversion fails</exception>
-        public static T To<T>(this object value) => (T) To(value, typeof(T));
+        public static T To<T>(this object value) => (T)To(value, typeof(T));
 
         public static Dictionary<string, string> ToDictionary(this IEnumerable<string> keyValuePairStrings)
         {

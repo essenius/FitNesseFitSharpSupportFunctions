@@ -21,16 +21,32 @@ namespace SupportFunctionsTest
     [TestClass]
     public class CommonFunctionsTest
     {
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
+        public void CommonFunctionsCalculateTest()
+        {
+            Assert.AreEqual(5, CommonFunctions.Calculate("2 + 3"), "2 + 3 = 5");
+            Assert.AreEqual(2.5, CommonFunctions.Calculate("5 / 2"), "5 / 2 = 2.5");
+            Assert.AreEqual(2d, CommonFunctions.Calculate("6 / 3"), "6 / 3 = 2");
+            Assert.AreEqual(2, CommonFunctions.Calculate("8 % 3"), "8 % 3 = 2");
+            Assert.AreEqual(3, CommonFunctions.Calculate("len('abc')"), "len('abc') = 3");
+        }
+
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CommonFunctionsCloneSymbolTest() => Assert.AreEqual(5, CommonFunctions.CloneSymbol(5));
 
-        [TestMethod, TestCategory("Unit")]
-        public void CommonFunctionsConcatenateTest() => Assert.AreEqual("abc", CommonFunctions.Concatenate(new[] {"a", "b", "c"}));
+        [TestMethod]
+        [TestCategory("Unit")]
+        public void CommonFunctionsConcatenateTest() => Assert.AreEqual("abc", CommonFunctions.Concatenate(new[] { "a", "b", "c" }));
 
-        [Obsolete("Use Concatenate instead"), TestMethod, TestCategory("Unit")]
-        public void CommonFunctionsConcatTest() => Assert.AreEqual("ab", CommonFunctions.Concat(new[] {"a", "b"}));
+        [Obsolete("Use Concatenate instead")]
+        [TestMethod]
+        [TestCategory("Unit")]
+        public void CommonFunctionsConcatTest() => Assert.AreEqual("ab", CommonFunctions.Concat(new[] { "a", "b" }));
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CommonFunctionsDateTests()
         {
             Date.ResetDefaultFormat();
@@ -46,42 +62,32 @@ namespace SupportFunctionsTest
             Assert.AreEqual("August 28, 1969", date.ToString());
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CommonFunctionsEchoDictTest()
         {
             var dict = new Dictionary<string, string>
             {
-                {"a", "b"},
-                {"c", "d"}
+                { "a", "b" },
+                { "c", "d" }
             };
             Assert.AreEqual(dict, CommonFunctions.Echo(dict));
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CommonFunctionsEchoTest() => Assert.AreEqual("abc", CommonFunctions.Echo("abc"));
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CommonFunctionsEscapeRegexTest()
         {
             Assert.AreEqual(@"a\\b", CommonFunctions.RegexEscape(@"a\b"));
             Assert.AreEqual(@"a\b", CommonFunctions.RegexUnescape(@"a\\b"));
         }
 
-        [TestMethod, TestCategory("Unit")]
-        public void CommonFunctionsEvaluateTest()
-        {
-            Assert.AreEqual(32769, CommonFunctions.Evaluate("32767+2"), "32769 + 2 = 32769");
-            Assert.AreEqual("23", CommonFunctions.Evaluate("'2' + '3'"), " '2' + '3' = '23'");
-            Assert.AreEqual(0.75, CommonFunctions.Evaluate("3 / 4"), "3 / 4 = 0.75");
-            Assert.AreEqual(9999999999999999999999999999M,
-                CommonFunctions.Evaluate("9999999999999999999999999998. + 1"),
-                "99999999999999999999999998. + 1 = 99999999999999999999999999");
-            Assert.IsTrue((bool) CommonFunctions.Evaluate("6 > 5"), "6 > 5");
-            Assert.AreEqual(2, CommonFunctions.Evaluate("8 % 3"), "8 % 3 = 2");
-            Assert.AreEqual(new DateTime(1995, 5, 9), CommonFunctions.Evaluate("#9-May-1995#"), "#9-May-1995#");
-        }
-
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CommonFunctionsEvaluateAsTest()
         {
             Assert.AreEqual(32769, CommonFunctions.EvaluateAs("32767+2", "int"), "32767 + 2 = 32769");
@@ -91,7 +97,7 @@ namespace SupportFunctionsTest
             Assert.AreEqual(9999999999999999999999999999M,
                 CommonFunctions.EvaluateAs("9999999999999999999999999998. + 1", "decimal"),
                 "99999999999999999999999998. + 1 = 99999999999999999999999999");
-            Assert.IsTrue((bool) CommonFunctions.EvaluateAs("6 > 5", "bool"), "6 > 5");
+            Assert.IsTrue((bool)CommonFunctions.EvaluateAs("6 > 5", "bool"), "6 > 5");
             Assert.AreEqual(2, CommonFunctions.EvaluateAs("8 % 3", "System.Int32"), "8 % 3 = 2");
             Assert.AreEqual(new DateTime(1995, 5, 9), CommonFunctions.EvaluateAs("#9-May-1995#", "System.DateTime"),
                 "#9-May-1995#");
@@ -99,15 +105,18 @@ namespace SupportFunctionsTest
                 CommonFunctions.EvaluateAs("#22-Oct-1999#", "Date").ToString(), "#22-Oct-1999#");
         }
 
-        [TestMethod, TestCategory("Unit"), ExpectedExceptionWithMessage(typeof(ArgumentException),
+        [TestMethod]
+        [TestCategory("Unit")]
+        [ExpectedExceptionWithMessage(typeof(ArgumentException),
 #if NET5_0
         "Type 'WrongType' not recognized. (Parameter 'type')")]
 #else
-        "Type 'WrongType' not recognized.\r\nParameter name: type")]
+            "Type 'WrongType' not recognized.\r\nParameter name: type")]
 #endif
         public void CommonFunctionsEvaluateAsThrowsExceptionsTest() => CommonFunctions.EvaluateAs(string.Empty, "WrongType");
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CommonFunctionsEvaluateAsWithParamTest()
         {
             // can't use powers or other math functions, unfortunately. Just the basic stuff
@@ -124,7 +133,23 @@ namespace SupportFunctionsTest
             Assert.AreEqual(625.0, CommonFunctions.EvaluateAsWithParams("xx*xx", "double", parameters));
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
+        public void CommonFunctionsEvaluateTest()
+        {
+            Assert.AreEqual(32769, CommonFunctions.Evaluate("32767+2"), "32769 + 2 = 32769");
+            Assert.AreEqual("23", CommonFunctions.Evaluate("'2' + '3'"), " '2' + '3' = '23'");
+            Assert.AreEqual(0.75, CommonFunctions.Evaluate("3 / 4"), "3 / 4 = 0.75");
+            Assert.AreEqual(9999999999999999999999999999M,
+                CommonFunctions.Evaluate("9999999999999999999999999998. + 1"),
+                "99999999999999999999999998. + 1 = 99999999999999999999999999");
+            Assert.IsTrue((bool)CommonFunctions.Evaluate("6 > 5"), "6 > 5");
+            Assert.AreEqual(2, CommonFunctions.Evaluate("8 % 3"), "8 % 3 = 2");
+            Assert.AreEqual(new DateTime(1995, 5, 9), CommonFunctions.Evaluate("#9-May-1995#"), "#9-May-1995#");
+        }
+
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CommonFunctionsEvaluateWithParamTest()
         {
             var parameters = new[]
@@ -137,23 +162,16 @@ namespace SupportFunctionsTest
             Assert.AreEqual(2.5, CommonFunctions.EvaluateWithParams("xx/10", parameters));
         }
 
-        [TestMethod, TestCategory("Unit")]
-        public void CommonFunctionsCalculateTest()
-        {
-            Assert.AreEqual(5, CommonFunctions.Calculate("2 + 3"), "2 + 3 = 5");
-            Assert.AreEqual(2.5, CommonFunctions.Calculate("5 / 2"), "5 / 2 = 2.5");
-            Assert.AreEqual(2d, CommonFunctions.Calculate("6 / 3"), "6 / 3 = 2");
-            Assert.AreEqual(2, CommonFunctions.Calculate("8 % 3"), "8 % 3 = 2");
-            Assert.AreEqual(3, CommonFunctions.Calculate("len('abc')"), "len('abc') = 3");
-        }
-
-        [TestMethod, TestCategory("Unit"), ExpectedException(typeof(ArgumentException))]
+        [TestMethod]
+        [TestCategory("Unit")]
+        [ExpectedException(typeof(ArgumentException))]
         public void CommonFunctionsGetOfExceptionTest()
         {
             ReflectionFunctions.Get(string.Empty);
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CommonFunctionsIsTrueTest()
         {
             Assert.AreEqual(true, CommonFunctions.IsTrue("2 < 3"), "2 < 3");
@@ -162,7 +180,8 @@ namespace SupportFunctionsTest
             Assert.IsFalse(CommonFunctions.IsTrue("len('ab') = 3"), "len('ab') <> 3");
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CommonFunctionsLeftmostTest()
         {
             Assert.AreEqual(@"abcd", CommonFunctions.LeftmostOf(4, @"abcdefg"));
@@ -170,14 +189,16 @@ namespace SupportFunctionsTest
             Assert.AreEqual("", CommonFunctions.LeftmostOf(4, ""));
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CommonFunctionsParseFormattedTest()
         {
             var date = CommonFunctions.ParseFormatted("12-11-2010 9:8:7", "MM-dd-yyyy H:m:s");
             Assert.AreEqual("11/12/10 09:08:07 AM", date.Formatted("dd/MM/yy hh:mm:ss tt"));
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CommonFunctionsRightmostTest()
         {
             Assert.AreEqual(@"defg", CommonFunctions.RightmostOf(4, @"abcdefg"));
@@ -185,7 +206,8 @@ namespace SupportFunctionsTest
             Assert.AreEqual("", CommonFunctions.RightmostOf(4, ""));
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CommonFunctionsTicksTest()
         {
             var firstCheck = UniqueDateTime.NowTicks;
@@ -214,7 +236,8 @@ namespace SupportFunctionsTest
             Assert.IsTrue(ticks2 - firstCheck > ticksElapsed1, "ticks2 - firstCheck > ticksElapsed");
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CommonFunctionsToLocalTest()
         {
             var date = new Date("1/1/2018");
@@ -224,7 +247,8 @@ namespace SupportFunctionsTest
             Console.WriteLine(offset.Ticks);
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CommonFunctionsToUtcTest()
         {
             var date = new Date("1/1/2018");
@@ -234,7 +258,8 @@ namespace SupportFunctionsTest
             Console.WriteLine(offset.Ticks);
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CommonFunctionsTrimTest() => Assert.AreEqual("abc", CommonFunctions.Trim("  abc   "));
     }
 }

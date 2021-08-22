@@ -25,10 +25,8 @@ namespace SupportFunctionsTest
         [DataRow(900d, "min")]
         [DataRow(50000d, "h")]
         [DataRow(3D * 24D * 3600D, "d")]
-        public void TimeUnitForDisplayCaptionTest(double timespan, string expectedUnit)
-        {
+        public void TimeUnitForDisplayCaptionTest(double timespan, string expectedUnit) =>
             Assert.AreEqual(expectedUnit, new TimeUnitForDisplay(timespan).Caption, "Caption");
-        }
 
         [DataTestMethod]
         [TestCategory("Unit")]

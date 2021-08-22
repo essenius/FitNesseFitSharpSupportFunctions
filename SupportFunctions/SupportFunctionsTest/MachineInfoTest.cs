@@ -17,7 +17,8 @@ namespace SupportFunctionsTest
     [TestClass]
     public class MachineInfoTest
     {
-        [TestMethod, TestCategory("Integration")]
+        [TestMethod]
+        [TestCategory("Integration")]
         public void MachineInfoFullyQualifiedDomainNameTest()
         {
             var fqdn = MachineInfo.FullyQualifiedDomainName();

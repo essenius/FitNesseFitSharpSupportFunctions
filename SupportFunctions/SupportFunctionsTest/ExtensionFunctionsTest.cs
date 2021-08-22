@@ -25,13 +25,13 @@ namespace SupportFunctionsTest
         [DataRow("0xcafe", TypeCode.Int32)]
         [DataRow("0x0x", TypeCode.String)]
         [DataRow("1", TypeCode.Int32)]
-        [DataRow( int.MaxValue + 1L, TypeCode.Int64)]
+        [DataRow(int.MaxValue + 1L, TypeCode.Int64)]
         [DataRow("1.1", TypeCode.Decimal)]
         [DataRow("1E+24", TypeCode.Double)]
         [DataRow("true", TypeCode.Boolean)]
         [DataRow("-.", TypeCode.String)]
         [DataRow("x", TypeCode.String)]
-        public void ExtensionFunctionsCastToInferredTypeTest(object input, TypeCode expected) => 
+        public void ExtensionFunctionsCastToInferredTypeTest(object input, TypeCode expected) =>
             Assert.AreEqual(expected, Type.GetTypeCode(input.ToString().CastToInferredType().GetType()));
 
         [DataTestMethod]
@@ -96,12 +96,12 @@ namespace SupportFunctionsTest
 
         [DataTestMethod]
         [TestCategory("Unit")]
-        [DataRow(0,"A")]
+        [DataRow(0, "A")]
         [DataRow(25, "Z")]
         [DataRow(26, "AA")]
         [DataRow(52, "BA")]
         [DataRow(702, "AAA")]
-        public void ExtensionFunctionsExcelColumnNameTest(int columnIndex, string columnName ) => 
+        public void ExtensionFunctionsExcelColumnNameTest(int columnIndex, string columnName) =>
             Assert.AreEqual(columnName, columnIndex.ToExcelColumnName());
 
         [DataTestMethod]

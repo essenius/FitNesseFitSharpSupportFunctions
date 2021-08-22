@@ -18,7 +18,8 @@ namespace SupportFunctionsTest
     [TestClass]
     public class CellComparisonTest
     {
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CellComparisonTest1()
         {
             var tolerance = Tolerance.Parse("1%");

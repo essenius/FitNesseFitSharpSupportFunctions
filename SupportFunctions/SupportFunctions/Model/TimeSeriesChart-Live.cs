@@ -37,16 +37,16 @@ namespace SupportFunctions.Model
         private const string ExpectedCaption = "Expected";
         private const string FailCaption = "Fail";
         private const int LineThickness = 3;
+        private const int MaxTextSize = 16;
+        private const int MinTextSize = 10;
+        private const int TextScalingFactor = 40;
         private const string XAxisTitleTemplate = "Time ({0})";
         private const string YAxisTitle = "Value";
-        private const int MinTextSize = 10;
-        private const int MaxTextSize = 16;
-        private const int TextScalingFactor = 40;
         private static readonly SKColor ActualColor = SKColors.MidnightBlue;
         private static readonly SKColor AxisColor = SKColors.DarkSlateGray;
         private static readonly SKColor ChartColor = SKColors.WhiteSmoke;
-        private static readonly SKColor FailColor = SKColors.Crimson;
         private static readonly SKColor ExpectedColor = SKColors.MediumAquamarine;
+        private static readonly SKColor FailColor = SKColors.Crimson;
         private static readonly SKColor MajorGridColor = SKColors.DarkGray;
 
         private ISeries _actualSeries;
@@ -65,31 +65,15 @@ namespace SupportFunctions.Model
             values.Add(point);
         }
 
-        
-        private static SKImage CombinedImage(SKImage graph, SKImage legend, int bottomMargin, int rightMargin)
-        {
-            // Draw the legend in the bottom right of the graph. 
-            // We do this by drawing both images on a new canvas, and taking a snapshot.
-            // offset by right margin so the legend aligns with the graph.
-            var imageSize = new SKSize(graph.Width, graph.Height);
-            using var surface = SKSurface.Create(new SKImageInfo(graph.Width, graph.Height));
-            using var canvas = surface.Canvas;
-            canvas.Clear(SKColors.Transparent);
-            canvas.DrawImage(graph, SKRect.Create(new SKPoint(0, 0), imageSize));
-            var legendPosition = new SKPoint(graph.Width - legend.Width - rightMargin - 1, graph.Height - legend.Height -bottomMargin - 1);
-            canvas.DrawImage(legend, SKRect.Create(legendPosition, new SKSize(legend.Width, legend.Height)));
-            return surface.Snapshot();
-        }
-
         private string AsBase64PngString()
         {
             Requires.NotNull(_chart, nameof(_chart));
-            using var  legend = new TimeSeriesLegend();
+            using var legend = new TimeSeriesLegend();
             using var image = _chart.GetImage();
             legend.Draw(_chart);
             using var legendImage = legend.Result;
             var rightMargin = (int)(_chart.Width - _chart.Core.DrawMarginSize.Width - _chart.Core.DrawMarginLocation.X);
-            using var combinedImage = CombinedImage(image, legendImage, (legend.MaxHeight - legend.Height)/2,rightMargin);
+            using var combinedImage = CombinedImage(image, legendImage, (legend.MaxHeight - legend.Height) / 2, rightMargin);
             using var encodedImage = combinedImage.Encode();
             return Convert.ToBase64String(encodedImage.AsSpan());
         }
@@ -97,13 +81,13 @@ namespace SupportFunctions.Model
         internal string ChartDataFor(MeasurementComparisonDictionary sourceData, AxisLimits limits, Size size)
         {
             InitChart(size);
-            var axisPaint = new SolidColorPaint(AxisColor) {StrokeThickness = LineThickness};
+            var axisPaint = new SolidColorPaint(AxisColor) { StrokeThickness = LineThickness };
             var timeUnit = limits.TimeUnit;
             limits.EnsureNonZeroRanges();
             InitSeries(sourceData, limits.StartTimestamp, timeUnit);
             _chart.Sections = new List<RectangularSection>()
-                .Append(new RectangularSection {Xi = 0, Xj = 0, Stroke = axisPaint})
-                .Append(new RectangularSection {Yi = 0, Yj = 0, Stroke = axisPaint});
+                .Append(new RectangularSection { Xi = 0, Xj = 0, Stroke = axisPaint })
+                .Append(new RectangularSection { Yi = 0, Yj = 0, Stroke = axisPaint });
             _chart.XAxes = CreateAxes(limits.X, XAxisTitleTemplate.FillIn(timeUnit.Caption));
 
             _chart.YAxes = CreateAxes(limits.Y, YAxisTitle);
@@ -114,6 +98,22 @@ namespace SupportFunctions.Model
         {
             var chartInBase64 = ChartDataFor(sourceData, limits, size);
             return WebFunctions.AsImg(chartInBase64);
+        }
+
+
+        private static SKImage CombinedImage(SKImage graph, SKImage legend, int bottomMargin, int rightMargin)
+        {
+            // Draw the legend in the bottom right of the graph. 
+            // We do this by drawing both images on a new canvas, and taking a snapshot.
+            // offset by right margin so the legend aligns with the graph.
+            var imageSize = new SKSize(graph.Width, graph.Height);
+            using var surface = SKSurface.Create(new SKImageInfo(graph.Width, graph.Height));
+            using var canvas = surface.Canvas;
+            canvas.Clear(SKColors.Transparent);
+            canvas.DrawImage(graph, SKRect.Create(new SKPoint(0, 0), imageSize));
+            var legendPosition = new SKPoint(graph.Width - legend.Width - rightMargin - 1, graph.Height - legend.Height - bottomMargin - 1);
+            canvas.DrawImage(legend, SKRect.Create(legendPosition, new SKSize(legend.Width, legend.Height)));
+            return surface.Snapshot();
         }
 
         private IEnumerable<IAxis> CreateAxes(Dimension limits, string name)
@@ -142,7 +142,7 @@ namespace SupportFunctions.Model
             {
                 Width = size.Width, Height = size.Height, Background = SKColors.White
             };
-            _textSize = Math.Max(Math.Min(size.Width / TextScalingFactor, MaxTextSize),MinTextSize);
+            _textSize = Math.Max(Math.Min(size.Width / TextScalingFactor, MaxTextSize), MinTextSize);
         }
 
         private void InitSeries(MeasurementComparisonDictionary sourceData, DateTime baseTimestamp, TimeUnitForDisplay timeUnit)
@@ -153,7 +153,7 @@ namespace SupportFunctions.Model
                 Fill = null,
                 LineSmoothness = 0,
                 GeometrySize = 0,
-                Stroke = new SolidColorPaint(ExpectedColor) {StrokeThickness = LineThickness, PathEffect = new DashEffect(new[] {5f, 5f})},
+                Stroke = new SolidColorPaint(ExpectedColor) { StrokeThickness = LineThickness, PathEffect = new DashEffect(new[] { 5f, 5f }) },
                 Name = ExpectedCaption
             };
             _actualSeries = new LineSeries<ObservablePoint>
@@ -162,7 +162,7 @@ namespace SupportFunctions.Model
                 Fill = null,
                 LineSmoothness = 0,
                 GeometrySize = 0,
-                Stroke = new SolidColorPaint(ActualColor) {StrokeThickness = LineThickness + 1},
+                Stroke = new SolidColorPaint(ActualColor) { StrokeThickness = LineThickness + 1 },
                 Name = ActualCaption
             };
             var errorPaint = new SolidColorPaint(FailColor);
@@ -195,7 +195,7 @@ namespace SupportFunctions.Model
                 AddPoint(_failSeries, xValue, failValue);
             }
 
-            var chartSeries = new List<ISeries> {_actualSeries, _expectedSeries};
+            var chartSeries = new List<ISeries> { _actualSeries, _expectedSeries };
             var errors = _failSeries.Values as List<ObservablePoint>;
             Debug.Assert(errors != null, nameof(errors) + " != null");
             if (errors.Any())

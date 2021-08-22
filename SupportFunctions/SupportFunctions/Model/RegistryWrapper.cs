@@ -33,7 +33,7 @@ namespace SupportFunctions.Model
                     return InternationalValue(ShortDateFormatLocation).ToString();
 #if NET5_0
                 return "dd-MMM-yyyy";
-#endif                
+#endif
             }
         }
 
@@ -49,7 +49,7 @@ namespace SupportFunctions.Model
                     return InternationalValue(TimeFormatLocation).ToString();
 #if NET5_0
                 return "HH:mm:ss";
-#endif                
+#endif
             }
         }
 

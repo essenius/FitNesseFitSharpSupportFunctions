@@ -16,6 +16,8 @@ namespace SupportFunctions.Model
     {
         private readonly float _startXPosition;
 
+        private float _textHeight;
+
         public LegendCursor(float maxWidth, float textHeight)
         {
             TextHeight = textHeight;
@@ -25,9 +27,10 @@ namespace SupportFunctions.Model
             Y = X;
             MaxX = X;
         }
+
         public float GeometryX => (X + LineEndX) / 2;
         public float LineEndX => X + LineWidth;
-        private float LineWidth {get; set; }
+        private float LineWidth { get; set; }
         public float LineY => Y + LineYOffset;
         private float LineYOffset { get; set; }
         private float Margin { get; set; }
@@ -35,8 +38,6 @@ namespace SupportFunctions.Model
         public float MaxX { get; private set; }
         public float MaxY => Y + TextHeight + ShortMargin;
         private float ShortMargin { get; set; }
-
-        private float _textHeight;
 
         private float TextHeight
         {
@@ -51,6 +52,7 @@ namespace SupportFunctions.Model
                 Margin = ShortMargin * 2f;
             }
         }
+
         public float TextStartX => LineEndX + ShortMargin;
         public float TextWidth { get; set; }
         public float TextY => Y + TextYOffset;

@@ -17,15 +17,17 @@ namespace SupportFunctionsTest
     [TestClass]
     public class StopExceptionTest
     {
-        [TestMethod, TestCategory("Unit"),
-         ExpectedExceptionWithMessage(typeof(StopSuiteException), "Message")]
+        [TestMethod]
+        [TestCategory("Unit")]
+        [ExpectedExceptionWithMessage(typeof(StopSuiteException), "Message")]
         public void StopSuiteExceptionInnerTest()
         {
             throw new StopSuiteException("Message", new StopSuiteException());
         }
 
-        [TestMethod, TestCategory("Unit"),
-         ExpectedExceptionWithMessage(typeof(StopTestException), "Message")]
+        [TestMethod]
+        [TestCategory("Unit")]
+        [ExpectedExceptionWithMessage(typeof(StopTestException), "Message")]
         public void StopTestExceptionInnerTest()
         {
             throw new StopTestException("Message", new StopTestException());

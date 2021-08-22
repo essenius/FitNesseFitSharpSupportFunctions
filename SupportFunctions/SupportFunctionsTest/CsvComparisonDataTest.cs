@@ -30,7 +30,8 @@ namespace SupportFunctionsTest
         private CsvComparison _csvComparison;
         private List<List<string>> _expectedResult;
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CsvComparisonDataDoTableCompleteTest()
         {
             var i = 0;
@@ -50,12 +51,13 @@ namespace SupportFunctionsTest
             }
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CsvComparisonDataDoTablePartialTest()
         {
             var desiredHeaders = new Collection<Collection<object>>
             {
-                new Collection<object> {"Value", "Row No", "Column No"}
+                new Collection<object> { "Value", "Row No", "Column No" }
             };
             var i = 0;
             var result = _csvComparison.DoTable(desiredHeaders);
@@ -75,22 +77,23 @@ namespace SupportFunctionsTest
             }
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CsvComparisonDataErrorsTest()
         {
             var errorExpectation = new Dictionary<string, string>
             {
-                {"D1 [Stream3/Key]", "[Stream3] missing (Missing)"},
-                {"C2 [Stream2/Attr1]", "101.1 != 100 (Delta:1.1, 1.1 %, OutsideToleranceIssue)"},
-                {"D2 [Stream3/Attr1]", "[3900] missing (Missing)"},
-                {"A3 [Key/Attr2]", "[Attr4] expected [Attr2] (ValueIssue)"},
-                {"B3 [Stream1/Attr2]", "[n/a] expected [2] (ValueIssue)"},
-                {"C3 [Stream2/Attr2]", "[0] expected [n/a] (ValueIssue)"},
-                {"D3 [Stream3/Attr2]", "[n/a] missing (Missing)"},
-                {"A4 [Key/Attr3]", "[Attr3] missing (Missing)"},
-                {"B4 [Stream1/Attr3]", "[] missing (Missing)"},
-                {"C4 [Stream2/Attr3]", "[Vapor] missing (Missing)"},
-                {"D4 [Stream3/Attr3]", "[Liquid] missing (Missing)"}
+                { "D1 [Stream3/Key]", "[Stream3] missing (Missing)" },
+                { "C2 [Stream2/Attr1]", "101.1 != 100 (Delta:1.1, 1.1 %, OutsideToleranceIssue)" },
+                { "D2 [Stream3/Attr1]", "[3900] missing (Missing)" },
+                { "A3 [Key/Attr2]", "[Attr4] expected [Attr2] (ValueIssue)" },
+                { "B3 [Stream1/Attr2]", "[n/a] expected [2] (ValueIssue)" },
+                { "C3 [Stream2/Attr2]", "[0] expected [n/a] (ValueIssue)" },
+                { "D3 [Stream3/Attr2]", "[n/a] missing (Missing)" },
+                { "A4 [Key/Attr3]", "[Attr3] missing (Missing)" },
+                { "B4 [Stream1/Attr3]", "[] missing (Missing)" },
+                { "C4 [Stream2/Attr3]", "[Vapor] missing (Missing)" },
+                { "D4 [Stream3/Attr3]", "[Liquid] missing (Missing)" }
             };
             var result = _csvComparison.Errors();
             Assert.AreEqual(errorExpectation.Count, result.Count, "Same number of errors");
@@ -101,7 +104,8 @@ namespace SupportFunctionsTest
             }
         }
 
-        [TestMethod, TestCategory("Unit")]
+        [TestMethod]
+        [TestCategory("Unit")]
         public void CsvComparisonDataQueryTest()
         {
             Assert.AreEqual(_expectedResult.Count, _csvComparison.ErrorCount(), "Error count");
@@ -124,12 +128,12 @@ namespace SupportFunctionsTest
         [TestInitialize]
         public void TestInitialize()
         {
-            _baseHeaders = new[] {"Key", "Stream1", "Stream2", "Stream3"};
+            _baseHeaders = new[] { "Key", "Stream1", "Stream2", "Stream3" };
             _baseData = new Collection<string[]>
             {
-                new[] {"Attr1", "1.0", "100", "3.9E+03"},
-                new[] {"Attr2", "2.0", "n/a", "n/a"},
-                new[] {"Attr3", "", "Vapor", "Liquid"}
+                new[] { "Attr1", "1.0", "100", "3.9E+03" },
+                new[] { "Attr2", "2.0", "n/a", "n/a" },
+                new[] { "Attr3", "", "Vapor", "Liquid" }
             };
             _baseTable = new CsvTable(_baseHeaders);
             foreach (var entry in _baseData)
@@ -137,26 +141,26 @@ namespace SupportFunctionsTest
                 _baseTable.Data.Add(entry);
             }
 
-            _actualHeaders = new[] {"Key", "Stream1", "Stream2"};
+            _actualHeaders = new[] { "Key", "Stream1", "Stream2" };
             _actualdata = new Collection<string[]>
             {
-                new[] {"Attr1", "1.0", "101.1"},
-                new[] {"Attr4", "n/a", "0"}
+                new[] { "Attr1", "1.0", "101.1" },
+                new[] { "Attr4", "n/a", "0" }
             };
 
             _expectedResult = new List<List<string>>
             {
-                new List<string> {"D1", "1", "Key", "4 (D)", "Stream3", "[Stream3] missing", ""},
-                new List<string> {"C2", "2", "Attr1", "3 (C)", "Stream2", "101.1 != 100", "1.1 %"},
-                new List<string> {"D2", "2", "Attr1", "4 (D)", "Stream3", "[3900] missing", ""},
-                new List<string> {"A3", "3", "Attr2", "1 (A)", "Key", "[Attr4] expected [Attr2]", ""},
-                new List<string> {"B3", "3", "Attr2", "2 (B)", "Stream1", "[n/a] expected [2]", ""},
-                new List<string> {"C3", "3", "Attr2", "3 (C)", "Stream2", "[0] expected [n/a]", ""},
-                new List<string> {"D3", "3", "Attr2", "4 (D)", "Stream3", "[n/a] missing", ""},
-                new List<string> {"A4", "4", "Attr3", "1 (A)", "Key", "[Attr3] missing", ""},
-                new List<string> {"B4", "4", "Attr3", "2 (B)", "Stream1", "[] missing", ""},
-                new List<string> {"C4", "4", "Attr3", "3 (C)", "Stream2", "[Vapor] missing", ""},
-                new List<string> {"D4", "4", "Attr3", "4 (D)", "Stream3", "[Liquid] missing", ""}
+                new List<string> { "D1", "1", "Key", "4 (D)", "Stream3", "[Stream3] missing", "" },
+                new List<string> { "C2", "2", "Attr1", "3 (C)", "Stream2", "101.1 != 100", "1.1 %" },
+                new List<string> { "D2", "2", "Attr1", "4 (D)", "Stream3", "[3900] missing", "" },
+                new List<string> { "A3", "3", "Attr2", "1 (A)", "Key", "[Attr4] expected [Attr2]", "" },
+                new List<string> { "B3", "3", "Attr2", "2 (B)", "Stream1", "[n/a] expected [2]", "" },
+                new List<string> { "C3", "3", "Attr2", "3 (C)", "Stream2", "[0] expected [n/a]", "" },
+                new List<string> { "D3", "3", "Attr2", "4 (D)", "Stream3", "[n/a] missing", "" },
+                new List<string> { "A4", "4", "Attr3", "1 (A)", "Key", "[Attr3] missing", "" },
+                new List<string> { "B4", "4", "Attr3", "2 (B)", "Stream1", "[] missing", "" },
+                new List<string> { "C4", "4", "Attr3", "3 (C)", "Stream2", "[Vapor] missing", "" },
+                new List<string> { "D4", "4", "Attr3", "4 (D)", "Stream3", "[Liquid] missing", "" }
             };
 
             _actualTable = new CsvTable(_actualHeaders);

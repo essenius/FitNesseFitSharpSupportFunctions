@@ -17,11 +17,12 @@ namespace SupportFunctionsTest
     [TestClass]
     public class StringFunctionsTest
     {
-        [DataTestMethod, TestCategory("Unit")]
+        [DataTestMethod]
+        [TestCategory("Unit")]
         [DataRow("  MAIN  ", true)]
         [DataRow("Main", true)]
         [DataRow("  Man  ", false)]
-        public void StringFunctionsEqualsIgnoreCaseTest(string input, bool expected) => 
+        public void StringFunctionsEqualsIgnoreCaseTest(string input, bool expected) =>
             Assert.AreEqual(expected, input.EqualsIgnoreCase("main"));
     }
 }

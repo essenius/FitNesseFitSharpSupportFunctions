@@ -17,7 +17,6 @@ namespace SupportFunctions.Model
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Used by FitSharp")]
     internal class AxisLimits
     {
-
         public AxisLimits(DateTime startTimestamp, DateTime endTimestamp, Dimension yDimension)
         {
             const bool snapToGrid = true;

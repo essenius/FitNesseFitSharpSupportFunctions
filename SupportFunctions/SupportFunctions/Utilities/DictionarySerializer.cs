@@ -11,45 +11,27 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace SupportFunctions.Utilities
 {
-
 #if NET5_0
-    using System.Text.Json;
-
     internal static class DictionarySerializer
     {
-        public static string Serialize(Dictionary<string, string> dictionary)
-        {
-            return JsonSerializer.Serialize(dictionary);
-        }
-
-        public static  Dictionary<string, string> Deserialize(string input)
-        {
-            return JsonSerializer.Deserialize<Dictionary<string, string>>(input);
-        }
-
         public static Type ParseExceptionType => typeof(JsonException);
 
+        public static Dictionary<string, string> Deserialize(string input) => JsonSerializer.Deserialize<Dictionary<string, string>>(input);
+        public static string Serialize(Dictionary<string, string> dictionary) => JsonSerializer.Serialize(dictionary);
     }
 #else
-    using System.Web.Script.Serialization;
- 
     internal static class DictionarySerializer
     {
-        public static string Serialize(Dictionary<string, string> dictionary)
-        {
-            return new JavaScriptSerializer().Serialize(dictionary);
-        }
-
-        public static  Dictionary<string, string> Deserialize(string input)
-        {
-            return new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(input);
-        }
-
         public static Type ParseExceptionType => typeof(ArgumentException);
 
+        public static Dictionary<string, string> Deserialize(string input) =>
+            new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(input);
+
+        public static string Serialize(Dictionary<string, string> dictionary) => new JavaScriptSerializer().Serialize(dictionary);
     }
 
 #endif

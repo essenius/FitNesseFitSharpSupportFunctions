@@ -38,15 +38,15 @@ namespace SupportFunctions
         internal static readonly Dictionary<string, Func<CellComparison, object>> GetTableValues =
             new Dictionary<string, Func<CellComparison, object>>
             {
-                {CellCaption, result => CellReference(result.Row, result.Column).Report()},
-                {RowNoCaption, result => RowReference(result.Row).Report()},
-                {RowNameCaption, result => result.RowName.Report()},
-                {ColumnNoCaption, result => ColumnReference(result.Column).Report()},
-                {ColumnNameCaption, result => result.ColumnName.Report()},
-                {ValueCaption, result => result.Cell.TableResult(result.Cell.ValueMessage)},
-                {DeltaCaption, result => result.Cell.TableResult(result.Cell.DeltaMessage)},
-                {DeltaPercentageCaption, result => result.Cell.TableResult(result.Cell.DeltaPercentageMessage)},
-                {IssueCaption, result => result.Cell.TableResult(result.Cell.Outcome.ToString())}
+                { CellCaption, result => CellReference(result.Row, result.Column).Report() },
+                { RowNoCaption, result => RowReference(result.Row).Report() },
+                { RowNameCaption, result => result.RowName.Report() },
+                { ColumnNoCaption, result => ColumnReference(result.Column).Report() },
+                { ColumnNameCaption, result => result.ColumnName.Report() },
+                { ValueCaption, result => result.Cell.TableResult(result.Cell.ValueMessage) },
+                { DeltaCaption, result => result.Cell.TableResult(result.Cell.DeltaMessage) },
+                { DeltaPercentageCaption, result => result.Cell.TableResult(result.Cell.DeltaPercentageMessage) },
+                { IssueCaption, result => result.Cell.TableResult(result.Cell.Outcome.ToString()) }
             };
 
         private readonly CsvTable _baseTable;
@@ -65,43 +65,6 @@ namespace SupportFunctions
             _tolerance = tolerance;
             _result = null;
         }
-
-        /// <returns>the errors of a CSV comparison in a Query Table format</returns>
-        public Collection<object> Query() => MakeQueryTable(Result);
-
-        internal static Collection<object> MakeQueryTable(IEnumerable<CellComparison> result)
-        {
-            var rows = new Collection<object>();
-            foreach (var entry in result)
-            {
-                rows.Add(QueryRow(entry));
-            }
-            return rows;
-        }
-
-        private static Collection<object> QueryRow(CellComparison row) => new Collection<object>
-        {
-            new Collection<object> {CellCaption, CellReference(row.Row, row.Column)},
-            new Collection<object> {RowNoCaption, RowReference(row.Row)},
-            new Collection<object> {RowNameCaption, row.RowName},
-            new Collection<object> {ColumnNoCaption, ColumnReference(row.Column)},
-            new Collection<object> {ColumnNameCaption, row.ColumnName},
-            new Collection<object> {ValueCaption, row.Cell.ValueMessage},
-            new Collection<object> {DeltaCaption, row.Cell.DeltaMessage},
-            new Collection<object> {DeltaPercentageCaption, row.Cell.DeltaPercentageMessage},
-            new Collection<object> {IssueCaption, row.Cell.Outcome.ToString()}
-        };
-
-        /// <returns>the cell reference in the way Excel refers to it, e.g. A1, AC39</returns>
-        private static string CellReference(int rowNo, int columnNo) => columnNo.ToExcelColumnName() + RowReference(rowNo);
-
-        /// <param name="columnNo">the column number (lower bound 0)</param>
-        /// <returns>the Excel style column reference (e.g. 0=>A, 25=>Z, 27=>AB)</returns>
-        private static string ColumnReference(int columnNo) => Invariant($"{columnNo + 1} ({columnNo.ToExcelColumnName()})");
-
-        /// <remarks>People used to Excel will expect counting to start at 1</remarks>
-        /// <param name="rowNo">header is -1, internal data row counting starts at 0</param>
-        private static string RowReference(int rowNo) => Invariant($"{rowNo + 2}");
 
         /// <summary>Execute the comparison and return the result</summary>
         /// <remarks>If the comparison was already done, returns the previous result</remarks>
@@ -124,50 +87,12 @@ namespace SupportFunctions
             }
         }
 
-        /// <summary>Execute cell comparison for the header row</summary>
-        /// <returns>the list of cell comparisons that didn't pass (empty list if all passed)</returns>
-        private List<CellComparison> HeaderErrors()
-        {
-            const int headerRowNo = -1;
-            var maxColumns = Math.Max(_baseTable.ColumnCount, _comparedTable.ColumnCount);
-            var result = new List<CellComparison>();
-            var rowName = _baseTable.Header(0);
-            for (var column = 0; column < maxColumns; column++)
-            {
-                var columnName = _baseTable.Header(column);
-                var comparison = new CellComparison(headerRowNo, rowName, column, columnName, columnName, _comparedTable.Header(column),
-                    _tolerance);
-                if (!comparison.Cell.IsOk()) result.Add(comparison);
-            }
-            return result;
-        }
+        /// <returns>the cell reference in the way Excel refers to it, e.g. A1, AC39</returns>
+        private static string CellReference(int rowNo, int columnNo) => columnNo.ToExcelColumnName() + RowReference(rowNo);
 
-        /// <summary>Execute cell comparisons for a data row</summary>
-        /// <param name="row">the index of the row to be compared</param>
-        /// <returns>the list of cell comparisons that didn't pass (empty list if all passed)</returns>
-        private List<CellComparison> RowErrors(int row)
-        {
-            var currentRow = _baseTable.DataCell(row, 0);
-            var result = new List<CellComparison>();
-            for (var column = 0; column < _baseTable.Data[row].Length; column++)
-            {
-                var currentColumn = _baseTable.Header(column);
-                var expectedValue = _baseTable.DataCell(row, column);
-                var actualValue = _comparedTable.DataCell(row, column);
-                // reset tolerance range to force recalculating per comparison
-                _tolerance.DataRange = null;
-                var comparison = new CellComparison(row, currentRow, column, currentColumn, expectedValue, actualValue, _tolerance);
-                if (!comparison.Cell.IsOk()) result.Add(comparison);
-            }
-            return result;
-        }
-
-        /// <summary>The result of the comparison in a Table Table format</summary>
-        public Collection<object> DoTable(Collection<Collection<object>> tableIn)
-        {
-            var renderer = new TableRenderer<CellComparison>(GetTableValues);
-            return renderer.MakeTableTable(Result, tableIn);
-        }
+        /// <param name="columnNo">the column number (lower bound 0)</param>
+        /// <returns>the Excel style column reference (e.g. 0=>A, 25=>Z, 27=>AB)</returns>
+        private static string ColumnReference(int columnNo) => Invariant($"{columnNo + 1} ({columnNo.ToExcelColumnName()})");
 
         /// <summary>Compare the comparison result with another one</summary>
         /// <param name="otherComparison">the comparison to compare with</param>
@@ -178,6 +103,13 @@ namespace SupportFunctions
             var common = Result.Intersect(otherComparison.Result, comparer).ToList();
             var difference = Result.Except(common, comparer).Union(otherComparison.Result.Except(common, comparer));
             return difference;
+        }
+
+        /// <summary>The result of the comparison in a Table Table format</summary>
+        public Collection<object> DoTable(Collection<Collection<object>> tableIn)
+        {
+            var renderer = new TableRenderer<CellComparison>(GetTableValues);
+            return renderer.MakeTableTable(Result, tableIn);
         }
 
 
@@ -199,12 +131,80 @@ namespace SupportFunctions
             return result;
         }
 
+        /// <summary>Execute cell comparison for the header row</summary>
+        /// <returns>the list of cell comparisons that didn't pass (empty list if all passed)</returns>
+        private List<CellComparison> HeaderErrors()
+        {
+            const int headerRowNo = -1;
+            var maxColumns = Math.Max(_baseTable.ColumnCount, _comparedTable.ColumnCount);
+            var result = new List<CellComparison>();
+            var rowName = _baseTable.Header(0);
+            for (var column = 0; column < maxColumns; column++)
+            {
+                var columnName = _baseTable.Header(column);
+                var comparison = new CellComparison(headerRowNo, rowName, column, columnName, columnName, _comparedTable.Header(column),
+                    _tolerance);
+                if (!comparison.Cell.IsOk()) result.Add(comparison);
+            }
+            return result;
+        }
+
+        internal static Collection<object> MakeQueryTable(IEnumerable<CellComparison> result)
+        {
+            var rows = new Collection<object>();
+            foreach (var entry in result)
+            {
+                rows.Add(QueryRow(entry));
+            }
+            return rows;
+        }
+
 
         /// <summary>We need this definition for FitNesse, but we don't need the actual value</summary>
         /// <param name="input">ignored</param>
         [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "FitNesse requirement")]
         [SuppressMessage("ReSharper", "UnusedParameter.Global", Justification = "FitNesse requirement")]
         public static CsvComparison Parse(string input) => null;
+
+        /// <returns>the errors of a CSV comparison in a Query Table format</returns>
+        public Collection<object> Query() => MakeQueryTable(Result);
+
+        private static Collection<object> QueryRow(CellComparison row) => new Collection<object>
+        {
+            new Collection<object> { CellCaption, CellReference(row.Row, row.Column) },
+            new Collection<object> { RowNoCaption, RowReference(row.Row) },
+            new Collection<object> { RowNameCaption, row.RowName },
+            new Collection<object> { ColumnNoCaption, ColumnReference(row.Column) },
+            new Collection<object> { ColumnNameCaption, row.ColumnName },
+            new Collection<object> { ValueCaption, row.Cell.ValueMessage },
+            new Collection<object> { DeltaCaption, row.Cell.DeltaMessage },
+            new Collection<object> { DeltaPercentageCaption, row.Cell.DeltaPercentageMessage },
+            new Collection<object> { IssueCaption, row.Cell.Outcome.ToString() }
+        };
+
+        /// <summary>Execute cell comparisons for a data row</summary>
+        /// <param name="row">the index of the row to be compared</param>
+        /// <returns>the list of cell comparisons that didn't pass (empty list if all passed)</returns>
+        private List<CellComparison> RowErrors(int row)
+        {
+            var currentRow = _baseTable.DataCell(row, 0);
+            var result = new List<CellComparison>();
+            for (var column = 0; column < _baseTable.Data[row].Length; column++)
+            {
+                var currentColumn = _baseTable.Header(column);
+                var expectedValue = _baseTable.DataCell(row, column);
+                var actualValue = _comparedTable.DataCell(row, column);
+                // reset tolerance range to force recalculating per comparison
+                _tolerance.DataRange = null;
+                var comparison = new CellComparison(row, currentRow, column, currentColumn, expectedValue, actualValue, _tolerance);
+                if (!comparison.Cell.IsOk()) result.Add(comparison);
+            }
+            return result;
+        }
+
+        /// <remarks>People used to Excel will expect counting to start at 1</remarks>
+        /// <param name="rowNo">header is -1, internal data row counting starts at 0</param>
+        private static string RowReference(int rowNo) => Invariant($"{rowNo + 2}");
 
         /// <returns>the caption of the CSV table</returns>
         public override string ToString() => CsvComparisonCaption;
