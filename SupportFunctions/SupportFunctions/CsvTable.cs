@@ -134,6 +134,8 @@ namespace SupportFunctions
             return returnObject;
         }
 
+        internal string[] Row(int row) => row >= RowCount ? Array.Empty<string>() : Data[row];
+
         internal void SaveTo(string path)
         {
             var csvLines = new List<string>();

@@ -19,4 +19,5 @@
 3.0.0-beta: Migration to .NET 5.0  (dual build .NET 4.6.1 and .NET 5.0) and LiveCharts 2 beta (.NET 5.0 only)
 3.0.0-beta-1: Bug fix: series with NaN entries were not displayed. Refactored conditional reference of Live Charts to make NuGet pick it up.
 3.0.0-beta-2: Update to LiveCharts 2 beta 50, aligned WebUI charts with Live Charts, introduced margins for Y axis so graphs can't touch top/bottom borders anymore.
-3.0.0-beta-3: activated XML documentation
+3.0.0-beta-3: Activated XML documentation, more use of DataTestMethods, aligned Requires with Microsoft version, enabled hex numbers as numeric
+3.0.0-beta-4: Improved CsvComparison to detect surplus values 

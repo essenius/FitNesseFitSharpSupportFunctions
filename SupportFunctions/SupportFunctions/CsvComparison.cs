@@ -49,22 +49,26 @@ namespace SupportFunctions
                 { IssueCaption, result => result.Cell.TableResult(result.Cell.Outcome.ToString()) }
             };
 
-        private readonly CsvTable _baseTable;
-        private readonly CsvTable _comparedTable;
         private readonly Tolerance _tolerance;
         private List<CellComparison> _result;
 
         /// <summary>Entry point for the FitNesse Query or Table Table</summary>
-        /// <param name="baseTable">The table being compared</param>
-        /// <param name="comparedTable">the table being compared to</param>
+        /// <param name="expectedTable">The table being compared</param>
+        /// <param name="actualTable">the table being compared to</param>
         /// <param name="tolerance">the tolerance applied. See <see cref="Tolerance.Parse" /></param>
-        public CsvComparison(CsvTable baseTable, CsvTable comparedTable, Tolerance tolerance)
+        public CsvComparison(CsvTable expectedTable, CsvTable actualTable, Tolerance tolerance)
         {
-            _baseTable = baseTable;
-            _comparedTable = comparedTable;
+            ExpectedTable = expectedTable;
+            ActualTable = actualTable;
             _tolerance = tolerance;
             _result = null;
         }
+
+        /// <summary>CSV table that the base table is compared to</summary>
+        public CsvTable ActualTable { get; }
+
+        /// <summary>Base CSV table used for the comparison</summary>
+        public CsvTable ExpectedTable { get; }
 
         /// <summary>Execute the comparison and return the result</summary>
         /// <remarks>If the comparison was already done, returns the previous result</remarks>
@@ -74,11 +78,11 @@ namespace SupportFunctions
             {
                 if (_result != null) return _result;
                 // safety net, should only occur in certain unit tests
-                if (_baseTable == null) return null;
+                if (ExpectedTable == null) return null;
 
                 _result = HeaderErrors();
 
-                var maxRows = Math.Max(_baseTable.RowCount, _comparedTable.RowCount);
+                var maxRows = Math.Max(ExpectedTable.RowCount, ActualTable.RowCount);
                 for (var row = 0; row < maxRows; row++)
                 {
                     _result.AddRange(RowErrors(row));
@@ -136,13 +140,13 @@ namespace SupportFunctions
         private List<CellComparison> HeaderErrors()
         {
             const int headerRowNo = -1;
-            var maxColumns = Math.Max(_baseTable.ColumnCount, _comparedTable.ColumnCount);
+            var maxColumns = Math.Max(ExpectedTable.ColumnCount, ActualTable.ColumnCount);
             var result = new List<CellComparison>();
-            var rowName = _baseTable.Header(0);
+            var rowName = ExpectedTable.Header(0);
             for (var column = 0; column < maxColumns; column++)
             {
-                var columnName = _baseTable.Header(column);
-                var comparison = new CellComparison(headerRowNo, rowName, column, columnName, columnName, _comparedTable.Header(column),
+                var columnName = ExpectedTable.Header(column);
+                var comparison = new CellComparison(headerRowNo, rowName, column, columnName, columnName, ActualTable.Header(column),
                     _tolerance);
                 if (!comparison.Cell.IsOk()) result.Add(comparison);
             }
@@ -187,13 +191,14 @@ namespace SupportFunctions
         /// <returns>the list of cell comparisons that didn't pass (empty list if all passed)</returns>
         private List<CellComparison> RowErrors(int row)
         {
-            var currentRow = _baseTable.DataCell(row, 0);
+            var currentRow = row < ExpectedTable.RowCount ? ExpectedTable.DataCell(row, 0) : ActualTable.DataCell(row, 0);
             var result = new List<CellComparison>();
-            for (var column = 0; column < _baseTable.Data[row].Length; column++)
+            var maxColumns = Math.Max(ExpectedTable.Row(row).Length, ActualTable.Row(row).Length);
+            for (var column = 0; column < maxColumns; column++)
             {
-                var currentColumn = _baseTable.Header(column);
-                var expectedValue = _baseTable.DataCell(row, column);
-                var actualValue = _comparedTable.DataCell(row, column);
+                var currentColumn = ExpectedTable.Header(column);
+                var expectedValue = ExpectedTable.DataCell(row, column);
+                var actualValue = ActualTable.DataCell(row, column);
                 // reset tolerance range to force recalculating per comparison
                 _tolerance.DataRange = null;
                 var comparison = new CellComparison(row, currentRow, column, currentColumn, expectedValue, actualValue, _tolerance);
