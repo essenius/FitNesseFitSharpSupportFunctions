@@ -23,6 +23,15 @@ namespace SupportFunctions
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Entry point for FitSharp")]
     public class Date
     {
+        private RegistryWrapper _registryWrapper;
+
+        // For mock injection
+        internal RegistryWrapper RegistryWrapper
+        {
+            get => _registryWrapper ??= new RegistryWrapper();
+            set => _registryWrapper = value;
+        }
+
         /// <summary>Initialize new Date object</summary>
         /// <param name="ticks">date/time in ticks</param>
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "ReSharper entry point")]
@@ -37,20 +46,24 @@ namespace SupportFunctions
         /// <returns>the underlying DateTime object</returns>
         public DateTime DateTime { get; }
 
+
+        /// <returns>the current short date/time format</returns>
+        public string LocalDateTimeFormat => ShortDateFormat + " " + TimeFormat;
+
         /// <summary>The default date/time format. If not set, SortableDateTimePattern is taken.</summary>
         public static string DefaultFormat { get; set; } = DateTimeFormatInfo.InvariantInfo.SortableDateTimePattern;
 
         /// <returns>the current short date format</returns>
-        public static string ShortDateFormat => RegistryWrapper.ShortDateFormat;
+        public string ShortDateFormat => RegistryWrapper.ShortDateFormat;
 
         /// <returns>the Ticks representation</returns>
         public long Ticks => DateTime.Ticks;
 
         /// <returns>the time format</returns>
-        public static string TimeFormat => RegistryWrapper.TimeFormat;
+        public string TimeFormat => RegistryWrapper.TimeFormat;
 
         /// <returns>the date in the user's default formatting</returns>
-        public string ToLocalFormat => DateTime.Formatted(RegistryWrapper.DateTimeFormat);
+        public string ToLocalFormat => DateTime.Formatted(LocalDateTimeFormat);
 
         /// <summary>Add a number of days. Can be negative and/or contain fractions</summary>
         public Date AddDays(double days) => new Date(DateTime.AddDays(days));

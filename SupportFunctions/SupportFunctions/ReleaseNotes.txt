@@ -21,3 +21,5 @@
 3.0.0-beta-2: Update to LiveCharts 2 beta 50, aligned WebUI charts with Live Charts, introduced margins for Y axis so graphs can't touch top/bottom borders anymore.
 3.0.0-beta-3: Activated XML documentation, more use of DataTestMethods, aligned Requires with Microsoft version, enabled hex numbers as numeric
 3.0.0-beta-4: Improved CsvComparison to detect surplus values 
+3.0.0-beta-5: Made RegistryWrapper non-static so it can be mocked, eliminated dependency on running FitNesse instance for tests, 
+              and made machine info and user info tests more robust.

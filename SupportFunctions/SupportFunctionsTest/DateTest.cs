@@ -51,7 +51,10 @@ namespace SupportFunctionsTest
         [TestCategory("Unit")]
         public void DateLocalFormatTest()
         {
-            var date = new Date("1-1-2017 1:02:03pm");
+            var date = new Date("1-1-2017 1:02:03pm")
+            {
+                RegistryWrapper = new RegistryWrapperMock()
+            };
             Assert.AreEqual("01-Jan-2017 13:02:03", date.ToLocalFormat);
         }
 
@@ -139,7 +142,7 @@ namespace SupportFunctionsTest
         [TestCategory("Integration")]
         public void DateShortDateFormatTest()
         {
-            var format = Date.ShortDateFormat;
+            var format = Date.Parse("0").ShortDateFormat;
             Console.WriteLine("Short date format: " + format);
             Assert.IsTrue(format.Contains("d"), "days found");
             Assert.IsTrue(format.Contains("yy"), "years found");
@@ -149,7 +152,7 @@ namespace SupportFunctionsTest
         [TestCategory("Integration")]
         public void DateTimeFormatTest()
         {
-            var format = Date.TimeFormat;
+            var format = Date.Parse("0").TimeFormat;
             Console.WriteLine("Time format: " + format);
             Assert.IsTrue(format.Contains("m"), "minutes found");
             Assert.IsTrue(format.Contains("h") || format.Contains("H"), "hours found");

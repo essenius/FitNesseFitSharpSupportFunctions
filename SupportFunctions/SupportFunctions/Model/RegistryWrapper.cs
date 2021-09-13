@@ -18,12 +18,11 @@ using System.Runtime.Versioning;
 
 namespace SupportFunctions.Model
 {
-    internal static class RegistryWrapper
+    internal class RegistryWrapper
     {
-        public static string DateTimeFormat => ShortDateFormat + " " + TimeFormat;
         private static string InternationalLocation => "Control Panel\\International";
 
-        public static string ShortDateFormat
+        public virtual string ShortDateFormat
         {
             get
             {
@@ -39,7 +38,7 @@ namespace SupportFunctions.Model
 
         private static string ShortDateFormatLocation => "sShortDate";
 
-        public static string TimeFormat
+        public virtual string TimeFormat
         {
             get
             {
@@ -58,7 +57,7 @@ namespace SupportFunctions.Model
 #if NET5_0
         [SupportedOSPlatform("windows")]
 #endif
-        private static object InternationalValue(string key)
+        private object InternationalValue(string key)
         {
             var baseKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
             var internationalKey = baseKey.OpenSubKey(InternationalLocation);

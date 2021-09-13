@@ -87,7 +87,9 @@ namespace SupportFunctionsTest
         public void FitNessePageCreateTableTest()
         {
             var dict = new Dictionary<string, string> { { "key1", "value1" }, { "key2", "value2" } };
-            var result = ((List<string>)_createTableMethod.Invoke(null, new object[] { "TestTable", dict })).ToArray();
+            var resultList = _createTableMethod.Invoke(null, new object[] { "TestTable", dict }) as List<string>;
+            Assert.IsNotNull( resultList);
+            var result = resultList.ToArray();
             Assert.AreEqual(4, result.Length);
             Assert.AreEqual("!|Dictionary|Having|Name|TestTable|", result[0]);
             Assert.AreEqual("|Key|Value|", result[1]);
@@ -130,16 +132,17 @@ namespace SupportFunctionsTest
         [ExpectedExceptionWithMessage(typeof(FormatException), "Row should have 2 cells: Key and Value. Found 1: ||")]
         public void FitNessePageExtractKeyValuePairFailsTest()
         {
-            var _ = (KeyValuePair<string, string>)_extractKeyValuePairMethod.Invoke(null, new object[] { "||" });
+            _extractKeyValuePairMethod.Invoke(null, new object[] { "||" });
         }
 
         [TestMethod]
         [TestCategory("Unit")]
         public void FitNessePageExtractKeyValuePairTest()
         {
-            var keyValuePair = (KeyValuePair<string, string>)_extractKeyValuePairMethod.Invoke(null, new object[] { "|Sleutel|Waarde|" });
-            Assert.AreEqual("Sleutel", keyValuePair.Key);
-            Assert.AreEqual("Waarde", keyValuePair.Value);
+            var keyValuePair = _extractKeyValuePairMethod.Invoke(null, new object[] { "|Sleutel|Waarde|" }) as KeyValuePair<string, string>?;
+            Assert.IsNotNull(keyValuePair);
+            Assert.AreEqual("Sleutel", keyValuePair.Value.Key);
+            Assert.AreEqual("Waarde", keyValuePair.Value.Value);
         }
 
         [DataTestMethod]
@@ -256,7 +259,7 @@ namespace SupportFunctionsTest
         [TestCategory("Integration")]
         public void FitNessePageRestCallInvalidTest()
         {
-            //requires FitNesse active locally on port 8080
+            // Test still works both when FitNesse is active locally on port 8080 and when it is not
             var fitnessePage = new FitNessePage();
             var stream = _restCallMethod.Invoke(fitnessePage, new object[] { Server + "NonExistingPage?pageData" });
             Assert.IsNull(stream);
@@ -266,10 +269,11 @@ namespace SupportFunctionsTest
         [TestCategory("Integration")]
         public void FitNessePageRestCallValidTest()
         {
-            //requires FitNesse active locally on port 8080
             var fitnessePage = new FitNessePage();
-            var stream = _restCallMethod.Invoke(fitnessePage, new object[] { Server + "?pageData" });
-            Assert.IsNotNull(stream);
+            var content = _restCallMethod.Invoke(fitnessePage, new object[] { "https://bing.com" }) as List<string>;
+            Assert.IsNotNull(content, "non-empty content for Bing");
+            // They put 'Bing' in the meta description, so the first part should find it - even in different languages
+            Assert.IsTrue(content[0].Contains("Bing"), "First batch contains Bing");
         }
 
         [TestMethod]
