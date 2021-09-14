@@ -27,7 +27,9 @@ namespace SupportFunctions
 #if NET5_0
                 if (OperatingSystem.IsWindows())
 #endif
-                    return UserPrincipal.Current.DisplayName;
+                    return string.IsNullOrEmpty(UserPrincipal.Current.DisplayName) 
+                        ? Environment.UserName 
+                        : UserPrincipal.Current.DisplayName;
 #if NET5_0
                 return Environment.UserName;
 #endif

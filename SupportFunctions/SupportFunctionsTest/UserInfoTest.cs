@@ -24,9 +24,9 @@ namespace SupportFunctionsTest
         [TestCategory("Integration")]
         public void UserInfoBaseTest()
         {
+            Debug.Print($"User name: <{UserInfo.UserName}>");
             Assert.IsFalse(string.IsNullOrEmpty(UserInfo.UserName), "User Name not empty");
-            Debug.Print($"User name: {UserInfo.UserName}");
-            Debug.Print($"Display name: {UserInfo.DisplayName}");
+            Debug.Print($"Display name: <{UserInfo.DisplayName}>");
             Assert.IsFalse(string.IsNullOrEmpty(UserInfo.DisplayName), "DisplayName not empty");
         }
     }
