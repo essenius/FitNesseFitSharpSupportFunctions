@@ -12,7 +12,7 @@ Differences are:
 * Download the repo code as a zip file and extract the contents of the folder ```FitNesseFitSharpSupportFunctions```. 
 * Build command becomes: `dotnet build %LOCALAPPDATA%\FitNesse\SupportFunctions\SupportFunctions.sln`
 * Go to folder: `cd /D %LOCALAPPDATA%\FitNesse\SupportFunctions\SupportFunctions\bin\debug\net5.0`
-* Run the suite: Open a browser and enter the URL http://localhost:8080/FitSharpDemos/SuppprtFunctionsSuite?suite
+* Run the suite: Open a browser and enter the URL http://localhost:8080/FitSharpDemos/SupportFunctionsSuite?suite
 
 # Contribute
 Enter an issue or provide a pull request. 
