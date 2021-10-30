@@ -38,7 +38,8 @@ namespace SupportFunctionsTest
 
         [TestMethod]
         [TestCategory("Unit")]
-        public void CommonFunctionsConcatenateTest() => Assert.AreEqual("abc", CommonFunctions.Concatenate(new[] { "a", "b", "c" }));
+        public void CommonFunctionsConcatenateTest() => 
+            Assert.AreEqual("abc", CommonFunctions.Concatenate(new[] { "a", "b", "c" }));
 
         [Obsolete("Use Concatenate instead")]
         [TestMethod]
@@ -113,7 +114,8 @@ namespace SupportFunctionsTest
 #else
             "Type 'WrongType' not recognized.\r\nParameter name: type")]
 #endif
-        public void CommonFunctionsEvaluateAsThrowsExceptionsTest() => CommonFunctions.EvaluateAs(string.Empty, "WrongType");
+        public void CommonFunctionsEvaluateAsThrowsExceptionsTest() => 
+            CommonFunctions.EvaluateAs(string.Empty, "WrongType");
 
         [TestMethod]
         [TestCategory("Unit")]
@@ -212,7 +214,8 @@ namespace SupportFunctionsTest
         {
             var firstCheck = UniqueDateTime.NowTicks;
             ("firstCheck:" + firstCheck).Log();
-            var stringDate = new DateTime(firstCheck).ToString(@"dd-MMM-yyyy HH:mm:ss.fffffff", CultureInfo.InvariantCulture);
+            var stringDate = new DateTime(firstCheck)
+                .ToString(@"dd-MMM-yyyy HH:mm:ss.fffffff", CultureInfo.InvariantCulture);
             stringDate.Log();
             var ticks1 = CommonFunctions.Ticks;
             ("ticks1:" + ticks1 + " (" + (ticks1 - firstCheck) + ")").Log();
@@ -227,7 +230,10 @@ namespace SupportFunctionsTest
 
             Assert.IsTrue(ticksElapsed1 > 0);
             Assert.IsTrue(ticksElapsed2 > ticksElapsed1);
-            var ticksBetween = CommonFunctions.TicksBetweenAnd(Date.Parse(firstCheck.To<string>()), Date.Parse(secondCheck.To<string>()));
+            var ticksBetween = CommonFunctions.TicksBetweenAnd(
+                Date.Parse(firstCheck.To<string>()), 
+                Date.Parse(secondCheck.To<string>())
+            );
             ("Ticks between: " + ticksBetween).Log();
             Assert.IsTrue(ticksBetween > 0);
             var ticks2 = CommonFunctions.Ticks;
@@ -260,6 +266,7 @@ namespace SupportFunctionsTest
 
         [TestMethod]
         [TestCategory("Unit")]
-        public void CommonFunctionsTrimTest() => Assert.AreEqual("abc", CommonFunctions.Trim("  abc   "));
+        public void CommonFunctionsTrimTest() => 
+            Assert.AreEqual("abc", CommonFunctions.Trim("  abc   "));
     }
 }

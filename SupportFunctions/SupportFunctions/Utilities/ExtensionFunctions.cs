@@ -45,7 +45,8 @@ namespace SupportFunctions.Utilities
 
         public static void AddWithCheck<T>(this IDictionary<DateTime, T> dictionary, DateTime key, T value, string id)
         {
-            if (dictionary.ContainsKey(key)) throw new ArgumentException(Invariant($"Duplicate timestamp in {id}: {key.ToRoundTripFormat()}"));
+            if (dictionary.ContainsKey(key)) 
+                throw new ArgumentException(Invariant($"Duplicate timestamp in {id}: {key.ToRoundTripFormat()}"));
             dictionary.Add(key, value);
         }
 
@@ -53,15 +54,16 @@ namespace SupportFunctions.Utilities
             type1 == expected1 && type2 == expected2 || type1 == expected2 && type2 == expected1;
 
         /// <summary>
-        ///     Infer from the input string what type it is, and return the field as that type (int, long, decimal, double, bool or
-        ///     string)
+        ///     Infer from the input string what type it is, and return the field as that type
+        ///     (int, long, decimal, double, bool or string)
         /// </summary>
         /// <param name="input">the input sting</param>
         /// <returns>the value cast to the type it could be parsed into</returns>
         public static object CastToInferredType(this string input)
         {
             var target = input;
-            // we infer hex numbers to be signed; size in bytes determines which return value to be used (byte, short, int, long)
+            // we infer hex numbers to be signed; size in bytes determines which return value to be used
+            // (byte, short, int, long)
             if (NumericFunctions.TryParseHex(input, true, out var hexValue)) target = hexValue.ToString();
             if (int.TryParse(target, out var intValue)) return intValue;
             if (long.TryParse(target, out var longValue)) return longValue;
@@ -75,7 +77,8 @@ namespace SupportFunctions.Utilities
         {
             var source = value;
             // if we want a numeric result and we have a hex value, convert the hex to long first.
-            if (targetType.IsNumeric() && NumericFunctions.TryParseHex(value?.ToString(), targetType.IsSigned(), out var hexValue))
+            if (targetType.IsNumeric() && 
+                NumericFunctions.TryParseHex(value?.ToString(), targetType.IsSigned(), out var hexValue))
             {
                 source = hexValue;
             }
@@ -218,7 +221,9 @@ namespace SupportFunctions.Utilities
         public static string TypeName(this string name)
         {
             var nameInUppercase = name.ToUpperInvariant();
-            return BuiltInTypeDictionary.ContainsKey(nameInUppercase) ? BuiltInTypeDictionary[nameInUppercase].ToString() : name;
+            return BuiltInTypeDictionary.ContainsKey(nameInUppercase) 
+                ? BuiltInTypeDictionary[nameInUppercase].ToString() 
+                : name;
         }
 
         public static T ValueOrDefault<T>(this Dictionary<string, string> dictionary, string key, T defaultValue) =>

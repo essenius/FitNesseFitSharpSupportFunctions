@@ -17,9 +17,13 @@ namespace SupportFunctions.Model
 {
     internal class MeasurementComparison : IMeasurementComparison
     {
-        public MeasurementComparison(Measurement expected, Measurement actual, Tolerance tolerance = null, Type compareType = null)
+        public MeasurementComparison(
+            Measurement expected, Measurement actual, Tolerance tolerance = null, Type compareType = null)
         {
-            Timestamp = new ValueComparison(expected?.Timestamp.ToRoundTripFormat(), actual?.Timestamp.ToRoundTripFormat());
+            Timestamp = new ValueComparison(
+                expected?.Timestamp.ToRoundTripFormat(), 
+                actual?.Timestamp.ToRoundTripFormat()
+            );
             Value = new ValueComparison(expected?.Value, actual?.Value, tolerance, compareType);
             IsGood = new ValueComparison(expected?.IsGood, actual?.IsGood);
         }

@@ -114,7 +114,10 @@ namespace SupportFunctions.Model
                 // since we only use a circle. Still need to figure out how to use geometries more effectively.
                 if (entry.GeometrySize > 0 && entry.GeometryFill is Paint geometryFill)
                 {
-                    DrawCircle(new SKPoint(cursor.GeometryX, cursor.LineY), entry.GeometrySize, geometryFill.Color);
+                    DrawCircle(
+                        new SKPoint(cursor.GeometryX, cursor.LineY), 
+                        entry.GeometrySize, 
+                        geometryFill.Color);
                 }
                 var seriesNameWidth = MeasureTextWidth(entry.Name, textPaint);
                 cursor.TextWidth = seriesNameWidth;

@@ -141,7 +141,8 @@ namespace SupportFunctions
             var csvLines = new List<string>();
             var csvCell = _headers.Select(AddQuotesIfNeeded);
             csvLines.Add(string.Join(",", csvCell));
-            csvLines.AddRange(Data.Select(row => row.Select(AddQuotesIfNeeded)).Select(dataRow => string.Join(",", dataRow)));
+            csvLines.AddRange(Data.Select(row => 
+                row.Select(AddQuotesIfNeeded)).Select(dataRow => string.Join(",", dataRow)));
             var csvText = string.Join(Environment.NewLine, csvLines);
             File.WriteAllText(path, csvText);
         }

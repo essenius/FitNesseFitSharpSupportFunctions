@@ -30,7 +30,8 @@ namespace SupportFunctions
         /// <summary>Throw a StopTestException if argument is false</summary>
         public static void StopTestIfNot(string condition) => ThrowStopIf(condition, false, false);
 
-        [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local", Justification = "intentional precondition check")]
+        [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local",
+            Justification = "intentional precondition check")]
         private static void ThrowStopIf(string conditionString, bool stopSuite, bool expectedValue)
         {
             var canParse = bool.TryParse(conditionString, out var condition);

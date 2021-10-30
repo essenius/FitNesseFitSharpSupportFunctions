@@ -85,5 +85,11 @@ namespace SupportFunctionsTest
 
         public void ReflectionFunctionsGetTest(string expression, object expected, string message) =>
             Assert.AreEqual(expected.ToString(), ReflectionFunctions.Get(expression).ToString(), message);
+
+        [TestMethod]
+        public void ReflectionFunctionsGetWithParamsTest()
+        {
+            Assert.AreEqual(8.0, ReflectionFunctions.GetWithParams("Math.Sqrt", new object[]{"64"}), "ok");
+        }
     }
 }

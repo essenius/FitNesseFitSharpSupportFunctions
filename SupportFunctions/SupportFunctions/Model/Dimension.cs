@@ -45,11 +45,14 @@ namespace SupportFunctions.Model
             }
         }
 
-        // These two are a bit tricky. Max/GridlineInterval shoud become integer, but floats sometimes have precision errors. 
-        // So we round the value first. If we round it to 5 digits, the difference wouldn't be visible anyway.
+        // These two are a bit tricky. Max/GridlineInterval shoud become integer,
+        // but floats sometimes have precision errors. So we round the value first.
+        // If we round it to 5 digits, the difference wouldn't be visible anyway.
         // Then the ceiling or floor kicks in to drag the outer gridline up or down
-        public double GridlineMax => GridlineInterval.IsZero() ? 0D : Math.Ceiling(Math.Round(Max / GridlineInterval, 5)) * GridlineInterval;
-        public double GridlineMin => GridlineInterval.IsZero() ? 0D : Math.Floor(Math.Round(Min / GridlineInterval, 5)) * GridlineInterval;
+        public double GridlineMax => 
+            GridlineInterval.IsZero() ? 0D : Math.Ceiling(Math.Round(Max / GridlineInterval, 5)) * GridlineInterval;
+        public double GridlineMin => 
+            GridlineInterval.IsZero() ? 0D : Math.Floor(Math.Round(Min / GridlineInterval, 5)) * GridlineInterval;
 
         public double Max { get; private set; }
         public double Min { get; private set; }
@@ -57,7 +60,8 @@ namespace SupportFunctions.Model
         private double Range => Math.Abs(Max - Min);
 
         public bool SnapToGrid { get; }
-        private static double Denormalized(double value, int orderOfMagnitude) => value * Math.Pow(10, orderOfMagnitude);
+        private static double Denormalized(double value, int orderOfMagnitude) => 
+            value * Math.Pow(10, orderOfMagnitude);
 
         public void EnsureNonZeroRange(double deltaMin, double deltaPlus)
         {
@@ -77,10 +81,12 @@ namespace SupportFunctions.Model
             return new Dimension(metadata.MinValue, metadata.MaxValue, false);
         }
 
-        public static Dimension GetValueRange(ICollection<IMeasurementComparison> values, double? minValue, double? maxValue)
+        public static Dimension GetValueRange(
+            ICollection<IMeasurementComparison> values, double? minValue, double? maxValue)
         {
             // If both limits are specified, use them
-            if (minValue != null && maxValue != null) return new Dimension(minValue.Value, maxValue.Value);
+            if (minValue != null && maxValue != null) 
+                return new Dimension(minValue.Value, maxValue.Value);
             // if we need to fill in at least one, get the required range from the values
             var range = GetExtremeValues(values);
             // Fill in the value(s) that we need so we can calculate the range, and from that the margin
@@ -94,7 +100,8 @@ namespace SupportFunctions.Model
             return range;
         }
 
-        private static double Normalized(double value, double orderOfMagnitude) => value * Math.Pow(10, -orderOfMagnitude);
+        private static double Normalized(
+            double value, double orderOfMagnitude) => value * Math.Pow(10, -orderOfMagnitude);
 
         private static int OrderOfMagnitude(double value)
         {

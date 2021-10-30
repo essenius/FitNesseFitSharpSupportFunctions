@@ -21,8 +21,10 @@ namespace SupportFunctions.Utilities
     {
         public static Type ParseExceptionType => typeof(JsonException);
 
-        public static Dictionary<string, string> Deserialize(string input) => JsonSerializer.Deserialize<Dictionary<string, string>>(input);
-        public static string Serialize(Dictionary<string, string> dictionary) => JsonSerializer.Serialize(dictionary);
+        public static Dictionary<string, string> Deserialize(string input) => 
+            JsonSerializer.Deserialize<Dictionary<string, string>>(input);
+        public static string Serialize(Dictionary<string, string> dictionary) => 
+            JsonSerializer.Serialize(dictionary);
     }
 #else
     using System.Web.Script.Serialization;
@@ -34,7 +36,8 @@ namespace SupportFunctions.Utilities
         public static Dictionary<string, string> Deserialize(string input) =>
             new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(input);
 
-        public static string Serialize(Dictionary<string, string> dictionary) => new JavaScriptSerializer().Serialize(dictionary);
+        public static string Serialize(Dictionary<string, string> dictionary) => 
+            new JavaScriptSerializer().Serialize(dictionary);
     }
 
 #endif

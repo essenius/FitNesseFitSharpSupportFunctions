@@ -37,20 +37,24 @@ namespace SupportFunctions.Model
         private void AddPage(string pageName, IEnumerable<string> lines)
         {
             var command = PageRoot + "?addChild&pageName=" + pageName + "&pageContent=";
-            var payload = lines.Aggregate(string.Empty, (current, entry) => current + entry + Linefeed);
+            var payload = lines.Aggregate(
+                string.Empty, 
+                (current, entry) => current + entry + Linefeed
+            );
             var _ = RestCall(command + Uri.EscapeDataString(payload));
         }
 
         private static void CheckColumnNames(string line)
         {
+            const string errorTemplate = "{0} column must be called '{1}' instead of '{2}'";
             var columnNames = ExtractKeyValuePair(line);
             if (!columnNames.Key.EqualsIgnoreCase("key"))
             {
-                throw new FormatException("First column must be called 'Key' instead of '" + columnNames.Key + "'");
+                throw new FormatException(string.Format( errorTemplate, "First", "Key", columnNames.Key));
             }
             if (!columnNames.Value.EqualsIgnoreCase("value"))
             {
-                throw new FormatException("Second column must be called 'Value' instead of '" + columnNames.Value + "'");
+                throw new FormatException(string.Format(errorTemplate, "Second", "Value", columnNames.Value));
             }
         }
 
@@ -97,7 +101,8 @@ namespace SupportFunctions.Model
             var part = line.Split(Pipe);
             if (part.Length != 4)
             {
-                throw new FormatException("Row should have 2 cells: Key and Value. Found " + (part.Length - 2) + ": " + line);
+                throw new FormatException(
+                    "Row should have 2 cells: Key and Value. Found " + (part.Length - 2) + ": " + line);
             }
             return new KeyValuePair<string, string>(part[1].Trim(), part[2].Trim());
         }
@@ -120,7 +125,8 @@ namespace SupportFunctions.Model
             while (searchPosition < _line.Count)
             {
                 var tableStartLineNo = FindTableStartFrom(searchPosition);
-                if (IsAtEnd(tableStartLineNo) || TableIsNamed(_line[tableStartLineNo], tableName)) return tableStartLineNo;
+                if (IsAtEnd(tableStartLineNo) || TableIsNamed(_line[tableStartLineNo], tableName)) 
+                    return tableStartLineNo;
                 searchPosition = DoUntilTableEndFrom(tableStartLineNo + 1, s => { });
             }
             return searchPosition;
@@ -269,10 +275,13 @@ namespace SupportFunctions.Model
         {
             var parts = line.Split(Pipe);
             // first and last are always empty. But also other parts could be, so don't remove empty ones
-            if (parts.Length != 4 && parts.Length != 6) return false;
-            if (!parts[1].EqualsIgnoreCase("dictionary")) return false;
+            if (parts.Length != 4 && parts.Length != 6) 
+                return false;
+            if (!parts[1].EqualsIgnoreCase("dictionary")) 
+                return false;
             if (parts.Length == 4) return parts[2].EqualsIgnoreCase(tableName);
-            if (!parts[2].EqualsIgnoreCase("given") && !parts[2].EqualsIgnoreCase("having")) return false;
+            if (!parts[2].EqualsIgnoreCase("given") && !parts[2].EqualsIgnoreCase("having")) 
+                return false;
             return parts[3].EqualsIgnoreCase("name") && parts[4].EqualsIgnoreCase(tableName);
         }
     }

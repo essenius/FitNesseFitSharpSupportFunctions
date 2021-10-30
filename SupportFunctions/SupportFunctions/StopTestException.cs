@@ -15,24 +15,18 @@ using System.Runtime.Serialization;
 namespace SupportFunctions
 {
     /// <inheritdoc />
-    /// <summary>
-    ///     Stop Test Exception - raise when you want FitNesse to stop testing the current test case
-    /// </summary>
+    /// <summary>Stop Test Exception - raise when you want FitNesse to stop testing the current test case</summary>
     [Serializable]
     public class StopTestException : Exception
     {
         /// <inheritdoc />
-        /// <summary>
-        ///     base constructor
-        /// </summary>
+        /// <summary>base constructor</summary>
         public StopTestException()
         {
         }
 
         /// <inheritdoc />
-        /// <summary>
-        ///     constructor with message param
-        /// </summary>
+        /// <summary>constructor with message param</summary>
         /// <param name="message">the exception message</param>
         public StopTestException(string message) : base(message)
         {

@@ -66,7 +66,8 @@ namespace SupportFunctions
         /// <summary>Initialize a new TimeSeriesComparison with expected and actual time series</summary>
         /// <param name="expected">Expected time series</param>
         /// <param name="actual">Actual time series</param>
-        public TimeSeriesComparison(TimeSeries expected, TimeSeries actual) : this(expected, actual, Tolerance.Parse(""))
+        public TimeSeriesComparison(TimeSeries expected, TimeSeries actual) : this(expected, actual,
+            Tolerance.Parse(""))
         {
         }
 
@@ -74,7 +75,8 @@ namespace SupportFunctions
         public Date BaseTimestamp => DoOperation(comparison => comparison._baseTimestamp);
 
         /// <summary>the number of failures in the comparison</summary>
-        public long FailureCount => DoOperation(comparison => comparison._result.Values.Count(result => !result.IsOk()));
+        public long FailureCount => DoOperation(comparison =>
+            comparison._result.Values.Count(result => !result.IsOk()));
 
         /// <summary>maximal value of the time series if numerical, 0 if not numerical</summary>
         public double MaxValue => DoOperation(comparison => comparison._maxValue);
@@ -147,7 +149,8 @@ namespace SupportFunctions
                     new Collection<string> { TimestampCaption, comparison.Timestamp.ActualValueOut },
                     new Collection<string> { ValueCaption, string.Empty + comparison.Value.ValueMessage },
                     new Collection<string> { DeltaCaption, string.Empty + comparison.Value.DeltaMessage },
-                    new Collection<string> { DeltaPercentageCaption, string.Empty + comparison.Value.DeltaPercentageMessage },
+                    new Collection<string>
+                        { DeltaPercentageCaption, string.Empty + comparison.Value.DeltaPercentageMessage },
                     new Collection<string> { IsGoodCaption, string.Empty + comparison.IsGood.ValueMessage },
                     new Collection<string> { IssueCaption, comparison.OutcomeMessage }
                 };
@@ -156,7 +159,8 @@ namespace SupportFunctions
             return rows;
         }
 
-        private static Dictionary<DateTime, Measurement> DictionaryFrom(IEnumerable<Measurement> measurements, string tag)
+        private static Dictionary<DateTime, Measurement> DictionaryFrom(IEnumerable<Measurement> measurements,
+            string tag)
         {
             var dictionary = new Dictionary<DateTime, Measurement>();
             foreach (var measurement in measurements)
@@ -188,7 +192,8 @@ namespace SupportFunctions
         public string Graph() => Graph(new Dictionary<string, string>());
 
         /// <summary>Graph with optional parameters: Width, Height, StartTimestamp, EndTimestamp, MinValue, MaxValue</summary>
-        public string Graph(Dictionary<string, string> rawParameters) => DoOperation(comparison => comparison.CreateGraph(rawParameters));
+        public string Graph(Dictionary<string, string> rawParameters) =>
+            DoOperation(comparison => comparison.CreateGraph(rawParameters));
 
         /// <summary>Shorthand for Graph with a certain width and height; other parameters default</summary>
         public string GraphX(int width, int height)

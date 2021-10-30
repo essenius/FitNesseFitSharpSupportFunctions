@@ -83,7 +83,8 @@ namespace SupportFunctions
             var qualityIndex = csvTable.HeaderIndex(IsGoodColumn);
 
             Measurements.Clear();
-            foreach (var entry in csvTable.Data.Where(t => !(string.IsNullOrEmpty(t[valueIndex]) && string.IsNullOrEmpty(t[qualityIndex]))))
+            foreach (var entry in csvTable.Data.Where(t =>
+                !(string.IsNullOrEmpty(t[valueIndex]) && string.IsNullOrEmpty(t[qualityIndex]))))
             {
                 var measurement = new Measurement(entry[timestampIndex], entry[valueIndex], entry[qualityIndex]);
                 Measurements.Add(measurement);

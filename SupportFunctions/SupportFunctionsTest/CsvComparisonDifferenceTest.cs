@@ -62,8 +62,7 @@ namespace SupportFunctionsTest
             var i = 0;
             foreach (Collection<object> row in difference.Query())
             {
-                Assert.AreEqual(expectedDifference[i][0], CsvComparisonTest.QueryValue(row, "Cell"), $"Query Entry #{i}.Cell");
-                Assert.AreEqual(expectedDifference[i][1], CsvComparisonTest.QueryValue(row, "Row No"), $"Query Entry #{i}.RowNo");
+                Assert.AreEqual(expectedDifference[i][0], CsvComparisonTest.QueryValue(row, "Cell"), $"Query Entry #{i}.Cell"); Assert.AreEqual(expectedDifference[i][1], CsvComparisonTest.QueryValue(row, "Row No"), $"Query Entry #{i}.RowNo");
                 Assert.AreEqual(expectedDifference[i][2], CsvComparisonTest.QueryValue(row, "Row Name"), $"Query Entry #{i}.Row");
                 Assert.AreEqual(expectedDifference[i][3], CsvComparisonTest.QueryValue(row, "Column No"), $"Query Entry #{i}.ColumnNo");
                 Assert.AreEqual(expectedDifference[i][4], CsvComparisonTest.QueryValue(row, "Column Name"), $"Query Entry #{i}.Column");

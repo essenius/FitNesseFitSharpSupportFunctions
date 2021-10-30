@@ -92,11 +92,13 @@ namespace SupportFunctions
         }
 
         /// <returns>the cell reference in the way Excel refers to it, e.g. A1, AC39</returns>
-        private static string CellReference(int rowNo, int columnNo) => columnNo.ToExcelColumnName() + RowReference(rowNo);
+        private static string CellReference(int rowNo, int columnNo) =>
+            columnNo.ToExcelColumnName() + RowReference(rowNo);
 
         /// <param name="columnNo">the column number (lower bound 0)</param>
         /// <returns>the Excel style column reference (e.g. 0=>A, 25=>Z, 27=>AB)</returns>
-        private static string ColumnReference(int columnNo) => Invariant($"{columnNo + 1} ({columnNo.ToExcelColumnName()})");
+        private static string ColumnReference(int columnNo) =>
+            Invariant($"{columnNo + 1} ({columnNo.ToExcelColumnName()})");
 
         /// <summary>Compare the comparison result with another one</summary>
         /// <param name="otherComparison">the comparison to compare with</param>
@@ -105,7 +107,10 @@ namespace SupportFunctions
         {
             var comparer = new RowColumnComparer();
             var common = Result.Intersect(otherComparison.Result, comparer).ToList();
-            var difference = Result.Except(common, comparer).Union(otherComparison.Result.Except(common, comparer));
+            var difference =
+                Result
+                    .Except(common, comparer)
+                    .Union(otherComparison.Result.Except(common, comparer));
             return difference;
         }
 
@@ -129,7 +134,9 @@ namespace SupportFunctions
                 result.Add(CellReference(entry.Row, entry.Column) + " [" + entry.ColumnName + "/" + entry.RowName + "]",
                     entry.Cell.ValueMessage + " (" +
                     (string.IsNullOrEmpty(entry.Cell.DeltaMessage) ? "" : "Delta:" + entry.Cell.DeltaMessage + ", ") +
-                    (string.IsNullOrEmpty(entry.Cell.DeltaPercentageMessage) ? "" : entry.Cell.DeltaPercentageMessage + ", ") +
+                    (string.IsNullOrEmpty(entry.Cell.DeltaPercentageMessage)
+                        ? ""
+                        : entry.Cell.DeltaPercentageMessage + ", ") +
                     entry.Cell.Outcome + ")");
             }
             return result;
@@ -146,8 +153,9 @@ namespace SupportFunctions
             for (var column = 0; column < maxColumns; column++)
             {
                 var columnName = ExpectedTable.Header(column);
-                var comparison = new CellComparison(headerRowNo, rowName, column, columnName, columnName, ActualTable.Header(column),
-                    _tolerance);
+                var comparison = new CellComparison(
+                    headerRowNo, rowName, column, columnName, columnName, ActualTable.Header(column), _tolerance
+                );
                 if (!comparison.Cell.IsOk()) result.Add(comparison);
             }
             return result;
@@ -191,7 +199,9 @@ namespace SupportFunctions
         /// <returns>the list of cell comparisons that didn't pass (empty list if all passed)</returns>
         private List<CellComparison> RowErrors(int row)
         {
-            var currentRow = row < ExpectedTable.RowCount ? ExpectedTable.DataCell(row, 0) : ActualTable.DataCell(row, 0);
+            var currentRow = row < ExpectedTable.RowCount
+                ? ExpectedTable.DataCell(row, 0)
+                : ActualTable.DataCell(row, 0);
             var result = new List<CellComparison>();
             var maxColumns = Math.Max(ExpectedTable.Row(row).Length, ActualTable.Row(row).Length);
             for (var column = 0; column < maxColumns; column++)
@@ -201,7 +211,9 @@ namespace SupportFunctions
                 var actualValue = ActualTable.DataCell(row, column);
                 // reset tolerance range to force recalculating per comparison
                 _tolerance.DataRange = null;
-                var comparison = new CellComparison(row, currentRow, column, currentColumn, expectedValue, actualValue, _tolerance);
+                var comparison = new CellComparison(
+                    row, currentRow, column, currentColumn, expectedValue, actualValue, _tolerance
+                );
                 if (!comparison.Cell.IsOk()) result.Add(comparison);
             }
             return result;

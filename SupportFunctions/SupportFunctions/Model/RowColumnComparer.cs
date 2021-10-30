@@ -23,6 +23,7 @@ namespace SupportFunctions.Model
             return x.Row == y.Row && x.Column == y.Column;
         }
 
-        public int GetHashCode(CellComparison x) => ((x.Row.GetHashCode() << 5) + x.Row.GetHashCode()) ^ x.Column.GetHashCode();
+        public int GetHashCode(CellComparison x) => 
+            ((x.Row.GetHashCode() << 5) + x.Row.GetHashCode()) ^ x.Column.GetHashCode();
     }
 }

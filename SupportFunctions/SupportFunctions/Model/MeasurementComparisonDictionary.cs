@@ -22,14 +22,17 @@ namespace SupportFunctions.Model
         {
         }
 
-        private MeasurementComparisonDictionary(IDictionary<DateTime, IMeasurementComparison> inDictionary) : base(inDictionary)
+        private MeasurementComparisonDictionary(IDictionary<DateTime, IMeasurementComparison> inDictionary) :
+            base(inDictionary)
         {
         }
 
         public MeasurementComparisonDictionary Subset(DateTime? startTimestamp, DateTime? endTimestamp)
         {
             return new MeasurementComparisonDictionary(
-                this.Where(kvp => kvp.Key.IsWithinTimeRange(startTimestamp, endTimestamp))
+                this.Where(
+                        kvp => kvp.Key.IsWithinTimeRange(startTimestamp, endTimestamp)
+                    )
                     .ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
         }
     }

@@ -57,9 +57,11 @@ namespace SupportFunctions.Model
         private bool IsNumericalComparisonWithoutToleranceRange
             => Tolerance is { DataRange: null } && CompareType.IsNumeric() && ExpectedValueIn.IsNumeric();
 
-        private bool IsToleranceUsed => Outcome == CompareOutcome.WithinTolerance || Outcome == CompareOutcome.OutsideToleranceIssue;
+        private bool IsToleranceUsed => 
+            Outcome == CompareOutcome.WithinTolerance || Outcome == CompareOutcome.OutsideToleranceIssue;
 
-        private bool IsZeroToleranceComparison => !CompareType.IsNumeric() || Tolerance == null || Tolerance.Value.Equals(0.0);
+        private bool IsZeroToleranceComparison => 
+            !CompareType.IsNumeric() || Tolerance == null || Tolerance.Value.Equals(0.0);
 
         private Tolerance Tolerance { get; }
 
@@ -96,7 +98,8 @@ namespace SupportFunctions.Model
             return IsOk(Outcome) ? message.Pass() : message.Fail();
         }
 
-        public string ValueMessage => string.Format(InvariantCulture, _messageDictionary[Outcome], ExpectedValueOut, ActualValueOut);
+        public string ValueMessage => 
+            string.Format(InvariantCulture, _messageDictionary[Outcome], ExpectedValueOut, ActualValueOut);
 
         private CompareOutcome DoubleComparison()
         {
@@ -121,7 +124,8 @@ namespace SupportFunctions.Model
             CompareType ??= ActualValueIn.InferType(ExpectedValueIn.InferType());
         }
 
-        public static bool IsOk(CompareOutcome outcome) => outcome == CompareOutcome.None || outcome == CompareOutcome.WithinTolerance;
+        public static bool IsOk(CompareOutcome outcome) => 
+            outcome == CompareOutcome.None || outcome == CompareOutcome.WithinTolerance;
 
         private CompareOutcome LongComparison()
         {

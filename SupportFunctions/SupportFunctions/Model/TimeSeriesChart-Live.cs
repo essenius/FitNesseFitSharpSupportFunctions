@@ -73,7 +73,9 @@ namespace SupportFunctions.Model
             legend.Draw(_chart);
             using var legendImage = legend.Result;
             var rightMargin = (int)(_chart.Width - _chart.Core.DrawMarginSize.Width - _chart.Core.DrawMarginLocation.X);
-            using var combinedImage = CombinedImage(image, legendImage, (legend.MaxHeight - legend.Height) / 2, rightMargin);
+            using var combinedImage = CombinedImage(
+                image, legendImage, (legend.MaxHeight - legend.Height) / 2, rightMargin
+            );
             using var encodedImage = combinedImage.Encode();
             return Convert.ToBase64String(encodedImage.AsSpan());
         }
@@ -111,7 +113,9 @@ namespace SupportFunctions.Model
             using var canvas = surface.Canvas;
             canvas.Clear(SKColors.Transparent);
             canvas.DrawImage(graph, SKRect.Create(new SKPoint(0, 0), imageSize));
-            var legendPosition = new SKPoint(graph.Width - legend.Width - rightMargin - 1, graph.Height - legend.Height - bottomMargin - 1);
+            var legendPosition = new SKPoint(
+                graph.Width - legend.Width - rightMargin - 1, graph.Height - legend.Height - bottomMargin - 1
+            );
             canvas.DrawImage(legend, SKRect.Create(legendPosition, new SKSize(legend.Width, legend.Height)));
             return surface.Snapshot();
         }
@@ -122,7 +126,7 @@ namespace SupportFunctions.Model
             {
                 new Axis
                 {
-                    MinLimit = limits.SnapToGrid ? limits.GridlineMin : limits.Min, //limits.GridlineMin,
+                    MinLimit = limits.SnapToGrid ? limits.GridlineMin : limits.Min, 
                     MaxLimit = limits.SnapToGrid ? limits.GridlineMax : limits.Max,
                     MinStep = limits.GridlineInterval,
                     ForceStepToMin = true,
@@ -145,7 +149,10 @@ namespace SupportFunctions.Model
             _textSize = Math.Max(Math.Min(size.Width / TextScalingFactor, MaxTextSize), MinTextSize);
         }
 
-        private void InitSeries(MeasurementComparisonDictionary sourceData, DateTime baseTimestamp, TimeUnitForDisplay timeUnit)
+        private void InitSeries(
+            MeasurementComparisonDictionary sourceData, 
+            DateTime baseTimestamp, 
+            TimeUnitForDisplay timeUnit)
         {
             _expectedSeries = new LineSeries<ObservablePoint>
             {

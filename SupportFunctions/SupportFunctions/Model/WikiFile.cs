@@ -70,7 +70,8 @@ namespace SupportFunctions.Model
             return "image/unknown";
         }
 
-        public string UniquePathFor(string baseName) => UniquePathFor(baseName, UniqueDateTime.NowTicks);
+        public string UniquePathFor(string baseName) => 
+            UniquePathFor(baseName, UniqueDateTime.NowTicks);
 
         public string UniquePathFor(string baseName, long ticks)
         {

@@ -15,33 +15,25 @@ using System.Runtime.Serialization;
 namespace SupportFunctions
 {
     /// <inheritdoc />
-    /// <summary>
-    ///     Stop Suite Exception - raise when you want FitNesse to stop executing the current test suite
-    /// </summary>
+    /// <summary>Stop Suite Exception - raise when you want FitNesse to stop executing the current test suite</summary>
     [Serializable]
     public class StopSuiteException : Exception
     {
         /// <inheritdoc />
-        /// <summary>
-        ///     base constructor
-        /// </summary>
+        /// <summary>base constructor</summary>
         public StopSuiteException()
         {
         }
 
         /// <inheritdoc />
-        /// <summary>
-        ///     constructor with message param
-        /// </summary>
+        /// <summary>constructor with message param</summary>
         /// <param name="message">the exception message</param>
         public StopSuiteException(string message) : base(message)
         {
         }
 
         /// <inheritdoc />
-        /// <summary>
-        ///     Constructor with message and inner exception
-        /// </summary>
+        /// <summary>Constructor with message and inner exception</summary>
         /// <param name="message">the message</param>
         /// <param name="innerException">the inner exception</param>
         public StopSuiteException(string message, Exception innerException) : base(message, innerException)
@@ -49,9 +41,7 @@ namespace SupportFunctions
         }
 
         /// <inheritdoc />
-        /// <summary>
-        ///     Constructor with serialization info and context
-        /// </summary>
+        /// <summary>Constructor with serialization info and context</summary>
         /// <param name="info">Serialization info</param>
         /// <param name="context">context</param>
         protected StopSuiteException(SerializationInfo info, StreamingContext context) : base(info, context)

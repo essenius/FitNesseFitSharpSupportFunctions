@@ -36,7 +36,7 @@ namespace SupportFunctions.Model
 
         internal Collection<object> MakeTableTable(IEnumerable<T> input, Collection<Collection<object>> tableIn)
         {
-            // FitNesse presents an empty table (no null). Checking for null just to be safe. Useful in unit tests too.
+            // FitNesse presents an empty table (no null). Checking for null to be safe. Useful in unit tests too.
             _desiredColumns = tableIn == null || tableIn.Count == 0
                 ? _allHeaders
                 : new Collection<string>(tableIn[0].Select(s => s.ToString()).ToList());
@@ -77,11 +77,15 @@ namespace SupportFunctions.Model
             {
                 if (!_allHeaders.Contains(_desiredColumns[i], StringComparer.OrdinalIgnoreCase))
                 {
-                    throw new ArgumentException(
-                        Invariant($"{_desiredColumns[i]}: No such header. Recognised values: {string.Join(", ", _allHeaders)}."));
+                    var message = Invariant(
+                        $"{_desiredColumns[i]}: No such header. Recognised values: {string.Join(", ", _allHeaders)}."
+                    );
+                    throw new ArgumentException(message);
                 }
                 // align the casing of the header to the specification
-                _desiredColumns[i] = _getField.First(x => string.Equals(x.Key, _desiredColumns[i], StringComparison.OrdinalIgnoreCase)).Key;
+                _desiredColumns[i] = _getField.First(
+                    x => string.Equals(x.Key, _desiredColumns[i], StringComparison.OrdinalIgnoreCase)
+                ).Key;
             }
         }
     }

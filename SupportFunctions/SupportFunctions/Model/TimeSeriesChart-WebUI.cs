@@ -76,7 +76,10 @@ namespace SupportFunctions.Model
             return Convert.ToBase64String(ms.ToArray());
         }
 
-        internal string ChartDataFor(MeasurementComparisonDictionary sourceData, AxisLimits limits, Size size)
+        internal string ChartDataFor(
+            MeasurementComparisonDictionary sourceData, 
+            AxisLimits limits, 
+            Size size)
         {
             InitChart(size);
             var timeUnit = limits.TimeUnit;
@@ -141,7 +144,10 @@ namespace SupportFunctions.Model
             };
         }
 
-        private void InitSeries(MeasurementComparisonDictionary sourceData, DateTime baseTimestamp, TimeUnitForDisplay timeUnit)
+        private void InitSeries(
+            MeasurementComparisonDictionary sourceData, 
+            DateTime baseTimestamp, 
+            TimeUnitForDisplay timeUnit)
         {
             _actualSeries = new Series(ActualCaption);
             _expectedSeries = new Series(ExpectedCaption);
@@ -200,12 +206,15 @@ namespace SupportFunctions.Model
 
         private static void SetSeriesStyle(Series series, SeriesType seriesType, bool hasFailures)
         {
-            series.ChartType = ChooseValue(seriesType, SeriesChartType.FastLine, SeriesChartType.FastLine, SeriesChartType.Line);
+            series.ChartType = ChooseValue(
+                seriesType, SeriesChartType.FastLine, SeriesChartType.FastLine, SeriesChartType.Line);
             series.Color = ChooseValue(seriesType, ExpectedColor, ActualColor, FailColor);
             series.BorderWidth = ChooseValue(seriesType, LineThickness, LineThickness + 1, 0);
             series.MarkerSize = ChooseValue(seriesType, 0, 0, 8);
             series.MarkerStyle = ChooseValue(seriesType, MarkerStyle.None, MarkerStyle.None, MarkerStyle.Circle);
-            series.BorderDashStyle = ChooseValue(seriesType, ChartDashStyle.Dot, ChartDashStyle.Solid, ChartDashStyle.NotSet);
+            series.BorderDashStyle = ChooseValue(
+                seriesType, ChartDashStyle.Dot, ChartDashStyle.Solid, ChartDashStyle.NotSet
+            );
             series.IsVisibleInLegend = ChooseValue(seriesType, true, true, hasFailures);
         }
 

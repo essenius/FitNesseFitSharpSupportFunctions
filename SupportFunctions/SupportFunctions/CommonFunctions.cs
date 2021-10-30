@@ -34,8 +34,9 @@ namespace SupportFunctions
         }
 
         /// <summary>
-        ///     Return the current ticks value. Ticks are the number of 100-nanosecond intervals that have elapsed since midnight,
-        ///     January 1, 0001 (0:00:00 UTC) in the Gregorian calendar. It will always return a unique higher value
+        ///     Return the current ticks value. Ticks are the number of 100-nanosecond intervals
+        ///     that have elapsed since midnight, January 1, 0001 (0:00:00 UTC) in the Gregorian calendar.
+        ///     It will always return a unique higher value.
         /// </summary>
         public static long Ticks => UniqueDateTime.NowTicks;
 
@@ -63,7 +64,8 @@ namespace SupportFunctions
         public static string Concat(string[] input) => Concatenate(input);
 
         /// <summary>Concatenate a list of values into a single string value</summary>
-        public static string Concatenate(string[] input) => input.Aggregate(string.Empty, (current, entry) => current + entry);
+        public static string Concatenate(string[] input) => 
+            input.Aggregate(string.Empty, (current, entry) => current + entry);
 
         /// <returns>a date using a specific format (using standard .Net convention)</returns>
         public static string DateFormatted(Date date, string format)
@@ -77,10 +79,10 @@ namespace SupportFunctions
 
         /// <summary>Evaluate an expression</summary>
         /// <param name="expression">
-        ///     the expression to evaluate. Supported operations: addition (+), subtraction (-), multiplication (*),
-        ///     division (/), and modulo (%).
-        ///     Supported functions: LEN(expression), ISNULL(expression, replacement), IIF(expression, trueValue, falseValue),
-        ///     TRIM(expression), SUBSTRING(expression, start, length)
+        ///     the expression to evaluate. Supported operations: addition (+), subtraction (-),
+        ///     multiplication (*), division (/), and modulo (%).
+        ///     Supported functions: LEN(expression), ISNULL(expression, replacement),
+        ///     IIF(expression, trueValue, falseValue), TRIM(expression), SUBSTRING(expression, start, length)
         /// </param>
         /// <remarks>
         ///     See <a href="https://docs.microsoft.com/en-us/dotnet/api/system.data.datacolumn.expression">DataColumn documentation</a>
@@ -96,15 +98,16 @@ namespace SupportFunctions
         ///     and the full names of standard .Net types such as System.String, System.Int32, System.DateTime
         /// </param>
         /// <returns>the result as the specified type</returns>
-        public static object EvaluateAs(string expression, string type) => EvaluateAsWithParams(expression, type, null);
+        public static object EvaluateAs(string expression, string type) => 
+            EvaluateAsWithParams(expression, type, null);
 
         /// <summary>Experimental - do not use</summary>
         public static object EvaluateAsWithParams(string expression, string type, string[] parameters)
         {
             Requires.NotNull(type, nameof(type));
             var returnType = type.ToType();
-            // Date is a special case. It can be used as a return value type, but EvaluateExpression only knows standard types. 
-            // So use DateTime in the evaluation, and map it to a Date afterwards.
+            // Date is a special case. It can be used as a return value type, but EvaluateExpression
+            // only knows standard types. So use DateTime in the evaluation, and map it to a Date afterwards.
             return returnType == typeof(Date)
                 ? Date.Parse(EvaluateExpression(expression, typeof(DateTime), parameters).To<string>())
                 : EvaluateExpression(expression, returnType, parameters);
@@ -129,7 +132,8 @@ namespace SupportFunctions
         }
 
         /// <summary>Experimental - do not use</summary>
-        public static object EvaluateWithParams(string expression, string[] parameters) => EvaluateExpression(expression, typeof(object), parameters);
+        public static object EvaluateWithParams(string expression, string[] parameters) => 
+            EvaluateExpression(expression, typeof(object), parameters);
 
         /// <summary>EvaluateExpression a Boolean expression. Shorthand for EvaluateExpression As with type bool</summary>
         /// <param name="expression">
@@ -138,7 +142,8 @@ namespace SupportFunctions
         ///     and/or end of the pattern. For IN, specify the values between parentheses, e.g. ′a′ IN (′a′, ′b′, ′c′)
         /// </param>
         /// <returns>whether the expression evaluated to True</returns>
-        public static bool IsTrue(string expression) => (bool)EvaluateExpression(expression, typeof(bool), null);
+        public static bool IsTrue(string expression) => 
+            (bool)EvaluateExpression(expression, typeof(bool), null);
 
         /// <returns>the leftmost characters of a string</returns>
         public static string LeftmostOf(int length, string input)
@@ -150,8 +155,8 @@ namespace SupportFunctions
         /// <summary>Parse a string value into a Date object. </summary>
         /// <param name="date">
         ///     today will return the current date (0:00 hours); now will return current date and time.
-        ///     If the input can be converted into a long, the input is assumed to be in Ticks.
-        ///     Otherwise, the date should be an unambiguous date format. Safest is to use the sortable format (as per default)
+        ///     If the input can be converted into a long, the input is assumed to be in Ticks. Otherwise,
+        ///     the date should be an unambiguous date format. Safest is to use the sortable format (as per default)
         /// </param>
         /// <returns>the parsed Date object</returns>
         public static Date Parse(string date) => Date.Parse(date);
@@ -221,6 +226,7 @@ namespace SupportFunctions
         }
 
         /// <summary>Wait the specified number of seconds</summary>
-        public static void WaitSeconds(double seconds) => Thread.Sleep(TimeSpan.FromSeconds(seconds));
+        public static void WaitSeconds(double seconds) => 
+            Thread.Sleep(TimeSpan.FromSeconds(seconds));
     }
 }

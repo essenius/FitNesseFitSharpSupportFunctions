@@ -81,9 +81,11 @@ namespace SupportFunctions.Utilities
             return diff <= units;
         }
 
-        public static bool IsFloatingPoint(this Type type) => type == typeof(double) || type == typeof(float) || type == typeof(decimal);
+        public static bool IsFloatingPoint(this Type type) => 
+            type == typeof(double) || type == typeof(float) || type == typeof(decimal);
 
-        public static bool IsNumeric(this Type myType) => NumericTypes.Contains(Nullable.GetUnderlyingType(myType) ?? myType);
+        public static bool IsNumeric(this Type myType) => 
+            NumericTypes.Contains(Nullable.GetUnderlyingType(myType) ?? myType);
 
         public static bool IsNumeric(this object expression)
         {

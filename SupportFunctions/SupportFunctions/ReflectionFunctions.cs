@@ -27,7 +27,10 @@ namespace SupportFunctions
         private static Type FindStaticClass(string className)
         {
             var type = Type.GetType(className.TypeName()) ?? Type.GetType("System." + className.ToTitleCase());
-            if (type == null) throw new TypeLoadException(Invariant($"Could not find static class '{className}'"));
+            if (type == null)
+            {
+                throw new TypeLoadException(Invariant($"Could not find static class '{className}'"));
+            }
             return type;
         }
 
@@ -59,6 +62,13 @@ namespace SupportFunctions
             }
             return GetWithParamsOf(member, param, input);
         }
+
+        /// <summary>Like, but with parameters as a separate entity</summary>
+        /// <param name="member">the method name</param>
+        /// <param name="parameters">the parameters for the method (in FitNesse array format)</param>
+        /// <returns>the result of the method call</returns>
+        public static object GetWithParams(string member, object[] parameters) => 
+            GetWithParamsOf(member, parameters, null);
 
         /// <summary>Like Get Of, but with parameters as a separate entity</summary>
         /// <param name="member">the method name</param>
@@ -127,7 +137,8 @@ namespace SupportFunctions
             {
                 return outValue;
             }
-            throw new MissingMemberException(Invariant($"Could not find static property, field or method '{function}'"));
+            throw new MissingMemberException(
+                Invariant($"Could not find static property, field or method '{function}'"));
         }
 
         private static bool TryGetMember(Type type, string function, object input,

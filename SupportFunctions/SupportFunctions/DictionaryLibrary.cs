@@ -41,8 +41,8 @@ namespace SupportFunctions
         public Dictionary<string, string> Dictionary { get; }
 
         /// <summary>
-        ///     set/get the filename used to load/save dictionaries. Can also be set implicitly via the Load, Save and Wait functions.
-        ///     Default name is DictionaryStore.json
+        ///     set/get the filename used to load/save dictionaries. Can also be set implicitly
+        ///     via the Load, Save and Wait functions. Default name is DictionaryStore.json
         /// </summary>
         public string FileName { get; set; }
 
@@ -96,7 +96,8 @@ namespace SupportFunctions
         public void DeletePage(string pageName) => MyFitNessePage.DeletePage(pageName);
 
         /// <summary>Remove a data table from a page under the page root</summary>
-        public bool DeleteTableFromPage(string tableName, string pageName) => MyFitNessePage.DeleteTableFromPage(tableName, pageName);
+        public bool DeleteTableFromPage(string tableName, string pageName) =>
+            MyFitNessePage.DeleteTableFromPage(tableName, pageName);
 
         /// <summary>Get the value from a key/value pair in the dictionary</summary>
         public object Get(string key) => GetFrom(key, Dictionary);
@@ -123,8 +124,8 @@ namespace SupportFunctions
         }
 
         /// <summary>
-        ///     Load a data table from a page under the page root. The dictionary is cleared before the load, so if the operation fails,
-        ///     the dictionary is empty
+        ///     Load a data table from a page under the page root. The dictionary is cleared before the load,
+        ///     so if the operation fails, the dictionary is empty
         /// </summary>
         /// <param name="tableName">the name of the table</param>
         /// <param name="page">the page reference</param>
@@ -156,7 +157,8 @@ namespace SupportFunctions
         }
 
         /// <summary>Save a data table onto a page under the page root</summary>
-        public void SaveTableToPage(string tableName, string pageName) => MyFitNessePage.SaveTableToPage(tableName, pageName, Dictionary);
+        public void SaveTableToPage(string tableName, string pageName) =>
+            MyFitNessePage.SaveTableToPage(tableName, pageName, Dictionary);
 
         /// <summary>Set the value of a key/value pair in the dictionary</summary>
         public void SetTo(string key, string value) => SetToIn(key, value, Dictionary);

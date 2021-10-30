@@ -67,8 +67,8 @@ namespace SupportFunctions
         ///     Double for absolutes. percentage for relative compared to expected data range. Example: 0.001;0.1%
         /// </summary>
         /// <param name="input">
-        ///     one or more tolerance specs separated by semicolon. Double for absolutes. percentage for relative compared to
-        ///     expected data range. Example: 0.001;0.1%
+        ///     one or more tolerance specs separated by semicolon. Double for absolutes.
+        ///     percentage for relative compared expected data range. Example: 0.001;0.1%
         /// </param>
         public static Tolerance Parse(string input)
         {

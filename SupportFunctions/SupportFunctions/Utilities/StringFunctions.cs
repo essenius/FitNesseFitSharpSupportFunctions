@@ -19,9 +19,11 @@ namespace SupportFunctions.Utilities
         public static bool EqualsIgnoreCase(this string input, string compareTo) =>
             input.Trim().Equals(compareTo, StringComparison.OrdinalIgnoreCase);
 
-        public static string FillIn(this string input, object objectToInsert) => string.Format(InvariantCulture, input, objectToInsert);
+        public static string FillIn(this string input, object objectToInsert) => 
+            string.Format(InvariantCulture, input, objectToInsert);
 
-        public static string Formatted(this DateTime input, string format) => input.ToString(format, InvariantCulture);
+        public static string Formatted(this DateTime input, string format) => 
+            input.ToString(format, InvariantCulture);
 
         #region Table Table Output Interface
 
