@@ -24,3 +24,4 @@
 3.0.0-beta-5: Made RegistryWrapper non-static so it can be mocked, eliminated dependency on running FitNesse instance for tests, 
               and made machine info and user info tests more robust.
 3.0.0-beta-6: made DisplayName more robust
+3.0.0-beta-7: Added ReflectionFunctions.GetWithParams
