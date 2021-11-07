@@ -15,4 +15,4 @@ Differences are:
 * Run the suite: Open a browser and enter the URL http://localhost:8080/FitSharpDemos.SupportFunctionsSuite?suite
 
 # Contribute
-Enter an issue or provide a pull request. 
+Enter an [issue](../../issues) or provide a [pull request](../../pulls). 
