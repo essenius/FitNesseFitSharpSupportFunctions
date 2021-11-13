@@ -10,7 +10,7 @@ The steps to install are very similar to that of installing the [FibonacciDemo](
 
 Differences are:
 * Download the repo code as a zip file and extract the contents of the folder ```FitNesseFitSharpSupportFunctions```. 
-* Build command becomes: `dotnet build -c release %LOCALAPPDATA%\FitNesse\SupportFunctions\SupportFunctions.sln`
+* Build command becomes: `dotnet build --configuration release %LOCALAPPDATA%\FitNesse\SupportFunctions\SupportFunctions.sln`
 * Publish, to get the necessary dependencies (primarily LiveCharts), and take the runtime you need: 
     ```
     cd %LOCALAPPDATA%\FitNesse\SupportFunctions\SupportFunctions
