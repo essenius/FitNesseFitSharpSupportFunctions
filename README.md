@@ -9,14 +9,12 @@ This repo contains support functions such as Echo, Times Series, Dictionary Libr
 The steps to install are very similar to that of installing the [FibonacciDemo](../../../FitNesseFitSharpFibonacciDemo).
 
 Differences are:
-* Download the repo code as a zip file and extract the contents of the folder ```FitNesseFitSharpSupportFunctions```. 
-* Build command becomes: `dotnet build --configuration release %LOCALAPPDATA%\FitNesse\SupportFunctions\SupportFunctions.sln`
-* Publish, to get the necessary dependencies (primarily LiveCharts), and take the runtime you need: 
-    ```
-    cd %LOCALAPPDATA%\FitNesse\SupportFunctions\SupportFunctions
-    dotnet publish SupportFunctions.csproj --output bin\Deploy\net5.0 --framework net5.0 --configuration release --runtime win-x64
-    ```
-* Before starting FitNesse, go to folder: `cd /D %LOCALAPPDATA%\FitNesse\SupportFunctions\SupportFunctions\bin\Deploy\net5.0`
+* Download the repo code as a zip file and extract the contents of the folder `FitNesseFitSharpSupportFunctions-master`. 
+* Go to the solution folder: `cd /D %LOCALAPPDATA%\FitNesse\SupportFunctions`
+* Build solution: `dotnet build --configuration release SupportFunctions.sln`
+* Go to fixture folder: `cd SupportFunctions`
+* Publish, including selecting the right runtime: `dotnet publish --output bin\Deploy\net5.0 --framework net5.0 --configuration release --runtime win-x64 SupportFunctions.csproj`
+* Go to the assemby folder and start FitNesse
 * Run the suite: Open a browser and enter the URL http://localhost:8080/FitSharpDemos.SupportFunctionsSuite?suite
 
 # Contribute
