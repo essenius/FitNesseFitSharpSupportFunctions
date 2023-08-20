@@ -14,7 +14,7 @@ Differences are:
 * If youy have .NET SDK installed:
     * Build solution: `dotnet build --configuration release SupportFunctions.sln`
     * Go to fixture folder: `cd SupportFunctions`
-    * Publish, including selecting the right runtime: `dotnet publish --output bin\Deploy\net5.0 --framework net5.0 --configuration release --runtime win-x64 SupportFunctions.csproj`
+    * Publish, including selecting the right runtime: `dotnet publish --output bin\Deploy\net6.0 --framework net6.0 --configuration release --runtime win-x64 SupportFunctions.csproj`
 * If you don't have .NET SDK installed: download `SupportFunctions.zip` from the latest [release](../../releases) and extract it into the `SupportFunctions\SupportFunctions` folder
 * Go to the assemby folder `bin\Deploy\net5.0` and start FitNesse.
 * Run the suite: Open a browser and enter the URL http://localhost:8080/FitSharpDemos.SupportFunctionsSuite?suite
