@@ -12,7 +12,7 @@
 // TimeSeriesChart using LiveCharts 2 which supports .NET 5.0
 // It's still a beta, so that's why this SupportFunctions version is a beta too.
 
-#if NET5_0
+#if NET6_0
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -120,9 +120,9 @@ namespace SupportFunctions.Model
             return surface.Snapshot();
         }
 
-        private IEnumerable<IAxis> CreateAxes(Dimension limits, string name)
+        private IEnumerable<ICartesianAxis> CreateAxes(Dimension limits, string name)
         {
-            return new IAxis[]
+            return new ICartesianAxis[]
             {
                 new Axis
                 {

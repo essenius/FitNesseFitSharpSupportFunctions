@@ -257,12 +257,12 @@ namespace SupportFunctionsTest
 
         [TestMethod]
         [TestCategory("Integration")]
+        [ExpectedException(typeof(TargetInvocationException))]
         public void FitNessePageRestCallInvalidTest()
         {
-            // Test still works both when FitNesse is active locally on port 8080 and when it is not
+            // We expect the Requires clause to kick in as return value should not be OK (whether FitNesse is active or not)
             var fitnessePage = new FitNessePage();
-            var stream = _restCallMethod.Invoke(fitnessePage, new object[] { Server + "NonExistingPage?pageData" });
-            Assert.IsNull(stream);
+            _restCallMethod.Invoke(fitnessePage, new object[] { Server + "NonExistingPage?pageData" });
         }
 
         [TestMethod]

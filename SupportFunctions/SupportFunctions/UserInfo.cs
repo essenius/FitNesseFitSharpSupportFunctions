@@ -10,13 +10,11 @@
 //   See the License for the specific language governing permissions and limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.DirectoryServices.AccountManagement;
 
 namespace SupportFunctions
 {
     /// <summary>User information</summary>
-    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "FitSharp entry point")]
     public sealed class UserInfo
     {
         /// <summary>The current user’s display name</summary>
@@ -24,13 +22,13 @@ namespace SupportFunctions
         {
             get
             {
-#if NET5_0
+#if NET6_0
                 if (OperatingSystem.IsWindows())
 #endif
                     return string.IsNullOrEmpty(UserPrincipal.Current.DisplayName) 
                         ? Environment.UserName 
                         : UserPrincipal.Current.DisplayName;
-#if NET5_0
+#if NET6_0
                 return Environment.UserName;
 #endif
             }

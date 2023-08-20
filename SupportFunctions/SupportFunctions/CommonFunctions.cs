@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -22,8 +21,6 @@ using SupportFunctions.Utilities;
 namespace SupportFunctions
 {
     /// <summary>Frequently needed functions for FitNesse tests. Useful as library</summary>
-    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "FitSharp entry point")]
-    [SuppressMessage("ReSharper", "ParameterTypeCanBeEnumerable.Global", Justification = "FitSharp would not see it")]
     public sealed class CommonFunctions
     {
         /// <summary>Get or set the default date format. Formatting follows the standard .Net conventions</summary>
@@ -149,6 +146,7 @@ namespace SupportFunctions
         public static string LeftmostOf(int length, string input)
         {
             Requires.NotNull(input, nameof(input));
+            // don't simplify as that won't work for .NET 4.6.1
             return input.Length < length ? input : input.Substring(0, length);
         }
 

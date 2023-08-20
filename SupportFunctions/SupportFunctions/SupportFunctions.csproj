@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0;net461</TargetFrameworks>
+    <TargetFrameworks>net6.0;net461</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <AnalysysMode>AllEnabledByDefault</AnalysysMode>
-    <Version>3.0.0-beta-7</Version>
+    <Version>3.0.0-beta-8</Version>
     <Authors>Rik Essenius</Authors>
     <Description>Support functions such as Echo, Times Series, Dictionary Library objects, date functions for FitNesse/FitSharp</Description>
-    <Copyright>Copyright © Rik Essenius 2015-2021</Copyright>
+    <Copyright>Copyright © Rik Essenius 2015-2023</Copyright>
     <RepositoryUrl>https://github.com/essenius/FitNesseFitSharpSupportFunctions.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
@@ -19,23 +19,23 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
-    <PackageReference Include="System.DirectoryServices" Version="5.0.0" />
-    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="5.0.0" />
-    <PackageReference Include="LiveChartsCore.SkiaSharpView" Version="2.0.0-beta.50" />
+    <PackageReference Include="System.DirectoryServices" Version="6.0.1" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute"> 
       <_Parameter1>SupportFunctionsTest</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net5.0' ">
+  <ItemGroup Condition =" '$(TargetFramework)' == 'net6.0' ">
+    <PackageReference Include="LiveChartsCore.SkiaSharpView" Version="2.0.0-beta.920" />
+  </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.DataVisualization" />
     <Reference Include="System.Web.Extensions" />
-    <!-- Nuget doesn't pick up conditional references, but we don't want this reference with net461 -->
-    <PackageReference Include="LiveChartsCore.SkiaSharpView" Version="2.0.0-beta.50">
-      <ExcludeAssets>All</ExcludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
 
   </ItemGroup>
 

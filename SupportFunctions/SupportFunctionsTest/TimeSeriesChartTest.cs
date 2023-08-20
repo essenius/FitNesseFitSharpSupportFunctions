@@ -24,7 +24,7 @@ namespace SupportFunctionsTest
     [TestClass]
     public class TimeSeriesChartTest
     {
-#if NET5_0
+#if NET6_0
         public const string ChartFolder = "TestDataLive\\";
 #else
         public const string ChartFolder = "TestDataWebUI\\";

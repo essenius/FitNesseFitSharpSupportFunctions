@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0;net461</TargetFrameworks>
+    <TargetFrameworks>net6.0;net461</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <AnalysysMode>AllEnabledByDefault</AnalysysMode>
-    <Version>3.0.0-beta-7</Version>
+    <Version>3.0.0-beta-8</Version>
     <Authors>Rik Essenius</Authors>
     <Description>Test project for SupportFunctions fixture</Description>
-    <Copyright>Copyright © Rik Essenius 2015-2021</Copyright>
+    <Copyright>Copyright © Rik Essenius 2015-2023</Copyright>
     <RepositoryUrl>https://github.com/essenius/FitNesseFitSharpSupportFunctions.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
@@ -52,7 +52,7 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
     <None Update="TestDataLive\Base64AllBelowXAxis.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -79,7 +79,7 @@
     </None>
 </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net5.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' ">
     <None Update="TestDataWebUI\Base64AllBelowXAxis.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

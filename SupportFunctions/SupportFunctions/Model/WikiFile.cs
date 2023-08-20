@@ -11,9 +11,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+#if NET6_0
+using SkiaSharp;
+#else
 using System.Drawing;
 using System.Drawing.Imaging;
+#endif
 using System.Globalization;
 using System.IO;
 using SupportFunctions.Utilities;
@@ -21,7 +24,6 @@ using static System.FormattableString;
 
 namespace SupportFunctions.Model
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "Used by FitSharp")]
     internal class WikiFile
     {
         private const string TestResultsFolder = "files\\testResults";
@@ -38,6 +40,46 @@ namespace SupportFunctions.Model
             _wikiPagePath = Path.Combine(wikiRoot, _wikiPage);
         }
 
+#if NET6_0
+        public static string MimeType(byte[] imageData)
+        {
+            var formatDictionary = new Dictionary<SKEncodedImageFormat, string>
+            {
+                { SKEncodedImageFormat.Jpeg, "image/jpeg" },
+                { SKEncodedImageFormat.Png, "image/png" },
+                { SKEncodedImageFormat.Gif, "image/gif" },
+                { SKEncodedImageFormat.Bmp, "image/bmp" },
+                { SKEncodedImageFormat.Ico, "image/ico" },
+                { SKEncodedImageFormat.Wbmp, "image/wbmp" },
+                { SKEncodedImageFormat.Pkm, "image/pkm" },
+                { SKEncodedImageFormat.Ktx, "image/ktx" },
+                { SKEncodedImageFormat.Dng, "image/dng" },
+                { SKEncodedImageFormat.Astc, "image/astc" },
+                { SKEncodedImageFormat.Heif, "image/heif" },
+                { SKEncodedImageFormat.Webp, "image/webp" }
+            };
+            try
+            {
+                using var ms = new MemoryStream(imageData);
+                using var skStream = new SKManagedStream(ms);
+                using var skCodec = SKCodec.Create(skStream);
+                
+                var codecFormat = skCodec.EncodedFormat;
+
+
+                if (formatDictionary.TryGetValue(codecFormat, out var mimeType))
+                {   
+                    return mimeType;
+                }
+            }
+            catch (Exception)
+            {
+                // all exceptions imply we don't know this image type
+            }
+
+            return "image/unknown";
+        }
+#else
         public static string MimeType(byte[] imageData)
         {
             var formatDictionary = new Dictionary<Guid, string>
@@ -70,6 +112,7 @@ namespace SupportFunctions.Model
             return "image/unknown";
         }
 
+#endif
         public string UniquePathFor(string baseName) => 
             UniquePathFor(baseName, UniqueDateTime.NowTicks);
 

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using SupportFunctions.Utilities;
 
 namespace SupportFunctions.Model
@@ -206,8 +207,7 @@ namespace SupportFunctions.Model
         private static IEnumerable<string> ReadLines(Stream stream)
         {
             using var reader = new StreamReader(stream);
-            string line;
-            while ((line = reader.ReadLine()) != null)
+            while (reader.ReadLine() is { } line)
             {
                 yield return line;
             }
@@ -224,19 +224,20 @@ namespace SupportFunctions.Model
         protected virtual List<string> RestCall(string uri)
         {
             var encodedUri = new Uri(uri);
-            var webRequest = (HttpWebRequest)WebRequest.Create(encodedUri);
-            webRequest.Method = "GET";
+
+
+            using var httpClient = new HttpClient();
             try
             {
-                var webResponse = (HttpWebResponse)webRequest.GetResponse();
-                Requires.Condition(webResponse.StatusCode == HttpStatusCode.OK, "Web response status is OK");
-                var stream = webResponse.GetResponseStream();
+                var response = httpClient.GetAsync(encodedUri).Result;
+
+                Requires.Condition(response.StatusCode == HttpStatusCode.OK, "Web response status is OK");
+                var stream = response.Content.ReadAsStreamAsync().Result;
                 Requires.NotNull(stream, nameof(stream));
                 var result = ReadLines(stream).ToList();
-                webResponse.Close();
                 return result;
             }
-            catch (WebException)
+            catch (HttpRequestException)
             {
                 return null;
             }

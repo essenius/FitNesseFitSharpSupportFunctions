@@ -11,7 +11,7 @@
 
 using Microsoft.Win32;
 using SupportFunctions.Utilities;
-#if NET5_0
+#if NET6_0
 using System;
 using System.Runtime.Versioning;
 #endif
@@ -26,11 +26,11 @@ namespace SupportFunctions.Model
         {
             get
             {
-#if NET5_0
+#if NET6_0
                 if (OperatingSystem.IsWindows())
 #endif
                     return InternationalValue(ShortDateFormatLocation).ToString();
-#if NET5_0
+#if NET6_0
                 return "dd-MMM-yyyy";
 #endif
             }
@@ -42,11 +42,11 @@ namespace SupportFunctions.Model
         {
             get
             {
-#if NET5_0
+#if NET6_0
                 if (OperatingSystem.IsWindows())
 #endif
                     return InternationalValue(TimeFormatLocation).ToString();
-#if NET5_0
+#if NET6_0
                 return "HH:mm:ss";
 #endif
             }
@@ -54,7 +54,7 @@ namespace SupportFunctions.Model
 
         private static string TimeFormatLocation => "sTimeFormat";
 
-#if NET5_0
+#if NET6_0
         [SupportedOSPlatform("windows")]
 #endif
         private object InternationalValue(string key)

@@ -109,7 +109,7 @@ namespace SupportFunctionsTest
         [TestMethod]
         [TestCategory("Unit")]
         [ExpectedExceptionWithMessage(typeof(ArgumentException),
-#if NET5_0
+#if NET6_0
         "Type 'WrongType' not recognized. (Parameter 'type')")]
 #else
             "Type 'WrongType' not recognized.\r\nParameter name: type")]

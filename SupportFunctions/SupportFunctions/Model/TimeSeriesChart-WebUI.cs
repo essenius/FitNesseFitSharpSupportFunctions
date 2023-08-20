@@ -11,7 +11,7 @@
 
 // TimeSeriesChart using Web.UI.DataVisualization (which is standard in .NET Framework)
 
-#if NET5_0 == false
+#if NET6_0 == false
 using System;
 using System.Diagnostics;
 using System.Drawing;

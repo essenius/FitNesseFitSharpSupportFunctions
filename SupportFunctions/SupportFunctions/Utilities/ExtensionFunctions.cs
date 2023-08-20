@@ -191,7 +191,7 @@ namespace SupportFunctions.Utilities
         public static Type ToType(this string type)
         {
             var typeKey = type.ToUpperInvariant();
-            if (BuiltInTypeDictionary.ContainsKey(typeKey)) return BuiltInTypeDictionary[typeKey];
+            if (BuiltInTypeDictionary.TryGetValue(typeKey, out var builtinType)) return builtinType;
             // none of the standard types, check if we can map it
             var evalType = Type.GetType(type);
             if (evalType != null) return evalType;
@@ -221,8 +221,8 @@ namespace SupportFunctions.Utilities
         public static string TypeName(this string name)
         {
             var nameInUppercase = name.ToUpperInvariant();
-            return BuiltInTypeDictionary.ContainsKey(nameInUppercase) 
-                ? BuiltInTypeDictionary[nameInUppercase].ToString() 
+            return BuiltInTypeDictionary.TryGetValue(nameInUppercase, out var builtinType) 
+                ? builtinType.ToString() 
                 : name;
         }
 

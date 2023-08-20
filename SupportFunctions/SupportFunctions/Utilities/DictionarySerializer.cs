@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace SupportFunctions.Utilities
 {
-#if NET5_0
+#if NET6_0
     using System.Text.Json;
 
     internal static class DictionarySerializer

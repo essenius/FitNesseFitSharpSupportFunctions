@@ -11,7 +11,7 @@
 
 // Legend construction for Live Charts 2, which currently only supports legends for UI components
 
-#if NET5_0
+#if NET6_0
 using System;
 using System.Diagnostics;
 using System.Linq;
