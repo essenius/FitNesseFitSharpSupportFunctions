@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using SupportFunctions.Model;
@@ -21,7 +20,6 @@ using SupportFunctions.Utilities;
 namespace SupportFunctions
 {
     /// <summary>Compares two time series and reports results in a table or graph</summary>
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "FitSharp entry point")]
     public class TimeSeriesComparison
     {
         private const string DeltaCaption = "Delta";

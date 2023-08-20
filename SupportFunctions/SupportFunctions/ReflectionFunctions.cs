@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using SupportFunctions.Utilities;
@@ -20,8 +19,6 @@ using static System.FormattableString;
 namespace SupportFunctions
 {
     /// <summary>Fixtures to access methods on parameters or static classes via reflection</summary>
-    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global", Justification = "FitSharp entry point")]
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "FitSharp entry point")]
     public sealed class ReflectionFunctions
     {
         private static Type FindStaticClass(string className)

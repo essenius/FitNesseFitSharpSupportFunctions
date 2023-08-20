@@ -1,4 +1,4 @@
-!define folder {SupportFunctions.Sample}
+!define folder {${FITNESSE_ROOTPATH}/SupportFunctions.Sample}
 
 !|script:Time Series Comparison|${folder}\DemoExpected.csv|${folder}\DemoActual.csv|0.5%:3;0.01|
 |check                         |failure count             |3                                   |
