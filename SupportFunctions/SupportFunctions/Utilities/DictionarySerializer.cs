@@ -1,4 +1,4 @@
-﻿// Copyright 2021 Rik Essenius
+﻿// Copyright 2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -9,26 +9,31 @@
 //   is distributed on an "AS IS" BASIS WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and limitations under the License.
 
+
 using System;
 using System.Collections.Generic;
+#if NET5_0_OR_GREATER
+using System.Text.Json;
+
+#else
+using System.Web.Script.Serialization;
+#endif
 
 namespace SupportFunctions.Utilities
 {
-#if NET6_0
-    using System.Text.Json;
+#if NET5_0_OR_GREATER
 
     internal static class DictionarySerializer
     {
         public static Type ParseExceptionType => typeof(JsonException);
 
-        public static Dictionary<string, string> Deserialize(string input) => 
+        public static Dictionary<string, string> Deserialize(string input) =>
             JsonSerializer.Deserialize<Dictionary<string, string>>(input);
-        public static string Serialize(Dictionary<string, string> dictionary) => 
+
+        public static string Serialize(Dictionary<string, string> dictionary) =>
             JsonSerializer.Serialize(dictionary);
     }
 #else
-    using System.Web.Script.Serialization;
-
     internal static class DictionarySerializer
     {
         public static Type ParseExceptionType => typeof(ArgumentException);

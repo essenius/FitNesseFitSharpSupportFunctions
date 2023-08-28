@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2021 Rik Essenius
+﻿// Copyright 2016-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -55,10 +55,12 @@ namespace SupportFunctionsTest
             {
                 Assert.AreEqual(resultExpected, comparison.ExpectedValueOut ?? string.Empty, testName + "-Expected");
             }
+
             if (!string.IsNullOrEmpty(resultActual))
             {
                 Assert.AreEqual(resultActual, comparison.ActualValueOut ?? string.Empty, testName + "-Actual");
             }
+
             if (!string.IsNullOrEmpty(resultDelta))
             {
                 Assert.AreEqual(resultDelta, comparison.DeltaOut ?? string.Empty, testName + "-Delta");

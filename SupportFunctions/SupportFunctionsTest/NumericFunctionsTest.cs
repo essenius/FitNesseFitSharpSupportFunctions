@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2021 Rik Essenius
+﻿// Copyright 2017-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -50,6 +50,7 @@ namespace SupportFunctionsTest
             {
                 value2 += .1;
             }
+
             Assert.IsTrue(value1.HasMinimalDifferenceWith(value2));
 
             Assert.IsTrue(9.87654321E100.HasMinimalDifferenceWith(9.87654321E100 * Math.Pow(10, 5) * Math.Pow(10, -5)));

@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2021 Rik Essenius
+﻿// Copyright 2017-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -18,7 +18,6 @@ using SupportFunctions.Model;
 namespace SupportFunctions
 {
     /// <summary>Comparing the difference between two comparisons.</summary>
-    [SuppressMessage("ReSharper", "ReturnTypeCanBeEnumerable.Global", Justification = "FitSharp would not see it")]
     public class CsvComparisonDifference
     {
         private readonly CsvComparison _set1;

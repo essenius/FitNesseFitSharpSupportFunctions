@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2021 Rik Essenius
+﻿// Copyright 2015-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -9,14 +9,14 @@
 //   is distributed on an "AS IS" BASIS WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and limitations under the License.
 
-using System;
-using System.Collections.Generic;
-#if NET6_0
+#if NET5_0_OR_GREATER
 using SkiaSharp;
 #else
 using System.Drawing;
 using System.Drawing.Imaging;
 #endif
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using SupportFunctions.Utilities;
@@ -40,7 +40,7 @@ namespace SupportFunctions.Model
             _wikiPagePath = Path.Combine(wikiRoot, _wikiPage);
         }
 
-#if NET6_0
+#if NET5_0_OR_GREATER
         public static string MimeType(byte[] imageData)
         {
             var formatDictionary = new Dictionary<SKEncodedImageFormat, string>
@@ -63,12 +63,12 @@ namespace SupportFunctions.Model
                 using var ms = new MemoryStream(imageData);
                 using var skStream = new SKManagedStream(ms);
                 using var skCodec = SKCodec.Create(skStream);
-                
+
                 var codecFormat = skCodec.EncodedFormat;
 
 
                 if (formatDictionary.TryGetValue(codecFormat, out var mimeType))
-                {   
+                {
                     return mimeType;
                 }
             }
@@ -113,7 +113,7 @@ namespace SupportFunctions.Model
         }
 
 #endif
-        public string UniquePathFor(string baseName) => 
+        public string UniquePathFor(string baseName) =>
             UniquePathFor(baseName, UniqueDateTime.NowTicks);
 
         public string UniquePathFor(string baseName, long ticks)
@@ -130,6 +130,7 @@ namespace SupportFunctions.Model
             {
                 result = Invariant($"{path}_{i++}{extension}");
             } while (File.Exists(result));
+
             return result;
         }
 

@@ -31,6 +31,7 @@ namespace SupportFunctions.Model
             {
                 _allHeaders.Add(entry);
             }
+
             _getField = getField;
         }
 
@@ -47,6 +48,7 @@ namespace SupportFunctions.Model
             {
                 returnValue.Add(TableRow(entry));
             }
+
             return returnValue;
         }
 
@@ -57,6 +59,7 @@ namespace SupportFunctions.Model
             {
                 returnValue.Add(header.Report());
             }
+
             return returnValue;
         }
 
@@ -67,6 +70,7 @@ namespace SupportFunctions.Model
             {
                 returnValue.Add(_getField[column](resultEntry));
             }
+
             return returnValue;
         }
 
@@ -82,6 +86,7 @@ namespace SupportFunctions.Model
                     );
                     throw new ArgumentException(message);
                 }
+
                 // align the casing of the header to the specification
                 _desiredColumns[i] = _getField.First(
                     x => string.Equals(x.Key, _desiredColumns[i], StringComparison.OrdinalIgnoreCase)

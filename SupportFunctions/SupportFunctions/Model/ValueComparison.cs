@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2021 Rik Essenius
+﻿// Copyright 2017-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -57,10 +57,10 @@ namespace SupportFunctions.Model
         private bool IsNumericalComparisonWithoutToleranceRange
             => Tolerance is { DataRange: null } && CompareType.IsNumeric() && ExpectedValueIn.IsNumeric();
 
-        private bool IsToleranceUsed => 
+        private bool IsToleranceUsed =>
             Outcome == CompareOutcome.WithinTolerance || Outcome == CompareOutcome.OutsideToleranceIssue;
 
-        private bool IsZeroToleranceComparison => 
+        private bool IsZeroToleranceComparison =>
             !CompareType.IsNumeric() || Tolerance == null || Tolerance.Value.Equals(0.0);
 
         private Tolerance Tolerance { get; }
@@ -98,7 +98,7 @@ namespace SupportFunctions.Model
             return IsOk(Outcome) ? message.Pass() : message.Fail();
         }
 
-        public string ValueMessage => 
+        public string ValueMessage =>
             string.Format(InvariantCulture, _messageDictionary[Outcome], ExpectedValueOut, ActualValueOut);
 
         private CompareOutcome DoubleComparison()
@@ -124,7 +124,7 @@ namespace SupportFunctions.Model
             CompareType ??= ActualValueIn.InferType(ExpectedValueIn.InferType());
         }
 
-        public static bool IsOk(CompareOutcome outcome) => 
+        public static bool IsOk(CompareOutcome outcome) =>
             outcome == CompareOutcome.None || outcome == CompareOutcome.WithinTolerance;
 
         private CompareOutcome LongComparison()
@@ -147,6 +147,7 @@ namespace SupportFunctions.Model
                 case null:
                     return CompareOutcome.Surplus;
             }
+
             if (actual == null) return CompareOutcome.Missing;
             return null;
         }

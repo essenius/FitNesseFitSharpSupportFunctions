@@ -21,7 +21,7 @@ namespace SupportFunctions.Model
             Measurement expected, Measurement actual, Tolerance tolerance = null, Type compareType = null)
         {
             Timestamp = new ValueComparison(
-                expected?.Timestamp.ToRoundTripFormat(), 
+                expected?.Timestamp.ToRoundTripFormat(),
                 actual?.Timestamp.ToRoundTripFormat()
             );
             Value = new ValueComparison(expected?.Value, actual?.Value, tolerance, compareType);

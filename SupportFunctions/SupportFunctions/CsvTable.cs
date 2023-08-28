@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2021 Rik Essenius
+﻿// Copyright 2016-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -62,6 +62,7 @@ namespace SupportFunctions
             {
                 row.Add("report:" + headerCell);
             }
+
             returnObject.Add(row);
             foreach (var line in Data)
             {
@@ -70,8 +71,10 @@ namespace SupportFunctions
                 {
                     row.Add("report:" + cell);
                 }
+
                 returnObject.Add(row);
             }
+
             return returnObject;
         }
 
@@ -83,6 +86,7 @@ namespace SupportFunctions
             {
                 if (_headers[i].Equals(headerName, StringComparison.OrdinalIgnoreCase)) return i;
             }
+
             throw new ArgumentException(Invariant($"Header name {headerName} not recognized"));
         }
 
@@ -129,8 +133,10 @@ namespace SupportFunctions
                     row.Add(new Collection<object> { _headers[cellCounter], cell });
                     cellCounter++;
                 }
+
                 returnObject.Add(row);
             }
+
             return returnObject;
         }
 
@@ -141,7 +147,7 @@ namespace SupportFunctions
             var csvLines = new List<string>();
             var csvCell = _headers.Select(AddQuotesIfNeeded);
             csvLines.Add(string.Join(",", csvCell));
-            csvLines.AddRange(Data.Select(row => 
+            csvLines.AddRange(Data.Select(row =>
                 row.Select(AddQuotesIfNeeded)).Select(dataRow => string.Join(",", dataRow)));
             var csvText = string.Join(Environment.NewLine, csvLines);
             File.WriteAllText(path, csvText);

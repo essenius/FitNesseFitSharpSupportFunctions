@@ -14,7 +14,7 @@ namespace SupportFunctions.Model
     internal class CellComparison
     {
         public CellComparison(
-            int row, string rowName, int column, string columName, 
+            int row, string rowName, int column, string columName,
             object expected, object actual, Tolerance tolerance = null)
         {
             Row = row;

@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2021 Rik Essenius
+﻿// Copyright 2017-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -55,13 +55,14 @@ namespace SupportFunctionsTest
                 if (actualValue > maxY) maxY = actualValue;
                 if (actualValue < minY) minY = actualValue;
 
-                var okValue = time < 12 || time > 16 && time < 25 || time > 25.5;
+                var okValue = time < 12 || (time > 16 && time < 25) || time > 25.5;
 
                 table.Add(timestamp, new MeasurementComparisonMock(
                     expectedValue.To<string>(),
                     actualValue.To<string>(),
                     okValue ? CompareOutcome.None : CompareOutcome.ValueIssue));
             }
+
             return table;
         }
 

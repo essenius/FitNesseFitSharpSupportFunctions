@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2021 Rik Essenius
+﻿// Copyright 2015-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -61,7 +61,7 @@ namespace SupportFunctions
         public static string Concat(string[] input) => Concatenate(input);
 
         /// <summary>Concatenate a list of values into a single string value</summary>
-        public static string Concatenate(string[] input) => 
+        public static string Concatenate(string[] input) =>
             input.Aggregate(string.Empty, (current, entry) => current + entry);
 
         /// <returns>a date using a specific format (using standard .Net convention)</returns>
@@ -82,7 +82,8 @@ namespace SupportFunctions
         ///     IIF(expression, trueValue, falseValue), TRIM(expression), SUBSTRING(expression, start, length)
         /// </param>
         /// <remarks>
-        ///     See <a href="https://docs.microsoft.com/en-us/dotnet/api/system.data.datacolumn.expression">DataColumn documentation</a>
+        ///     See
+        ///     <a href="https://docs.microsoft.com/en-us/dotnet/api/system.data.datacolumn.expression">DataColumn documentation</a>
         ///     for more information
         /// </remarks>
         /// <returns>the result as a suitable type</returns>
@@ -95,7 +96,7 @@ namespace SupportFunctions
         ///     and the full names of standard .Net types such as System.String, System.Int32, System.DateTime
         /// </param>
         /// <returns>the result as the specified type</returns>
-        public static object EvaluateAs(string expression, string type) => 
+        public static object EvaluateAs(string expression, string type) =>
             EvaluateAsWithParams(expression, type, null);
 
         /// <summary>Experimental - do not use</summary>
@@ -129,17 +130,18 @@ namespace SupportFunctions
         }
 
         /// <summary>Experimental - do not use</summary>
-        public static object EvaluateWithParams(string expression, string[] parameters) => 
+        public static object EvaluateWithParams(string expression, string[] parameters) =>
             EvaluateExpression(expression, typeof(object), parameters);
 
         /// <summary>EvaluateExpression a Boolean expression. Shorthand for EvaluateExpression As with type bool</summary>
         /// <param name="expression">
         ///     The expression to evaluate. Supported operations are AND, OR and NOT.
-        ///     Comparisons can be &gt;, &lt;, &gt;=, &lt;=, =, &lt;&gt;, IN, LIKE. For LIKE, wildcards (%, *) can be used at the beginning
+        ///     Comparisons can be &gt;, &lt;, &gt;=, &lt;=, =, &lt;&gt;, IN, LIKE. For LIKE, wildcards (%, *) can be used at the
+        ///     beginning
         ///     and/or end of the pattern. For IN, specify the values between parentheses, e.g. ′a′ IN (′a′, ′b′, ′c′)
         /// </param>
         /// <returns>whether the expression evaluated to True</returns>
-        public static bool IsTrue(string expression) => 
+        public static bool IsTrue(string expression) =>
             (bool)EvaluateExpression(expression, typeof(bool), null);
 
         /// <returns>the leftmost characters of a string</returns>
@@ -224,7 +226,7 @@ namespace SupportFunctions
         }
 
         /// <summary>Wait the specified number of seconds</summary>
-        public static void WaitSeconds(double seconds) => 
+        public static void WaitSeconds(double seconds) =>
             Thread.Sleep(TimeSpan.FromSeconds(seconds));
     }
 }

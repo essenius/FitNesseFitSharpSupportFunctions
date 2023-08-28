@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2021 Rik Essenius
+﻿// Copyright 2016-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -47,6 +47,7 @@ namespace SupportFunctionsTest
                 {
                     Assert.AreEqual("fail:" + _expectedResult[i][6], row[7], $"Table Entry #{i}.Delta Percentage");
                 }
+
                 i++;
             }
         }
@@ -168,6 +169,7 @@ namespace SupportFunctionsTest
             {
                 _actualTable.Data.Add(entry);
             }
+
             _csvComparison = new CsvComparison(_baseTable, _actualTable, Tolerance.Parse("1%"));
         }
     }

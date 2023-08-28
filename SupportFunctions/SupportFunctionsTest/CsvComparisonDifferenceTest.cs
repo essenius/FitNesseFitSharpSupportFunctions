@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2020 Rik Essenius
+﻿// Copyright 2017-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -35,6 +35,7 @@ namespace SupportFunctionsTest
             {
                 resultTable.Data.Add(entry);
             }
+
             return resultTable;
         }
 
@@ -62,7 +63,8 @@ namespace SupportFunctionsTest
             var i = 0;
             foreach (Collection<object> row in difference.Query())
             {
-                Assert.AreEqual(expectedDifference[i][0], CsvComparisonTest.QueryValue(row, "Cell"), $"Query Entry #{i}.Cell"); Assert.AreEqual(expectedDifference[i][1], CsvComparisonTest.QueryValue(row, "Row No"), $"Query Entry #{i}.RowNo");
+                Assert.AreEqual(expectedDifference[i][0], CsvComparisonTest.QueryValue(row, "Cell"), $"Query Entry #{i}.Cell");
+                Assert.AreEqual(expectedDifference[i][1], CsvComparisonTest.QueryValue(row, "Row No"), $"Query Entry #{i}.RowNo");
                 Assert.AreEqual(expectedDifference[i][2], CsvComparisonTest.QueryValue(row, "Row Name"), $"Query Entry #{i}.Row");
                 Assert.AreEqual(expectedDifference[i][3], CsvComparisonTest.QueryValue(row, "Column No"), $"Query Entry #{i}.ColumnNo");
                 Assert.AreEqual(expectedDifference[i][4], CsvComparisonTest.QueryValue(row, "Column Name"), $"Query Entry #{i}.Column");
@@ -83,6 +85,7 @@ namespace SupportFunctionsTest
                 Assert.AreEqual("fail:" + expectedDifference[i][6], row[6], $"Table Entry #{i}.Delta");
                 i++;
             }
+
             Assert.AreEqual(expectedDifference.Count, difference.ErrorCount, "Table ErrorCount");
         }
     }

@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2021 Rik Essenius
+﻿// Copyright 2017-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -49,9 +49,10 @@ namespace SupportFunctions.Model
         // but floats sometimes have precision errors. So we round the value first.
         // If we round it to 5 digits, the difference wouldn't be visible anyway.
         // Then the ceiling or floor kicks in to drag the outer gridline up or down
-        public double GridlineMax => 
+        public double GridlineMax =>
             GridlineInterval.IsZero() ? 0D : Math.Ceiling(Math.Round(Max / GridlineInterval, 5)) * GridlineInterval;
-        public double GridlineMin => 
+
+        public double GridlineMin =>
             GridlineInterval.IsZero() ? 0D : Math.Floor(Math.Round(Min / GridlineInterval, 5)) * GridlineInterval;
 
         public double Max { get; private set; }
@@ -60,7 +61,8 @@ namespace SupportFunctions.Model
         private double Range => Math.Abs(Max - Min);
 
         public bool SnapToGrid { get; }
-        private static double Denormalized(double value, int orderOfMagnitude) => 
+
+        private static double Denormalized(double value, int orderOfMagnitude) =>
             value * Math.Pow(10, orderOfMagnitude);
 
         public void EnsureNonZeroRange(double deltaMin, double deltaPlus)
@@ -85,7 +87,7 @@ namespace SupportFunctions.Model
             ICollection<IMeasurementComparison> values, double? minValue, double? maxValue)
         {
             // If both limits are specified, use them
-            if (minValue != null && maxValue != null) 
+            if (minValue != null && maxValue != null)
                 return new Dimension(minValue.Value, maxValue.Value);
             // if we need to fill in at least one, get the required range from the values
             var range = GetExtremeValues(values);

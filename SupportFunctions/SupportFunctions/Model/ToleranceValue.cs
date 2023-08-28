@@ -46,6 +46,7 @@ namespace SupportFunctions.Model
                     SignificantDigits = null
                 };
             }
+
             var rawTolerance = input;
             int? significantDigits = null;
             if (input.Contains(":"))
@@ -54,6 +55,7 @@ namespace SupportFunctions.Model
                 rawTolerance = split[0];
                 significantDigits = split[1].To<int>();
             }
+
             if (rawTolerance.EqualsIgnoreCase("epsilon"))
             {
                 return new ToleranceValue
@@ -63,6 +65,7 @@ namespace SupportFunctions.Model
                     SignificantDigits = significantDigits
                 };
             }
+
             var isAbsolute = !rawTolerance.EndsWith("%", Ordinal);
 
             var tolerance = Math.Abs(

@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2021 Rik Essenius
+﻿// Copyright 2015-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -88,7 +88,7 @@ namespace SupportFunctionsTest
         {
             var dict = new Dictionary<string, string> { { "key1", "value1" }, { "key2", "value2" } };
             var resultList = _createTableMethod.Invoke(null, new object[] { "TestTable", dict }) as List<string>;
-            Assert.IsNotNull( resultList);
+            Assert.IsNotNull(resultList);
             var result = resultList.ToArray();
             Assert.AreEqual(4, result.Length);
             Assert.AreEqual("!|Dictionary|Having|Name|TestTable|", result[0]);

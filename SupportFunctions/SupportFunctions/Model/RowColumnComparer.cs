@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2021 Rik Essenius
+﻿// Copyright 2017-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -23,7 +23,7 @@ namespace SupportFunctions.Model
             return x.Row == y.Row && x.Column == y.Column;
         }
 
-        public int GetHashCode(CellComparison x) => 
+        public int GetHashCode(CellComparison x) =>
             ((x.Row.GetHashCode() << 5) + x.Row.GetHashCode()) ^ x.Column.GetHashCode();
     }
 }

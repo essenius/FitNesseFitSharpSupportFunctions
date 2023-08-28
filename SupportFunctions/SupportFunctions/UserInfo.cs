@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2021 Rik Essenius
+﻿// Copyright 2015-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -22,13 +22,13 @@ namespace SupportFunctions
         {
             get
             {
-#if NET6_0
+#if NET5_0_OR_GREATER
                 if (OperatingSystem.IsWindows())
 #endif
-                    return string.IsNullOrEmpty(UserPrincipal.Current.DisplayName) 
-                        ? Environment.UserName 
+                    return string.IsNullOrEmpty(UserPrincipal.Current.DisplayName)
+                        ? Environment.UserName
                         : UserPrincipal.Current.DisplayName;
-#if NET6_0
+#if NET5_0_OR_GREATER
                 return Environment.UserName;
 #endif
             }

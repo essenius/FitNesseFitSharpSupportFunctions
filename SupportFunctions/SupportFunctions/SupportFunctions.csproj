@@ -21,7 +21,7 @@
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="System.DirectoryServices" Version="6.0.1" />
     <PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute"> 
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
       <_Parameter1>SupportFunctionsTest</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
@@ -30,7 +30,7 @@
     <PackageReference Include="LiveChartsCore.SkiaSharpView" Version="2.0.0-beta.920" />
   </ItemGroup>
 
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.DataVisualization" />
@@ -39,10 +39,10 @@
 
   </ItemGroup>
 
-    <ItemGroup>
-      <None Update="config.xml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
+  <ItemGroup>
+    <None Update="config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
 </Project>

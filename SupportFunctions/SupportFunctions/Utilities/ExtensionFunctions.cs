@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2021 Rik Essenius
+﻿// Copyright 2015-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -45,13 +45,13 @@ namespace SupportFunctions.Utilities
 
         public static void AddWithCheck<T>(this IDictionary<DateTime, T> dictionary, DateTime key, T value, string id)
         {
-            if (dictionary.ContainsKey(key)) 
+            if (dictionary.ContainsKey(key))
                 throw new ArgumentException(Invariant($"Duplicate timestamp in {id}: {key.ToRoundTripFormat()}"));
             dictionary.Add(key, value);
         }
 
         private static bool ArePair(Type type1, Type type2, Type expected1, Type expected2) =>
-            type1 == expected1 && type2 == expected2 || type1 == expected2 && type2 == expected1;
+            (type1 == expected1 && type2 == expected2) || (type1 == expected2 && type2 == expected1);
 
         /// <summary>
         ///     Infer from the input string what type it is, and return the field as that type
@@ -77,11 +77,12 @@ namespace SupportFunctions.Utilities
         {
             var source = value;
             // if we want a numeric result and we have a hex value, convert the hex to long first.
-            if (targetType.IsNumeric() && 
+            if (targetType.IsNumeric() &&
                 NumericFunctions.TryParseHex(value?.ToString(), targetType.IsSigned(), out var hexValue))
             {
                 source = hexValue;
             }
+
             try
             {
                 return Convert.ChangeType(source, targetType, InvariantCulture);
@@ -181,6 +182,7 @@ namespace SupportFunctions.Utilities
                 columnName = Convert.ToChar('A' + modulo) + columnName;
                 dividend = (dividend - modulo) / 26;
             }
+
             return columnName;
         }
 
@@ -221,8 +223,8 @@ namespace SupportFunctions.Utilities
         public static string TypeName(this string name)
         {
             var nameInUppercase = name.ToUpperInvariant();
-            return BuiltInTypeDictionary.TryGetValue(nameInUppercase, out var builtinType) 
-                ? builtinType.ToString() 
+            return BuiltInTypeDictionary.TryGetValue(nameInUppercase, out var builtinType)
+                ? builtinType.ToString()
                 : name;
         }
 

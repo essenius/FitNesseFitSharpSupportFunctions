@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2021 Rik Essenius
+﻿// Copyright 2017-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -47,6 +47,7 @@ namespace SupportFunctions.Utilities
             {
                 throw new ArgumentNullException(null, $"'{name}' cannot be null in '{CallingMethod()}'");
             }
+
             if (string.IsNullOrEmpty(value))
             {
                 throw new ArgumentException($"'{name}' cannot be empty in '{CallingMethod()}'");

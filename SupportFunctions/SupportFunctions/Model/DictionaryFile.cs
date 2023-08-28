@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2021 Rik Essenius
+﻿// Copyright 2015-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -72,6 +72,7 @@ namespace SupportFunctions.Model
                     var value = reader.ReadString();
                     dictionary[key] = value;
                 }
+
                 return dictionary;
             }
         }
@@ -107,6 +108,7 @@ namespace SupportFunctions.Model
                 fileSystemWatcher.EnableRaisingEvents = true;
                 fileExists = WaitUntil(() => _fileExists);
             }
+
             // if it is there, wait until it is not locked.
             return fileExists && WaitUntil(() => !IsFileLocked(_fileName));
         }
@@ -122,6 +124,7 @@ namespace SupportFunctions.Model
                 waitedTimes++;
                 Thread.Sleep(sleepTime);
             }
+
             return expression();
         }
     }

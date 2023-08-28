@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2021 Rik Essenius
+﻿// Copyright 2017-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -38,7 +38,7 @@ namespace SupportFunctionsTest
 
         [TestMethod]
         [TestCategory("Unit")]
-        public void CommonFunctionsConcatenateTest() => 
+        public void CommonFunctionsConcatenateTest() =>
             Assert.AreEqual("abc", CommonFunctions.Concatenate(new[] { "a", "b", "c" }));
 
         [Obsolete("Use Concatenate instead")]
@@ -110,11 +110,11 @@ namespace SupportFunctionsTest
         [TestCategory("Unit")]
         [ExpectedExceptionWithMessage(typeof(ArgumentException),
 #if NET6_0
-        "Type 'WrongType' not recognized. (Parameter 'type')")]
+            "Type 'WrongType' not recognized. (Parameter 'type')")]
 #else
             "Type 'WrongType' not recognized.\r\nParameter name: type")]
 #endif
-        public void CommonFunctionsEvaluateAsThrowsExceptionsTest() => 
+        public void CommonFunctionsEvaluateAsThrowsExceptionsTest() =>
             CommonFunctions.EvaluateAs(string.Empty, "WrongType");
 
         [TestMethod]
@@ -231,7 +231,7 @@ namespace SupportFunctionsTest
             Assert.IsTrue(ticksElapsed1 > 0);
             Assert.IsTrue(ticksElapsed2 > ticksElapsed1);
             var ticksBetween = CommonFunctions.TicksBetweenAnd(
-                Date.Parse(firstCheck.To<string>()), 
+                Date.Parse(firstCheck.To<string>()),
                 Date.Parse(secondCheck.To<string>())
             );
             ("Ticks between: " + ticksBetween).Log();
@@ -266,7 +266,7 @@ namespace SupportFunctionsTest
 
         [TestMethod]
         [TestCategory("Unit")]
-        public void CommonFunctionsTrimTest() => 
+        public void CommonFunctionsTrimTest() =>
             Assert.AreEqual("abc", CommonFunctions.Trim("  abc   "));
     }
 }

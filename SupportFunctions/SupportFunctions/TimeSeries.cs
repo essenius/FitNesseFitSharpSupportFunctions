@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2021 Rik Essenius
+﻿// Copyright 2016-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,6 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using SupportFunctions.Model;
 using SupportFunctions.Utilities;
@@ -19,8 +18,6 @@ using SupportFunctions.Utilities;
 namespace SupportFunctions
 {
     /// <summary>Time series assignable to a symbol</summary>
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "FitSharp entry point")]
-    [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global", Justification = "FitSharp entry point")]
     public class TimeSeries
     {
         /// <summary>Initialize a new TimeSeries</summary>
@@ -84,7 +81,7 @@ namespace SupportFunctions
 
             Measurements.Clear();
             foreach (var entry in csvTable.Data.Where(t =>
-                !(string.IsNullOrEmpty(t[valueIndex]) && string.IsNullOrEmpty(t[qualityIndex]))))
+                         !(string.IsNullOrEmpty(t[valueIndex]) && string.IsNullOrEmpty(t[qualityIndex]))))
             {
                 var measurement = new Measurement(entry[timestampIndex], entry[valueIndex], entry[qualityIndex]);
                 Measurements.Add(measurement);
@@ -107,6 +104,7 @@ namespace SupportFunctions
                 csvTable.Data.Add(new[]
                     { measurement.Timestamp.ToRoundTripFormat(), measurement.Value, measurement.IsGood.To<string>() });
             }
+
             csvTable.SaveTo(path);
         }
 

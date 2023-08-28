@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2021 Rik Essenius
+﻿// Copyright 2015-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
 
 // TimeSeriesChart using Web.UI.DataVisualization (which is standard in .NET Framework)
 
-#if NET6_0 == false
+#if NET5_0_OR_GREATER == false
 using System;
 using System.Diagnostics;
 using System.Drawing;

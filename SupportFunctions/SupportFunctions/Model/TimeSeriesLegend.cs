@@ -1,4 +1,4 @@
-﻿// Copyright 2021 Rik Essenius
+﻿// Copyright 2021-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
 
 // Legend construction for Live Charts 2, which currently only supports legends for UI components
 
-#if NET6_0
+#if NET5_0_OR_GREATER
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -84,6 +84,7 @@ namespace SupportFunctions.Model
                 strokePaint.Color = SKColors.Transparent;
                 strokePaint.StrokeWidth = 0;
             }
+
             return strokePaint;
         }
 
@@ -115,17 +116,18 @@ namespace SupportFunctions.Model
                 if (entry.GeometrySize > 0 && entry.GeometryFill is Paint geometryFill)
                 {
                     DrawCircle(
-                        new SKPoint(cursor.GeometryX, cursor.LineY), 
-                        entry.GeometrySize, 
+                        new SKPoint(cursor.GeometryX, cursor.LineY),
+                        entry.GeometrySize,
                         geometryFill.Color);
                 }
+
                 var seriesNameWidth = MeasureTextWidth(entry.Name, textPaint);
                 cursor.TextWidth = seriesNameWidth;
                 cursor.NextSeries();
             }
 
-            Width = (int) Math.Round(Math.Min(cursor.MaxX, MaxWidth));
-            Height = (int) Math.Round(Math.Min(cursor.MaxY, MaxHeight));
+            Width = (int)Math.Round(Math.Min(cursor.MaxX, MaxWidth));
+            Height = (int)Math.Round(Math.Min(cursor.MaxY, MaxHeight));
             DrawBorder(borderPaint);
             CreateResizedImage();
         }
@@ -145,16 +147,16 @@ namespace SupportFunctions.Model
                 IsAntialias = true,
                 Color = color
             };
-            var radius = (float) size / 2;
+            var radius = (float)size / 2;
             _canvas.DrawCircle(position, radius, geometryPaint);
         }
 
         private void Initialize(SKCartesianChart chart)
         {
             var primaryXAxis = chart.XAxes.First();
-            _textHeight = (int) primaryXAxis.NameTextSize;
-            MaxWidth = (int) (chart.Core.DrawMarginSize.Width / 2);
-            MaxHeight = (int) (chart.Height - chart.Core.DrawMarginSize.Height) / 2;
+            _textHeight = (int)primaryXAxis.NameTextSize;
+            MaxWidth = (int)(chart.Core.DrawMarginSize.Width / 2);
+            MaxHeight = (int)(chart.Height - chart.Core.DrawMarginSize.Height) / 2;
 
             _imageInfo = new SKImageInfo(MaxWidth, MaxHeight, SKColorType.Rgba8888, SKAlphaType.Premul);
             _surface = SKSurface.Create(_imageInfo);
@@ -166,7 +168,7 @@ namespace SupportFunctions.Model
         {
             var boundingRectangle = new SKRect();
             paint.MeasureText(text, ref boundingRectangle);
-            return (int) boundingRectangle.Width;
+            return (int)boundingRectangle.Width;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright 2021 Rik Essenius
+﻿// Copyright 2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -12,7 +12,7 @@
 // TimeSeriesChart using LiveCharts 2 which supports .NET 5.0
 // It's still a beta, so that's why this SupportFunctions version is a beta too.
 
-#if NET6_0
+#if NET5_0_OR_GREATER
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -126,7 +126,7 @@ namespace SupportFunctions.Model
             {
                 new Axis
                 {
-                    MinLimit = limits.SnapToGrid ? limits.GridlineMin : limits.Min, 
+                    MinLimit = limits.SnapToGrid ? limits.GridlineMin : limits.Min,
                     MaxLimit = limits.SnapToGrid ? limits.GridlineMax : limits.Max,
                     MinStep = limits.GridlineInterval,
                     ForceStepToMin = true,
@@ -150,8 +150,8 @@ namespace SupportFunctions.Model
         }
 
         private void InitSeries(
-            MeasurementComparisonDictionary sourceData, 
-            DateTime baseTimestamp, 
+            MeasurementComparisonDictionary sourceData,
+            DateTime baseTimestamp,
             TimeUnitForDisplay timeUnit)
         {
             _expectedSeries = new LineSeries<ObservablePoint>
@@ -209,6 +209,7 @@ namespace SupportFunctions.Model
             {
                 chartSeries.Add(_failSeries);
             }
+
             _chart.Series = chartSeries;
             _chart.DrawMarginFrame = new DrawMarginFrame
             {

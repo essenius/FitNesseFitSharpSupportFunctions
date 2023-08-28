@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2020 Rik Essenius
+﻿// Copyright 2016-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -26,7 +26,6 @@ namespace SupportFunctionsTest
 
         private const string PageName = "PageName";
 
-        //private const string SaveDataPartialRequest = TestPage + "?saveData&editTime=1&pageContent=";
         private const string TestPage = TestPageRoot + "." + PageName;
 
         private const string TestPageRoot = "http://localhost:8080/TestPage";
@@ -150,6 +149,7 @@ namespace SupportFunctionsTest
                 Assert.AreEqual(3, loader.Count, "original entries stay intact after failed load");
                 return;
             }
+
             Assert.Fail("No exception thrown after loading deleted file");
         }
 

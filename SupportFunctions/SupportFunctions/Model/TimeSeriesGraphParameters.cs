@@ -33,7 +33,7 @@ namespace SupportFunctions.Model
         {
             _parameters = rawParameters
                 .Select(
-                    x => 
+                    x =>
                         new KeyValuePair<string, string>(
                             x.Key.Replace(" ", string.Empty).ToUpperInvariant(), x.Value
                         )

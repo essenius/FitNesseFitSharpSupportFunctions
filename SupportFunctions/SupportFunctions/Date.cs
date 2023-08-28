@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2021 Rik Essenius
+﻿// Copyright 2015-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -25,13 +25,6 @@ namespace SupportFunctions
     {
         private RegistryWrapper _registryWrapper;
 
-        // For mock injection
-        internal RegistryWrapper RegistryWrapper
-        {
-            get => _registryWrapper ??= new RegistryWrapper();
-            set => _registryWrapper = value;
-        }
-
         /// <summary>Initialize new Date object</summary>
         /// <param name="ticks">date/time in ticks</param>
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "ReSharper entry point")]
@@ -42,6 +35,13 @@ namespace SupportFunctions
 
         /// <summary>Initialize Date with a string to be parsed</summary>
         public Date(string input) => DateTime = input.To<DateTime>();
+
+        // For mock injection
+        internal RegistryWrapper RegistryWrapper
+        {
+            get => _registryWrapper ??= new RegistryWrapper();
+            set => _registryWrapper = value;
+        }
 
         /// <returns>the underlying DateTime object</returns>
         public DateTime DateTime { get; }

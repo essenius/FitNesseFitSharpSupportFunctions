@@ -1,4 +1,4 @@
-﻿// Copyright 2020-2021 Rik Essenius
+﻿// Copyright 2020-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -28,6 +28,7 @@ namespace SupportFunctions
             {
                 throw new TypeLoadException(Invariant($"Could not find static class '{className}'"));
             }
+
             return type;
         }
 
@@ -57,6 +58,7 @@ namespace SupportFunctions
                 input = param[0].ToString();
                 param = param.Skip(1).ToArray();
             }
+
             return GetWithParamsOf(member, param, input);
         }
 
@@ -64,7 +66,7 @@ namespace SupportFunctions
         /// <param name="member">the method name</param>
         /// <param name="parameters">the parameters for the method (in FitNesse array format)</param>
         /// <returns>the result of the method call</returns>
-        public static object GetWithParams(string member, object[] parameters) => 
+        public static object GetWithParams(string member, object[] parameters) =>
             GetWithParamsOf(member, parameters, null);
 
         /// <summary>Like Get Of, but with parameters as a separate entity</summary>
@@ -98,6 +100,7 @@ namespace SupportFunctions
             {
                 return outValue;
             }
+
             throw new MissingMethodException(MissingMemberMessage(member, inputType));
         }
 
@@ -134,6 +137,7 @@ namespace SupportFunctions
             {
                 return outValue;
             }
+
             throw new MissingMemberException(
                 Invariant($"Could not find static property, field or method '{function}'"));
         }
@@ -151,12 +155,14 @@ namespace SupportFunctions
                 output = property.GetValue(input, null);
                 return true;
             }
+
             var field = type.GetField(memberName);
             if (field != null)
             {
                 output = field.GetValue(input);
                 return true;
             }
+
             var method = type.GetMethod(memberName, types);
             if (method == null)
             {
@@ -165,12 +171,15 @@ namespace SupportFunctions
                 {
                     if (types[i] == typeof(decimal)) types[i] = typeof(double);
                 }
+
                 for (var i = 0; i < parameters.Length; i++)
                 {
                     if (parameters[i] is decimal) parameters[i] = parameters[i].To<double>();
                 }
+
                 method = type.GetMethod(function, types);
             }
+
             if (method == null) return false;
             output = method.Invoke(input, parameters);
             return true;

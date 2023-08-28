@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2021 Rik Essenius
+﻿// Copyright 2017-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -56,11 +56,13 @@ namespace SupportFunctionsTest
                 {
                     actualSeries.AddMeasurement(new Measurement(timestamp, actualValue, actualIsGood ?? defaultIsGood.ToString()));
                 }
+
                 // if exists == actual, we don't want an expected record
                 if (exists != "actual")
                 {
                     expectedSeries.AddMeasurement(new Measurement(timestamp, expectedValue, expectedlIsGood ?? defaultIsGood.ToString()));
                 }
+
                 var result = new Dictionary<string, string>
                 {
                     { "value", value }, { "delta", delta }, { "deltaPercentage", deltaPercentage }
@@ -126,6 +128,7 @@ namespace SupportFunctionsTest
             {
                 timestamp = timestamp.Substring(1, timestamp.IndexOf("]", StringComparison.Ordinal) - 1);
             }
+
             return timestamp;
         }
 
@@ -449,7 +452,7 @@ namespace SupportFunctionsTest
                 if (actualValue > maxY) maxY = actualValue;
                 if (actualValue < minY) minY = actualValue;
 
-                var okValue = time < 12 || time > 16 && time < 25 || time > 25.5;
+                var okValue = time < 12 || (time > 16 && time < 25) || time > 25.5;
 
                 actual.AddMeasurement(new Measurement
                 {
@@ -541,6 +544,7 @@ namespace SupportFunctionsTest
                 var timeString = time.To<string>();
                 table.Add(timestamp, new MeasurementComparisonMock(timeString, timeString, CompareOutcome.None));
             }
+
             var subset = table.Subset(timestampBase, timestampBase.AddSeconds(10));
             Assert.AreEqual(21, subset.Count);
             Assert.AreEqual("0", subset.First().Value.Value.ActualValueOut);

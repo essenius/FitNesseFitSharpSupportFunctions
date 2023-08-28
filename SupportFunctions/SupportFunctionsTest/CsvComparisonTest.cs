@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2021 Rik Essenius
+﻿// Copyright 2017-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -50,28 +50,6 @@ namespace SupportFunctionsTest
             Assert.AreEqual("Missing", QueryValue(errorRow, "Issue"));
         }
 
-        [TestMethod]
-        [TestCategory("Integration")]
-        [DeploymentItem("TestData\\SimpleExpected.csv")]
-        [DeploymentItem("TestData\\SimpleActualSurplus.csv")]
-        public void CsvComparisonErrorsSurplusTest()
-        {
-            var expectedCsv = CsvTable.Parse("SimpleExpected.csv");
-            var actualCsv = CsvTable.Parse("SimpleActualSurplus.csv");
-            var comparison = new CsvComparison(expectedCsv, actualCsv, Tolerance.Parse("2%;0.001"));
-            Assert.AreEqual(3, comparison.ErrorCount(), "Error Count = 3");
-            var query = comparison.Query();
-            var errorRow = query[0] as Collection<object>;
-            Assert.AreEqual("C1", QueryValue(errorRow, "Cell"));
-            Assert.AreEqual("Surplus", QueryValue(errorRow, "Issue"));
-            errorRow = query[1] as Collection<object>;
-            Assert.AreEqual("C2", QueryValue(errorRow, "Cell"));
-            Assert.AreEqual("Surplus", QueryValue(errorRow, "Issue"));
-            errorRow = query[2] as Collection<object>;
-            Assert.AreEqual("A4", QueryValue(errorRow, "Cell"));
-            Assert.AreEqual("Surplus", QueryValue(errorRow, "Issue"));
-        }
-
 
         [TestMethod]
         [TestCategory("Integration")]
@@ -95,6 +73,28 @@ namespace SupportFunctionsTest
             Assert.AreEqual("0.01 != 0", QueryValue(errorRow, "Value"));
             Assert.AreEqual("0.01", QueryValue(errorRow, "Delta"));
             Assert.IsTrue(string.IsNullOrEmpty(QueryValue(errorRow, "Delta %").ToString()));
+        }
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        [DeploymentItem("TestData\\SimpleExpected.csv")]
+        [DeploymentItem("TestData\\SimpleActualSurplus.csv")]
+        public void CsvComparisonErrorsSurplusTest()
+        {
+            var expectedCsv = CsvTable.Parse("SimpleExpected.csv");
+            var actualCsv = CsvTable.Parse("SimpleActualSurplus.csv");
+            var comparison = new CsvComparison(expectedCsv, actualCsv, Tolerance.Parse("2%;0.001"));
+            Assert.AreEqual(3, comparison.ErrorCount(), "Error Count = 3");
+            var query = comparison.Query();
+            var errorRow = query[0] as Collection<object>;
+            Assert.AreEqual("C1", QueryValue(errorRow, "Cell"));
+            Assert.AreEqual("Surplus", QueryValue(errorRow, "Issue"));
+            errorRow = query[1] as Collection<object>;
+            Assert.AreEqual("C2", QueryValue(errorRow, "Cell"));
+            Assert.AreEqual("Surplus", QueryValue(errorRow, "Issue"));
+            errorRow = query[2] as Collection<object>;
+            Assert.AreEqual("A4", QueryValue(errorRow, "Cell"));
+            Assert.AreEqual("Surplus", QueryValue(errorRow, "Issue"));
         }
 
         [TestMethod]

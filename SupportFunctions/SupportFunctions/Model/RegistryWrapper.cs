@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2021 Rik Essenius
+﻿// Copyright 2017-2023 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
 
 using Microsoft.Win32;
 using SupportFunctions.Utilities;
-#if NET6_0
+#if NET5_0_OR_GREATER
 using System;
 using System.Runtime.Versioning;
 #endif
@@ -26,11 +26,11 @@ namespace SupportFunctions.Model
         {
             get
             {
-#if NET6_0
+#if NET5_0_OR_GREATER
                 if (OperatingSystem.IsWindows())
 #endif
                     return InternationalValue(ShortDateFormatLocation).ToString();
-#if NET6_0
+#if NET5_0_OR_GREATER
                 return "dd-MMM-yyyy";
 #endif
             }
@@ -42,11 +42,11 @@ namespace SupportFunctions.Model
         {
             get
             {
-#if NET6_0
+#if NET5_0_OR_GREATER
                 if (OperatingSystem.IsWindows())
 #endif
                     return InternationalValue(TimeFormatLocation).ToString();
-#if NET6_0
+#if NET5_0_OR_GREATER
                 return "HH:mm:ss";
 #endif
             }
@@ -54,7 +54,7 @@ namespace SupportFunctions.Model
 
         private static string TimeFormatLocation => "sTimeFormat";
 
-#if NET6_0
+#if NET5_0_OR_GREATER
         [SupportedOSPlatform("windows")]
 #endif
         private object InternationalValue(string key)
