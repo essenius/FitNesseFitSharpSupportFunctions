@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2023 Rik Essenius
+﻿// Copyright 2016-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -100,7 +100,7 @@ namespace SupportFunctions
         /// <summary>The tolerance that was used in the comparison</summary>
         public string UsedTolerance => DoOperation(comparison => comparison._tolerance.ToString());
 
-        private void CompareExpectedToActuals(IReadOnlyDictionary<DateTime, Measurement> actualDictionary)
+        private void CompareExpectedToActual(IReadOnlyDictionary<DateTime, Measurement> actualDictionary)
         {
             foreach (var expectedEntry in _expected.Measurements)
             {
@@ -253,7 +253,7 @@ namespace SupportFunctions
 
             SetTimeSpanSeconds();
 
-            CompareExpectedToActuals(actualDictionary);
+            CompareExpectedToActual(actualDictionary);
             MarkUncoveredActualsAsSurplus(actualDictionary);
         }
 

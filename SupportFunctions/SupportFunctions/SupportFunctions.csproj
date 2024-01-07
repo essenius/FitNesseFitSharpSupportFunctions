@@ -5,10 +5,10 @@
     <LangVersion>8.0</LangVersion>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <AnalysysMode>AllEnabledByDefault</AnalysysMode>
-    <Version>3.0.0-beta-8</Version>
+    <Version>3.0.0-beta-9</Version>
     <Authors>Rik Essenius</Authors>
     <Description>Support functions such as Echo, Times Series, Dictionary Library objects, date functions for FitNesse/FitSharp</Description>
-    <Copyright>Copyright © Rik Essenius 2015-2023</Copyright>
+    <Copyright>Copyright © Rik Essenius 2015-2024</Copyright>
     <RepositoryUrl>https://github.com/essenius/FitNesseFitSharpSupportFunctions.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
-    <PackageReference Include="LiveChartsCore.SkiaSharpView" Version="2.0.0-beta.920" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView" Version="2.0.0-rc2" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">

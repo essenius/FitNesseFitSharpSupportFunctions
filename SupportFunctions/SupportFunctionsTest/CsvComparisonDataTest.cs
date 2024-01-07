@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2023 Rik Essenius
+﻿// Copyright 2016-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -20,7 +20,7 @@ namespace SupportFunctionsTest
     [TestClass]
     public class CsvComparisonDataTest
     {
-        private Collection<string[]> _actualdata;
+        private Collection<string[]> _actualData;
         private string[] _actualHeaders;
         private CsvTable _actualTable;
         private Collection<string[]> _baseData;
@@ -143,7 +143,7 @@ namespace SupportFunctionsTest
             }
 
             _actualHeaders = new[] { "Key", "Stream1", "Stream2" };
-            _actualdata = new Collection<string[]>
+            _actualData = new Collection<string[]>
             {
                 new[] { "Attr1", "1.0", "101.1" },
                 new[] { "Attr4", "n/a", "0" }
@@ -165,7 +165,7 @@ namespace SupportFunctionsTest
             };
 
             _actualTable = new CsvTable(_actualHeaders);
-            foreach (var entry in _actualdata)
+            foreach (var entry in _actualData)
             {
                 _actualTable.Data.Add(entry);
             }

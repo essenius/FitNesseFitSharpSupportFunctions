@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2021 Rik Essenius
+﻿// Copyright 2017-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -26,7 +26,7 @@ namespace SupportFunctionsTest
         public void RequiresConditionOk() => Requires.Condition(true, "True");
 
         [TestMethod]
-        public void RequiresNotEmptyestOk() => Requires.NotNullOrEmpty("ok", "testName");
+        public void RequiresNotEmptyTestOk() => Requires.NotNullOrEmpty("ok", "testName");
 
         [TestMethod]
         [ExpectedExceptionWithMessage(typeof(ArgumentException), "'testName' cannot be empty in 'RequiresNotNullOrEmptyTestFiresOnEmpty'")]

@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2020 Rik Essenius
+﻿// Copyright 2017-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -43,7 +43,7 @@ namespace SupportFunctionsTest
             Assert.AreEqual(2, timeSeries.HeaderIndex("ExpectedQuality"), "HeaderIndex existing");
             try
             {
-                timeSeries.HeaderIndex("Nonexisting");
+                timeSeries.HeaderIndex("NonExisting");
                 Assert.Fail("No exception raised for non-existing HeaderIndex");
             }
             catch (ArgumentException)

@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2023 Rik Essenius
+﻿// Copyright 2017-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -118,7 +118,7 @@ namespace SupportFunctions.Model
 
         private void InferCompareTypeIfNotSpecified()
         {
-            // if the compare type is not specified we have indivudual comparisons, and 
+            // if the compare type is not specified we have individual comparisons, and 
             // expected/actual values may have different types. So then get a compatible type.
 
             CompareType ??= ActualValueIn.InferType(ExpectedValueIn.InferType());
@@ -203,7 +203,7 @@ namespace SupportFunctions.Model
             // Fail if the comparison is non-numerical or the tolerance is 0. An exact match would have caught a pass.
             if (IsZeroToleranceComparison) return CompareOutcome.ValueIssue;
 
-            // the calculation for floats and ints is slightly different because of the precision
+            // the calculation for float and int is slightly different because of the precision
             return CompareType.IsFloatingPoint() ? DoubleComparison() : LongComparison();
         }
     }

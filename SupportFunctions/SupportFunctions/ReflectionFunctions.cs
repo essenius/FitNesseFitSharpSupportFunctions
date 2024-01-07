@@ -1,4 +1,4 @@
-﻿// Copyright 2020-2023 Rik Essenius
+﻿// Copyright 2020-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -41,7 +41,7 @@ namespace SupportFunctions
         /// <returns>the value of a field, property or method of a static class</returns>
         public static object Get(string member) => GetOf(member, null);
 
-        /// <param name="member">the value, field.property or method to call</param>
+        /// <param name="member">the value, field, property or method to call</param>
         /// <param name="input">the entity to call the method on</param>
         /// <returns>the value of a field, property or method of an entity</returns>
         public static object GetOf(string member, string input)
@@ -104,10 +104,10 @@ namespace SupportFunctions
             throw new MissingMethodException(MissingMemberMessage(member, inputType));
         }
 
-        /// <summary>Find a member by the name, Look exact to start with, if that doesn't work look case insensitive.</summary>
+        /// <summary>Find a member by the name, Look exact to start with, if that doesn't work look case-insensitive.</summary>
         /// <param name="type">the type to look in</param>
         /// <param name="name">the member name to look for</param>
-        /// <returns>the case sensitive name of the member</returns>
+        /// <returns>the case-sensitive name of the member</returns>
         private static string MemberName(Type type, string name)
         {
             var exactMember = type.GetMember(name);

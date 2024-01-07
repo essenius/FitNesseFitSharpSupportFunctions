@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2023 Rik Essenius
+﻿// Copyright 2016-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -25,15 +25,9 @@ namespace SupportFunctions.Model
         private const string Linefeed = "\n";
         private const char Pipe = '|';
 
-        private List<string> _line;
+        private List<string> _line = new List<string>();
 
-        public FitNessePage()
-        {
-            _line = new List<string>();
-            PageRoot = DefaultPageRoot;
-        }
-
-        public string PageRoot { get; set; }
+        public string PageRoot { get; set; } = DefaultPageRoot;
 
         private void AddPage(string pageName, IEnumerable<string> lines)
         {
@@ -42,7 +36,7 @@ namespace SupportFunctions.Model
                 string.Empty,
                 (current, entry) => current + entry + Linefeed
             );
-            var _ = RestCall(command + Uri.EscapeDataString(payload));
+            _ = RestCall(command + Uri.EscapeDataString(payload));
         }
 
         private static void CheckColumnNames(string line)

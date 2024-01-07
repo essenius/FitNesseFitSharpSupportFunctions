@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2023 Rik Essenius
+﻿// Copyright 2017-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -135,7 +135,7 @@ namespace SupportFunctionsTest
             const double maxY = 50.02;
             table.Add(startTimestamp, new MeasurementComparisonMock("49.95", "49.95", CompareOutcome.None));
             table.Add(startTimestamp.AddSeconds(1), new MeasurementComparisonMock("50.0", "50.0", CompareOutcome.None));
-            // Ading a double NaN to check whether that is ignored
+            // Adding a double NaN to check whether that is ignored
             table.Add(startTimestamp.AddSeconds(2), new MeasurementComparisonMock("NaN", "NaN", CompareOutcome.None));
             var chart = new TimeSeriesChart();
             var base64Result = chart.ChartInHtmlFor(table,

@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2023 Rik Essenius
+﻿// Copyright 2015-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -50,11 +50,11 @@ namespace SupportFunctions.Model
                 { SKEncodedImageFormat.Gif, "image/gif" },
                 { SKEncodedImageFormat.Bmp, "image/bmp" },
                 { SKEncodedImageFormat.Ico, "image/ico" },
-                { SKEncodedImageFormat.Wbmp, "image/wbmp" },
+                { SKEncodedImageFormat.Wbmp, @"image/wbmp" },
                 { SKEncodedImageFormat.Pkm, "image/pkm" },
                 { SKEncodedImageFormat.Ktx, "image/ktx" },
                 { SKEncodedImageFormat.Dng, "image/dng" },
-                { SKEncodedImageFormat.Astc, "image/astc" },
+                { SKEncodedImageFormat.Astc, @"image/astc" },
                 { SKEncodedImageFormat.Heif, "image/heif" },
                 { SKEncodedImageFormat.Webp, "image/webp" }
             };
@@ -121,7 +121,7 @@ namespace SupportFunctions.Model
             baseName ??= string.Empty;
             var name = Path.GetFileNameWithoutExtension(baseName);
             var extension = Path.GetExtension(baseName);
-            var timestamp = new DateTime(ticks).ToString("yyyyMMddHHmmssffff", CultureInfo.InvariantCulture);
+            var timestamp = new DateTime(ticks).ToString(@"yyyyMMddHHmmssffff", CultureInfo.InvariantCulture);
             name = Invariant($"{timestamp}_{name}");
             var path = Path.Combine(_wikiPagePath, name);
             var i = 1;

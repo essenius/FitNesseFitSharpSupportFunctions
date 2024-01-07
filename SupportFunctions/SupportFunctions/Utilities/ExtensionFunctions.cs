@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2023 Rik Essenius
+﻿// Copyright 2015-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -45,6 +45,7 @@ namespace SupportFunctions.Utilities
 
         public static void AddWithCheck<T>(this IDictionary<DateTime, T> dictionary, DateTime key, T value, string id)
         {
+            // ReSharper disable once CanSimplifyDictionaryLookupWithTryAdd - also needs to compile on .NET 4.6
             if (dictionary.ContainsKey(key))
                 throw new ArgumentException(Invariant($"Duplicate timestamp in {id}: {key.ToRoundTripFormat()}"));
             dictionary.Add(key, value);
@@ -76,7 +77,7 @@ namespace SupportFunctions.Utilities
         private static object ChangeType(object value, Type targetType)
         {
             var source = value;
-            // if we want a numeric result and we have a hex value, convert the hex to long first.
+            // if we want a numeric result, and we have a hex value, convert the hex to long first.
             if (targetType.IsNumeric() &&
                 NumericFunctions.TryParseHex(value?.ToString(), targetType.IsSigned(), out var hexValue))
             {

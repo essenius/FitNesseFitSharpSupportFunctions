@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2023 Rik Essenius
+﻿// Copyright 2017-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -109,7 +109,7 @@ namespace SupportFunctionsTest
         {
             var desiredHeaders = new Collection<Collection<object>> { new Collection<object> { "Wrong" } };
             var csvComparison = new CsvComparison(null, null, null);
-            var _ = csvComparison.DoTable(desiredHeaders);
+            _ = csvComparison.DoTable(desiredHeaders);
         }
 
         internal static object QueryValue(IEnumerable<object> queryRow, string key) =>
