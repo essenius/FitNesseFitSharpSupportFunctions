@@ -3,7 +3,7 @@ Fixture support functions such as Echo, Times Series, Dictionary Library objects
 
 
 # Introduction 
-This repo contains support functions such as Echo, Times Series, Dictionary Library objects, including demos.
+This repo contains support functions such as Echo, Times Series, Dictionary Library objects, including demos. For more details see the [Wiki](wiki).
 
 # Installation
 The steps to install are very similar to that of installing the [FibonacciDemo](../../../FitNesseFitSharpFibonacciDemo).
