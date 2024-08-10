@@ -58,6 +58,12 @@ namespace SupportFunctionsTest
         [DataRow("string", 2, "hi1", "hi2", 0)]
         public void TimeSeriesDataRangeTest(string testCase, int measurementCount, string lowValue, string highValue, double expectedRange)
         {
+            var metadata = RunMeasurement(measurementCount, lowValue, highValue);
+            Assert.AreEqual(expectedRange, metadata.Range, $"Test {testCase}");
+        }
+
+        private static TimeSeriesMetadata<Measurement> RunMeasurement(int measurementCount, string lowValue, string highValue)
+        {
             var timeSeries = new TimeSeries();
 
             for (var i = 0; i < measurementCount; i++)
@@ -72,7 +78,7 @@ namespace SupportFunctionsTest
             }
 
             var metadata = new TimeSeriesMetadata<Measurement>(timeSeries.Measurements, p => p.Value);
-            Assert.AreEqual(expectedRange, metadata.Range, $"Test {testCase}");
+            return metadata;
         }
 
         [DataTestMethod]
@@ -100,20 +106,7 @@ namespace SupportFunctionsTest
         [DataRow("Double-InfSym-NaN-2", 19, "∞", "-∞", "System.Double")]
         public void TimeSeriesDataTypeTest(string testCase, int measurementCount, string value1, string value2, string expectedType)
         {
-            var timeSeries = new TimeSeries();
-
-            for (var i = 0; i < measurementCount; i++)
-            {
-                var measurement = new Measurement
-                {
-                    Value = i < measurementCount / 2 ? value1 : value2,
-                    Timestamp = DateTime.Now,
-                    IsGood = true
-                };
-                timeSeries.AddMeasurement(measurement);
-            }
-
-            var metadata = new TimeSeriesMetadata<Measurement>(timeSeries.Measurements, p => p.Value);
+            var metadata = RunMeasurement(measurementCount, value1, value2);
             Assert.AreEqual(expectedType, metadata.DataType.ToString(), $"Test {testCase}");
         }
 
