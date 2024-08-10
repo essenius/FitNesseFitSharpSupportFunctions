@@ -7,7 +7,13 @@
                     "value": "6"
                 }
             ],
-            "matching_content_path": "**/*"
+            "matching_content_path": "**/*",
+            "rules": [
+                {
+                    "name": "Large Assertion Blocks",
+                    "weight": 0
+                }
+            ]
        }
     ]
 }
