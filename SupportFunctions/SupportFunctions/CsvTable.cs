@@ -1,4 +1,4 @@
-﻿// Copyright 2016-2023 Rik Essenius
+﻿// Copyright 2016-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -95,10 +95,8 @@ namespace SupportFunctions
 
         private void LoadFrom(string path, string delimiter, string comment, bool fieldsInQuotes)
         {
-            using var csvParser = new TextFieldParser(path)
-            {
-                CommentTokens = new[] { comment }
-            };
+            using var csvParser = new TextFieldParser(path);
+            csvParser.CommentTokens = new[] { comment };
             csvParser.SetDelimiters(delimiter);
             csvParser.HasFieldsEnclosedInQuotes = fieldsInQuotes;
 

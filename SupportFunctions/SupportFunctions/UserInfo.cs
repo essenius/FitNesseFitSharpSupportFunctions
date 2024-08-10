@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2023 Rik Essenius
+﻿// Copyright 2015-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -17,31 +17,41 @@ namespace SupportFunctions
     /// <summary>User information</summary>
     public sealed class UserInfo
     {
+        // slow functions, so use caching
+        private static string _userName;
+        private static string _displayName;
+
+
         /// <summary>The current user’s display name</summary>
         public static string DisplayName
         {
             get
             {
+                if (!string.IsNullOrEmpty(_displayName)) return _displayName;
 #if NET5_0_OR_GREATER
                 if (OperatingSystem.IsWindows())
 #endif
-                    return string.IsNullOrEmpty(UserPrincipal.Current.DisplayName)
-                        ? Environment.UserName
-                        : UserPrincipal.Current.DisplayName;
-#if NET5_0_OR_GREATER
-                return Environment.UserName;
-#endif
+                    _displayName = UserPrincipal.Current.DisplayName;
+
+                if (string.IsNullOrEmpty(_displayName))
+                {
+                    _displayName = Environment.UserName;
+                }
+                return _displayName;
             }
         }
 
-        /// <summary>The current user’s user name</summary>
+        /// <summary>The current user’s username</summary>
         public static string UserName
         {
             get
             {
+                if (_userName != null) return _userName;
+                _userName = Environment.UserName;
                 var domain = Environment.UserDomainName;
-                if (string.IsNullOrEmpty(domain)) return Environment.UserName;
-                return domain + "\\" + Environment.UserName;
+                if (string.IsNullOrEmpty(domain)) 
+                    _userName = domain + "\\" + _userName;
+                return _userName;
             }
         }
     }

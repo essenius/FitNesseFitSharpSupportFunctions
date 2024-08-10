@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2023 Rik Essenius
+﻿// Copyright 2015-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -38,7 +38,7 @@ namespace SupportFunctionsTest
         private static MethodInfo _removeTableAtMethod;
         private static MethodInfo _restCallMethod;
         private static MethodInfo _savePageMethod;
-        private static MethodInfo _tableIsNamedmethod;
+        private static MethodInfo _tableIsNamedMethod;
 
         [ClassInitialize]
         [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Required for ClassInitialize")]
@@ -54,7 +54,7 @@ namespace SupportFunctionsTest
             _removeTableAtMethod = typeof(FitNessePage).GetMethod("RemoveTableAt", BindingFlags.Instance | BindingFlags.NonPublic);
             _restCallMethod = typeof(FitNessePage).GetMethod("RestCall", BindingFlags.Instance | BindingFlags.NonPublic);
             _savePageMethod = typeof(FitNessePage).GetMethod("SavePage", BindingFlags.Instance | BindingFlags.NonPublic);
-            _tableIsNamedmethod = typeof(FitNessePage).GetMethod("TableIsNamed", BindingFlags.Static | BindingFlags.NonPublic);
+            _tableIsNamedMethod = typeof(FitNessePage).GetMethod("TableIsNamed", BindingFlags.Static | BindingFlags.NonPublic);
         }
 
         [TestMethod]
@@ -72,15 +72,15 @@ namespace SupportFunctionsTest
 
         [TestMethod]
         [TestCategory("Unit")]
-        [ExpectedExceptionWithMessage(typeof(FormatException), "First column must be called 'Key' instead of 'Sleutel'")]
+        [ExpectedExceptionWithMessage(typeof(FormatException), @"First column must be called 'Key' instead of 'Sleutel'")]
         public void FitNessePageCheckColumnNamesWithWrongFirstColumnNameTrowsFormatException() =>
-            _checkColumnNamesMethod.Invoke(null, new object[] { "|Sleutel|Waarde|" });
+            _checkColumnNamesMethod.Invoke(null, new object[] { @"|Sleutel|Waarde|" });
 
         [TestMethod]
         [TestCategory("Unit")]
-        [ExpectedExceptionWithMessage(typeof(FormatException), "Second column must be called 'Value' instead of 'Waarde'")]
+        [ExpectedExceptionWithMessage(typeof(FormatException), @"Second column must be called 'Value' instead of 'Waarde'")]
         public void FitNessePageCheckColumnNamesWithWrongSecondColumnNameTrowsFormatException() =>
-            _checkColumnNamesMethod.Invoke(null, new object[] { "|key|Waarde|" });
+            _checkColumnNamesMethod.Invoke(null, new object[] { @"|key|Waarde|" });
 
         [TestMethod]
         [TestCategory("Unit")]
@@ -139,10 +139,10 @@ namespace SupportFunctionsTest
         [TestCategory("Unit")]
         public void FitNessePageExtractKeyValuePairTest()
         {
-            var keyValuePair = _extractKeyValuePairMethod.Invoke(null, new object[] { "|Sleutel|Waarde|" }) as KeyValuePair<string, string>?;
+            var keyValuePair = _extractKeyValuePairMethod.Invoke(null, new object[] { @"|Sleutel|Waarde|" }) as KeyValuePair<string, string>?;
             Assert.IsNotNull(keyValuePair);
-            Assert.AreEqual("Sleutel", keyValuePair.Value.Key);
-            Assert.AreEqual("Waarde", keyValuePair.Value.Value);
+            Assert.AreEqual(@"Sleutel", keyValuePair.Value.Key);
+            Assert.AreEqual(@"Waarde", keyValuePair.Value.Value);
         }
 
         [DataTestMethod]
@@ -190,8 +190,8 @@ namespace SupportFunctionsTest
 
         [DataTestMethod]
         [TestCategory("Unit")]
-        [DataRow("|Sleutel|Waarde|", true, "table line without whitespace")]
-        [DataRow(" |Sleutel|Waarde| ", true, "table line with whitespace")]
+        [DataRow(@"|Sleutel|Waarde|", true, "table line without whitespace")]
+        [DataRow(@" |Sleutel|Waarde| ", true, "table line with whitespace")]
         [DataRow("  ", false, "just whitespace")]
         [DataRow("comments", false, "comments")]
         [DataRow("  comments", false, "comments with whitespace")]
@@ -260,7 +260,7 @@ namespace SupportFunctionsTest
         [ExpectedException(typeof(TargetInvocationException))]
         public void FitNessePageRestCallInvalidTest()
         {
-            // We expect the Requires clause to kick in as return value should not be OK (whether FitNesse is active or not)
+            // We expect the 'Requires' clause to kick in as return value should not be OK (whether FitNesse is active or not)
             var fitnessePage = new FitNessePage();
             _restCallMethod.Invoke(fitnessePage, new object[] { Server + "NonExistingPage?pageData" });
         }
@@ -330,6 +330,6 @@ namespace SupportFunctionsTest
         [DataRow("|Dictionary|having| name |TestTable|", true)]
         [DataRow("|Dictionary| given |Name| TestTable |", true)]
         public void FitNessePageTableIsNamedTest(string testCase, bool isNamedMethod) =>
-            Assert.AreEqual(isNamedMethod, (bool)_tableIsNamedmethod.Invoke(null, new object[] { testCase, "TestTable" }));
+            Assert.AreEqual(isNamedMethod, (bool)_tableIsNamedMethod.Invoke(null, new object[] { testCase, "TestTable" })!);
     }
 }

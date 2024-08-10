@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2023 Rik Essenius
+﻿// Copyright 2017-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -62,7 +62,7 @@ namespace SupportFunctions.Model
             var baseKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
             var internationalKey = baseKey.OpenSubKey(InternationalLocation);
             Requires.NotNull(internationalKey, nameof(internationalKey));
-            return internationalKey.GetValue(key);
+            return internationalKey!.GetValue(key);
         }
 
         // This cannot be done without elevated privileges, so disabling

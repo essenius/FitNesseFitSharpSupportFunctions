@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2023 Rik Essenius
+﻿// Copyright 2017-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -45,7 +45,7 @@ namespace SupportFunctions.Model
             }
         }
 
-        // These two are a bit tricky. Max/GridlineInterval shoud become integer,
+        // These two are a bit tricky. Max/GridlineInterval should become integer,
         // but floats sometimes have precision errors. So we round the value first.
         // If we round it to 5 digits, the difference wouldn't be visible anyway.
         // Then the ceiling or floor kicks in to drag the outer gridline up or down

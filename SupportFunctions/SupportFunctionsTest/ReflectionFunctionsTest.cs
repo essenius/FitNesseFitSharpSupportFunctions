@@ -1,4 +1,4 @@
-﻿// Copyright 2020-2023 Rik Essenius
+﻿// Copyright 2020-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -63,11 +63,11 @@ namespace SupportFunctionsTest
         [DataTestMethod]
         [TestCategory("Unit")]
         [DataRow("Length", "hello", "5", "get Property of string")]
-        [DataRow("Substring(3,2)", "abcdef", "de", "Method with 2 parameters")]
+        [DataRow("Substring(3,2)", @"abcdef", "de", "Method with 2 parameters")]
         [DataRow("Substring   ( 8 )", int.MaxValue, "47", "Method with one param, and spaces")]
         [DataRow("GetType", int.MaxValue, "System.Int32", "Method without parameters")]
         [DataRow("Math.Sqrt", "49", "7", "Method with parameter from value")]
-        [DataRow("Math.Round(2)", "3.1415", "3.14", "Method with a paramater and a value")]
+        [DataRow("Math.Round(2)", "3.1415", "3.14", @"Method with a paramater and a value")]
         [DataRow("Math.Log10", "1000.0", "3", "Log10 (expecting double) of a decimal calculated right")]
         [DataRow("Math.Sqrt", "0x10", "4", "Method with hex parameter")]
         public void ReflectionFunctionsGetOfTest(string method, object inputObject, object expected, string message) =>
@@ -77,7 +77,7 @@ namespace SupportFunctionsTest
         [TestCategory("Unit")]
         [DataRow("Int.MaxValue", int.MaxValue, "Get Field from Int")]
         [DataRow("Math.Sqrt(49)", "7", "Get parameter from the parameter list")]
-        [DataRow("String.IsNullOrEmpty()", "True", "Evaluate string mathod")]
+        [DataRow("String.IsNullOrEmpty()", "True", "Evaluate string method")]
         [DataRow("Math.Round( 3.14159265, 2 )", "3.14", "Use method with two parameters")]
         [DataRow("boolean.TrueString", "True", "see if we can use 'boolean' instead of 'bool")]
         [DataRow("Math.Sqrt(0x19)", "5", "Method with hex parameter")]

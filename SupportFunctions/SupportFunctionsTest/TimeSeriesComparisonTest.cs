@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2023 Rik Essenius
+﻿// Copyright 2017-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -48,7 +48,7 @@ namespace SupportFunctionsTest
                 var value = GetEntry(entry, 5) as string;
                 var delta = GetEntry(entry, 6) as string;
                 var deltaPercentage = GetEntry(entry, 7) as string;
-                var expectedlIsGood = GetEntry(entry, 9) as string;
+                var expectedIsGood = GetEntry(entry, 9) as string;
                 var actualIsGood = GetEntry(entry, 10) as string;
 
                 // if exists == expected, we don't want an actual record
@@ -60,7 +60,7 @@ namespace SupportFunctionsTest
                 // if exists == actual, we don't want an expected record
                 if (exists != "actual")
                 {
-                    expectedSeries.AddMeasurement(new Measurement(timestamp, expectedValue, expectedlIsGood ?? defaultIsGood.ToString()));
+                    expectedSeries.AddMeasurement(new Measurement(timestamp, expectedValue, expectedIsGood ?? defaultIsGood.ToString()));
                 }
 
                 var result = new Dictionary<string, string>
@@ -94,7 +94,7 @@ namespace SupportFunctionsTest
                 var expectedResult = expectedResults[timestamp];
                 var actualResult = new Dictionary<string, object>
                 {
-                    { "pass", (!row.Any(cell => cell.ToString().StartsWith(fail, StringComparison.Ordinal))).ToString() },
+                    { "pass", (!row.Any(cell => cell.ToString()!.StartsWith(fail, StringComparison.Ordinal))).ToString() },
                     { "timestampOut", row[0] },
                     { "value", row[1] },
                     { "delta", row[2] },
@@ -264,7 +264,7 @@ namespace SupportFunctionsTest
                 }
             }
         )]
-        [DataRow("allgood", null, "", true, 0, 4,
+        [DataRow("allGood", null, "", true, 0, 4,
             new object[]
             {
                 new object[] { "2020-01-01T00:00:00.0000000", "both", "10", "10", true, "pass:10", "report:", "report:" },

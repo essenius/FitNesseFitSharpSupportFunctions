@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2023 Rik Essenius
+﻿// Copyright 2015-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -105,7 +105,7 @@ namespace SupportFunctions
             Requires.NotNull(type, nameof(type));
             var returnType = type.ToType();
             // Date is a special case. It can be used as a return value type, but EvaluateExpression
-            // only knows standard types. So use DateTime in the evaluation, and map it to a Date afterwards.
+            // only knows standard types. So use DateTime in the evaluation, and map it to a Date afterward.
             return returnType == typeof(Date)
                 ? Date.Parse(EvaluateExpression(expression, typeof(DateTime), parameters).To<string>())
                 : EvaluateExpression(expression, returnType, parameters);
@@ -114,7 +114,8 @@ namespace SupportFunctions
         private static object EvaluateExpression(string expression, Type type, IEnumerable<string> parameters)
         {
             // making use of the fact that DataTables come with a handy eval function
-            using var dataTable = new DataTable { Locale = CultureInfo.InvariantCulture };
+            using var dataTable = new DataTable();
+            dataTable.Locale = CultureInfo.InvariantCulture;
             var columnDictionary = parameters?.ToDictionary() ?? new Dictionary<string, string>();
             columnDictionary.Add("Eval", expression);
             foreach (var entry in columnDictionary)

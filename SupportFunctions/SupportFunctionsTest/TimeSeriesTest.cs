@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2023 Rik Essenius
+﻿// Copyright 2017-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -34,9 +34,9 @@ namespace SupportFunctionsTest
 
         [DataTestMethod]
         [TestCategory("Unit")]
-        [DataRow("test1.csv", "test1.csv", "timestamp", "value", "isgood", "TimeSeriesDefault")]
-        [DataRow("test2.csv#tijd#waarde#goed", "test2.csv", "tijd", "waarde", "goed", "TimeSeriesCustom")]
-        [DataRow("test3.csv##waarde", "test3.csv", "timestamp", "waarde", "isgood", "TimeSeriesPartlyCustom")]
+        [DataRow("test1.csv", "test1.csv", "timestamp", "value", @"isgood", "TimeSeriesDefault")]
+        [DataRow(@"test2.csv#tijd#waarde#goed", "test2.csv", @"tijd", @"waarde", @"goed", "TimeSeriesCustom")]
+        [DataRow(@"test3.csv##waarde", "test3.csv", "timestamp", @"waarde", @"isgood", "TimeSeriesPartlyCustom")]
         public void TimeSeriesConstructorTest(string spec, string path, string timestampHeader, string valueHeader, string isGoodHeader,
             string testCase)
         {

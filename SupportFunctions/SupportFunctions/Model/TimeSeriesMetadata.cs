@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2023 Rik Essenius
+﻿// Copyright 2015-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -39,10 +39,10 @@ namespace SupportFunctions.Model
                     DataType = getValue[0](entry).InferType(DataType);
                     // string is an end state, no need to dig further
                     if (DataType == typeof(string)) break;
-                    // we dont need min and max for booleans, but we could need to switch to string later
+                    // we don't need min and max for booleans, but we could need to switch to string later
                     if (DataType == typeof(bool)) continue;
                     // now we know the primary (expected) value is numerical (double, int, long)
-                    // So it makes sense to determine the extremes, using secundary (actual) too
+                    // So it makes sense to determine the extremes, using secondary (actual) too
                 }
 
                 UpdateExtremes(entry, getValue);

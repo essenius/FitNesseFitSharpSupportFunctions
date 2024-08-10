@@ -44,7 +44,7 @@ namespace SupportFunctions.Model
 
         private SKPaint CreateLinePaint(SKColor color, float width = 0f, bool isStroke = true)
         {
-            Debug.Assert(_textHeight > 0, "Measure happend");
+            Debug.Assert(_textHeight > 0, "Measure happened");
             return new SKPaint
             {
                 TextSize = _textHeight,
@@ -76,7 +76,7 @@ namespace SupportFunctions.Model
                 strokePaint.StrokeWidth = lineStroke.StrokeThickness;
                 if (lineStroke.PathEffect == null) return strokePaint;
                 // using null is a shortcut, as the function doesn't use the drawing context.
-                lineStroke.PathEffect.CreateEffect(null);
+                lineStroke.PathEffect.CreateEffect(null!);
                 strokePaint.PathEffect = lineStroke.PathEffect.SKPathEffect;
             }
             else

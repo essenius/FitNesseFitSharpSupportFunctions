@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2020 Rik Essenius
+﻿// Copyright 2017-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -61,7 +61,7 @@ namespace SupportFunctions.Utilities
         public static int FractionalDigits(this object value)
         {
             if (!value.IsNumeric()) return 0;
-            var splitE = value.ToString().Split('E', 'e');
+            var splitE = value.ToString()!.Split('E', 'e');
             var eValue = splitE.Length > 1 ? -splitE[1].To<int>() : 0;
             var splitPoint = splitE[0].Split('.');
             var fractionDigits = Math.Max((splitPoint.Length == 1 ? 0 : splitPoint[1].Length) + eValue, 0);

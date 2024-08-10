@@ -1,11 +1,12 @@
-# FitNesseFitSharpSupportFunctions
+# SupportFunctions ![workflow badge](../../actions/workflows/support-functions-ci.yml/badge.svg)
+
 Fixture support functions such as Echo, Times Series, Dictionary Library objects
 
 
-# Introduction 
-This repo contains support functions such as Echo, Times Series, Dictionary Library objects, including demos.
+## Introduction 
+This repo contains support functions such as Echo, Times Series, Dictionary Library objects, including demos. For more details see the [Wiki](../../wiki).
 
-# Installation
+## Installation
 The steps to install are very similar to that of installing the [FibonacciDemo](../../../FitNesseFitSharpFibonacciDemo).
 
 Differences are:
@@ -19,5 +20,5 @@ Differences are:
 * Go to the assemby folder `bin\Deploy\net5.0` and start FitNesse.
 * Run the suite: Open a browser and enter the URL http://localhost:8080/FitSharpDemos.SupportFunctionsSuite?suite
 
-# Contribute
+## Contribute
 Enter an [issue](../../issues) or provide a [pull request](../../pulls). 
