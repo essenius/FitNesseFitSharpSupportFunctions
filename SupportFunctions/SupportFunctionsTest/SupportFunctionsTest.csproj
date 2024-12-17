@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net461</TargetFrameworks>
+    <TargetFrameworks>net8.0;net461</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <AnalysysMode>AllEnabledByDefault</AnalysysMode>
-    <Version>3.0.0-beta-9</Version>
+    <Version>3.0.0-beta-10</Version>
     <Authors>Rik Essenius</Authors>
     <Description>Test project for SupportFunctions fixture</Description>
     <Copyright>Copyright © Rik Essenius 2015-2024</Copyright>
@@ -52,7 +52,7 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
     <None Update="TestDataLive\Base64AllBelowXAxis.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -79,7 +79,7 @@
     </None>
 </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net8.0' ">
     <None Update="TestDataWebUI\Base64AllBelowXAxis.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

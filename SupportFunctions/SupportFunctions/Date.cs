@@ -82,8 +82,8 @@ namespace SupportFunctions
             {
                 "TODAY" => new Date(DateTime.Today),
                 "NOW" => new Date(UniqueDateTime.NowTicks),
-                @"UTCTODAY" => new Date(DateTime.UtcNow.Date),
-                @"UTCNOW" => new Date(UniqueDateTime.UtcNowTicks),
+                "UTCTODAY" => new Date(DateTime.UtcNow.Date),
+                "UTCNOW" => new Date(UniqueDateTime.UtcNowTicks),
                 _ => long.TryParse(input, out var ticks) ? new Date(ticks) : new Date(input)
             };
         }

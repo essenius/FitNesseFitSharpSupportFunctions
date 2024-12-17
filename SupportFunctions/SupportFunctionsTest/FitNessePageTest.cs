@@ -72,15 +72,15 @@ namespace SupportFunctionsTest
 
         [TestMethod]
         [TestCategory("Unit")]
-        [ExpectedExceptionWithMessage(typeof(FormatException), @"First column must be called 'Key' instead of 'Sleutel'")]
+        [ExpectedExceptionWithMessage(typeof(FormatException), "First column must be called 'Key' instead of 'Sleutel'")]
         public void FitNessePageCheckColumnNamesWithWrongFirstColumnNameTrowsFormatException() =>
-            _checkColumnNamesMethod.Invoke(null, new object[] { @"|Sleutel|Waarde|" });
+            _checkColumnNamesMethod.Invoke(null, new object[] { "|Sleutel|Waarde|" });
 
         [TestMethod]
         [TestCategory("Unit")]
-        [ExpectedExceptionWithMessage(typeof(FormatException), @"Second column must be called 'Value' instead of 'Waarde'")]
+        [ExpectedExceptionWithMessage(typeof(FormatException), "Second column must be called 'Value' instead of 'Waarde'")]
         public void FitNessePageCheckColumnNamesWithWrongSecondColumnNameTrowsFormatException() =>
-            _checkColumnNamesMethod.Invoke(null, new object[] { @"|key|Waarde|" });
+            _checkColumnNamesMethod.Invoke(null, new object[] { "|key|Waarde|" });
 
         [TestMethod]
         [TestCategory("Unit")]
@@ -139,10 +139,10 @@ namespace SupportFunctionsTest
         [TestCategory("Unit")]
         public void FitNessePageExtractKeyValuePairTest()
         {
-            var keyValuePair = _extractKeyValuePairMethod.Invoke(null, new object[] { @"|Sleutel|Waarde|" }) as KeyValuePair<string, string>?;
+            var keyValuePair = _extractKeyValuePairMethod.Invoke(null, new object[] { "|Sleutel|Waarde|" }) as KeyValuePair<string, string>?;
             Assert.IsNotNull(keyValuePair);
-            Assert.AreEqual(@"Sleutel", keyValuePair.Value.Key);
-            Assert.AreEqual(@"Waarde", keyValuePair.Value.Value);
+            Assert.AreEqual("Sleutel", keyValuePair.Value.Key);
+            Assert.AreEqual("Waarde", keyValuePair.Value.Value);
         }
 
         [DataTestMethod]
@@ -190,8 +190,8 @@ namespace SupportFunctionsTest
 
         [DataTestMethod]
         [TestCategory("Unit")]
-        [DataRow(@"|Sleutel|Waarde|", true, "table line without whitespace")]
-        [DataRow(@" |Sleutel|Waarde| ", true, "table line with whitespace")]
+        [DataRow("|Sleutel|Waarde|", true, "table line without whitespace")]
+        [DataRow(" |Sleutel|Waarde| ", true, "table line with whitespace")]
         [DataRow("  ", false, "just whitespace")]
         [DataRow("comments", false, "comments")]
         [DataRow("  comments", false, "comments with whitespace")]

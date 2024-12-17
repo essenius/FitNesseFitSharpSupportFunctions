@@ -63,11 +63,11 @@ namespace SupportFunctionsTest
         [DataTestMethod]
         [TestCategory("Unit")]
         [DataRow("Length", "hello", "5", "get Property of string")]
-        [DataRow("Substring(3,2)", @"abcdef", "de", "Method with 2 parameters")]
+        [DataRow("Substring(3,2)", "abcdef", "de", "Method with 2 parameters")]
         [DataRow("Substring   ( 8 )", int.MaxValue, "47", "Method with one param, and spaces")]
         [DataRow("GetType", int.MaxValue, "System.Int32", "Method without parameters")]
         [DataRow("Math.Sqrt", "49", "7", "Method with parameter from value")]
-        [DataRow("Math.Round(2)", "3.1415", "3.14", @"Method with a paramater and a value")]
+        [DataRow("Math.Round(2)", "3.1415", "3.14", "Method with a paramater and a value")]
         [DataRow("Math.Log10", "1000.0", "3", "Log10 (expecting double) of a decimal calculated right")]
         [DataRow("Math.Sqrt", "0x10", "4", "Method with hex parameter")]
         public void ReflectionFunctionsGetOfTest(string method, object inputObject, object expected, string message) =>

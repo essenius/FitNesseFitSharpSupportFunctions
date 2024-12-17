@@ -47,7 +47,7 @@ namespace SupportFunctions
         }
 
         /// <summary>Name of the Is Good column in the CSV file</summary>
-        public string IsGoodColumn { get; set; } = @"isgood";
+        public string IsGoodColumn { get; set; } = "isgood";
 
         internal Collection<Measurement> Measurements { get; }
 

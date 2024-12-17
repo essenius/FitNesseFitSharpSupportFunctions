@@ -328,7 +328,7 @@ namespace SupportFunctionsTest
             var parameters = new Dictionary<string, string>
             {
                 { "Width", "320" },
-                { @"heIght", "200" }
+                { "heIght", "200" }
             };
             var result = timeseriesComparison.Graph(parameters);
             TimeSeriesChartTest.AssertChartImage(result, MissingExpectedFile, nameof(TimeSeriesComparisonGraphEmptyExpectedNumericalTest));

@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2021 Rik Essenius
+﻿// Copyright 2017-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -148,8 +148,8 @@ namespace SupportFunctionsTest
             Assert.IsFalse(noon.IsWithinTimeRange(null, today), "noon not in null-today (T-FF)");
             Assert.IsTrue(noon.IsWithinTimeRange(null, tomorrow), "noon in null-tomorrow (T-FT)");
             Assert.IsTrue(noon.IsWithinTimeRange(today, null), "noon in today-null (FTT-)");
-            Assert.IsFalse(tomorrow.IsWithinTimeRange(today, noon), @"tomorrow not in today-noon (FTFF)");
-            Assert.IsTrue(noon.IsWithinTimeRange(today, tomorrow), @"noon in today-tomorrow (FTFT)");
+            Assert.IsFalse(tomorrow.IsWithinTimeRange(today, noon), "tomorrow not in today-noon (FTFF)");
+            Assert.IsTrue(noon.IsWithinTimeRange(today, tomorrow), "noon in today-tomorrow (FTFT)");
             Assert.IsFalse(noon.IsWithinTimeRange(tomorrow, null), "noon not in tomorrow-null (FF--)");
         }
 

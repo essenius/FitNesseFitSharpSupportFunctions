@@ -1,4 +1,4 @@
-﻿// Copyright 2017-2023 Rik Essenius
+﻿// Copyright 2017-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -71,7 +71,7 @@ namespace SupportFunctionsTest
         {
             var root = Path.GetTempPath();
             var wikiFile = new WikiFile(root, "TestPage");
-            var wikiFolder = Path.Combine(root, "files\\testResults\\TestPage");
+            var wikiFolder = Path.Combine(root, @"files\testResults\TestPage");
             Directory.CreateDirectory(wikiFolder);
             var dir = new DirectoryInfo(wikiFolder);
             foreach (var file in dir.EnumerateFiles("*test*.rik"))
@@ -94,10 +94,10 @@ namespace SupportFunctionsTest
         [TestCategory("Unit")]
         public void WikiFileUniquePathTest2()
         {
-            const string format = @"yyyyMMddHHmmssffff";
+            const string format = "yyyyMMddHHmmssffff";
             var culture = CultureInfo.InvariantCulture;
             var startTime = DateTime.Now.ToString(format, culture);
-            var file = new WikiFile("c:\\", "Data").UniquePathFor(@"demofile");
+            var file = new WikiFile("c:\\", "Data").UniquePathFor("demofile");
             Assert.IsNotNull(file);
             var timestamp = Path.GetFileNameWithoutExtension(file).Substring(0, 18);
             var endTime = DateTime.Now.ToString(format, culture);

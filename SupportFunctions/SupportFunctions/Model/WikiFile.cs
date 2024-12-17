@@ -121,7 +121,7 @@ namespace SupportFunctions.Model
             baseName ??= string.Empty;
             var name = Path.GetFileNameWithoutExtension(baseName);
             var extension = Path.GetExtension(baseName);
-            var timestamp = new DateTime(ticks).ToString(@"yyyyMMddHHmmssffff", CultureInfo.InvariantCulture);
+            var timestamp = new DateTime(ticks).ToString("yyyyMMddHHmmssffff", CultureInfo.InvariantCulture);
             name = Invariant($"{timestamp}_{name}");
             var path = Path.Combine(_wikiPagePath, name);
             var i = 1;

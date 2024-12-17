@@ -109,7 +109,7 @@ namespace SupportFunctionsTest
         [TestMethod]
         [TestCategory("Unit")]
         [ExpectedExceptionWithMessage(typeof(ArgumentException),
-#if NET6_0
+#if NET8_0
             "Type 'WrongType' not recognized. (Parameter 'type')")]
 #else
             "Type 'WrongType' not recognized.\r\nParameter name: type")]
@@ -186,8 +186,8 @@ namespace SupportFunctionsTest
         [TestCategory("Unit")]
         public void CommonFunctionsLeftmostTest()
         {
-            Assert.AreEqual(@"abcd", CommonFunctions.LeftmostOf(4, @"abcdefg"));
-            Assert.AreEqual(@"abcd", CommonFunctions.LeftmostOf(5, @"abcd"));
+            Assert.AreEqual("abcd", CommonFunctions.LeftmostOf(4, "abcdefg"));
+            Assert.AreEqual("abcd", CommonFunctions.LeftmostOf(5, "abcd"));
             Assert.AreEqual("", CommonFunctions.LeftmostOf(4, ""));
         }
 
@@ -203,8 +203,8 @@ namespace SupportFunctionsTest
         [TestCategory("Unit")]
         public void CommonFunctionsRightmostTest()
         {
-            Assert.AreEqual(@"defg", CommonFunctions.RightmostOf(4, @"abcdefg"));
-            Assert.AreEqual(@"abcd", CommonFunctions.RightmostOf(5, @"abcd"));
+            Assert.AreEqual("defg", CommonFunctions.RightmostOf(4, "abcdefg"));
+            Assert.AreEqual("abcd", CommonFunctions.RightmostOf(5, "abcd"));
             Assert.AreEqual("", CommonFunctions.RightmostOf(4, ""));
         }
 
@@ -215,7 +215,7 @@ namespace SupportFunctionsTest
             var firstCheck = UniqueDateTime.NowTicks;
             ("firstCheck:" + firstCheck).Log();
             var stringDate = new DateTime(firstCheck)
-                .ToString(@"dd-MMM-yyyy HH:mm:ss.fffffff", CultureInfo.InvariantCulture);
+                .ToString("dd-MMM-yyyy HH:mm:ss.fffffff", CultureInfo.InvariantCulture);
             stringDate.Log();
             var ticks1 = CommonFunctions.Ticks;
             ("ticks1:" + ticks1 + " (" + (ticks1 - firstCheck) + ")").Log();

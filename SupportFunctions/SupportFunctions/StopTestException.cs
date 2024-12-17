@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2023 Rik Essenius
+﻿// Copyright 2015-2024 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -36,13 +36,6 @@ namespace SupportFunctions
         /// <param name="message">the message</param>
         /// <param name="innerException">the inner exception</param>
         public StopTestException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
-
-        /// <inheritdoc />
-        /// <param name="info">Serialization info</param>
-        /// <param name="context">context</param>
-        protected StopTestException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }

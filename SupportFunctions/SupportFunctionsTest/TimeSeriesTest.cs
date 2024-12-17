@@ -34,9 +34,9 @@ namespace SupportFunctionsTest
 
         [DataTestMethod]
         [TestCategory("Unit")]
-        [DataRow("test1.csv", "test1.csv", "timestamp", "value", @"isgood", "TimeSeriesDefault")]
-        [DataRow(@"test2.csv#tijd#waarde#goed", "test2.csv", @"tijd", @"waarde", @"goed", "TimeSeriesCustom")]
-        [DataRow(@"test3.csv##waarde", "test3.csv", "timestamp", @"waarde", @"isgood", "TimeSeriesPartlyCustom")]
+        [DataRow("test1.csv", "test1.csv", "timestamp", "value", "isgood", "TimeSeriesDefault")]
+        [DataRow("test2.csv#tijd#waarde#goed", "test2.csv", "tijd", "waarde", "goed", "TimeSeriesCustom")]
+        [DataRow("test3.csv##waarde", "test3.csv", "timestamp", "waarde", "isgood", "TimeSeriesPartlyCustom")]
         public void TimeSeriesConstructorTest(string spec, string path, string timestampHeader, string valueHeader, string isGoodHeader,
             string testCase)
         {
@@ -139,7 +139,7 @@ namespace SupportFunctionsTest
             Assert.AreEqual("50", timeSeries.Measurements[0].Value, "First row value 1");
             Assert.AreEqual("49.96429546", timeSeries.Measurements[126].Value, "Last row value 1");
 
-            const string file2 = @"1stOrderExpected.csv#tijd#waarde#kwaliteit";
+            const string file2 = "1stOrderExpected.csv#tijd#waarde#kwaliteit";
             var timeSeries2 = TimeSeries.Parse(file2);
             timeSeries2.Load();
             Assert.AreEqual(34, timeSeries2.Measurements.Count);

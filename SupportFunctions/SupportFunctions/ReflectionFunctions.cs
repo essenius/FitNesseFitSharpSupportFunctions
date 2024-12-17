@@ -23,11 +23,9 @@ namespace SupportFunctions
     {
         private static Type FindStaticClass(string className)
         {
-            var type = Type.GetType(className.TypeName()) ?? Type.GetType("System." + className.ToTitleCase());
-            if (type == null)
-            {
-                throw new TypeLoadException(Invariant($"Could not find static class '{className}'"));
-            }
+            var type = Type.GetType(className.TypeName()) 
+                       ?? Type.GetType("System." + className.ToTitleCase())
+                       ?? throw new TypeLoadException(Invariant($"Could not find static class '{className}'"));
 
             return type;
         }
