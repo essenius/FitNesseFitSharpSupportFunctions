@@ -50,11 +50,11 @@ namespace SupportFunctions.Model
                 { SKEncodedImageFormat.Gif, "image/gif" },
                 { SKEncodedImageFormat.Bmp, "image/bmp" },
                 { SKEncodedImageFormat.Ico, "image/ico" },
-                { SKEncodedImageFormat.Wbmp, @"image/wbmp" },
+                { SKEncodedImageFormat.Wbmp, "image/wbmp" },
                 { SKEncodedImageFormat.Pkm, "image/pkm" },
                 { SKEncodedImageFormat.Ktx, "image/ktx" },
                 { SKEncodedImageFormat.Dng, "image/dng" },
-                { SKEncodedImageFormat.Astc, @"image/astc" },
+                { SKEncodedImageFormat.Astc, "image/astc" },
                 { SKEncodedImageFormat.Heif, "image/heif" },
                 { SKEncodedImageFormat.Webp, "image/webp" }
             };

@@ -1,4 +1,4 @@
-﻿// Copyright 2021-2023 Rik Essenius
+﻿// Copyright 2021-2025 Rik Essenius
 //
 //   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file 
 //   except in compliance with the License. You may obtain a copy of the License at
@@ -16,8 +16,6 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.SkiaSharpView.Drawing;
-using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using SkiaSharp;
