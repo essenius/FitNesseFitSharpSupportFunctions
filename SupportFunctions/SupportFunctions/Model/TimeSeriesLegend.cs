@@ -17,6 +17,7 @@ using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using SkiaSharp;
@@ -62,7 +63,7 @@ namespace SupportFunctions.Model
             Result = image.Subset(boundary);
         }
 
-        private SKPaint CreateStrokePaint(IStrokedAndFilled<SkiaSharpDrawingContext> series)
+        private SKPaint CreateStrokePaint(IStrokedAndFilled series)
         {
             var strokePaint = new SKPaint
             {
@@ -70,7 +71,7 @@ namespace SupportFunctions.Model
                 IsAntialias = true,
                 IsStroke = series.Stroke != null
             };
-            if (series.Stroke is Paint lineStroke)
+            if (series.Stroke is SolidColorPaint lineStroke)
             {
                 strokePaint.Color = lineStroke.Color;
                 strokePaint.StrokeWidth = lineStroke.StrokeThickness;
@@ -104,7 +105,7 @@ namespace SupportFunctions.Model
 
             foreach (var chartSeries in chart.Series)
             {
-                if (!(chartSeries is ILineSeries<SkiaSharpDrawingContext> entry)) continue;
+                if (!(chartSeries is ILineSeries entry)) continue;
                 cursor.CheckNextLine();
                 var strokePaint = CreateStrokePaint(entry);
 
@@ -113,7 +114,7 @@ namespace SupportFunctions.Model
 
                 // This is a bit of a shortcut, all geometries become circles. Not an issue right now
                 // since we only use a circle. Still need to figure out how to use geometries more effectively.
-                if (entry.GeometrySize > 0 && entry.GeometryFill is Paint geometryFill)
+                if (entry.GeometrySize > 0 && entry.GeometryFill is SolidColorPaint geometryFill)
                 {
                     DrawCircle(
                         new SKPoint(cursor.GeometryX, cursor.LineY),
